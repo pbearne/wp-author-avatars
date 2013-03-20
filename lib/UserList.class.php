@@ -56,7 +56,7 @@ class UserList {
 	var $show_biography = false;
 
 	/**
-	 * Flag whether to show a user's biography
+	 * Flag whether to show a user's email
 	 */
 	var $show_email = false;
 	
