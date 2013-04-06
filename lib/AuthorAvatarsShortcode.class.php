@@ -102,6 +102,13 @@ class AuthorAvatarsShortcode {
 			else $this->userlist->show_postcount = true;
 		}
 
+		// show email?
+		if (isset($atts['show_email'])&& ( strlen($atts['show_email'])>0) ) {
+			$set_to_false = ($atts['show_email'] == 'false');
+			if ($set_to_false) $this->userlist->show_email = false;
+			else $this->userlist->show_email = true;
+		}
+
 		// show biography?
 		if (isset($atts['show_biography'])&& ( strlen($atts['show_biography'])>0) ) {
 			$set_to_false = ($atts['show_biography'] == 'false');
