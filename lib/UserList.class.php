@@ -54,6 +54,11 @@ class UserList {
 	 * Flag whether to show a user's biography
 	 */
 	var $show_biography = false;
+
+	/**
+	 * Flag whether to show a user's email
+	 */
+	var $show_email = false;
 	
 	/**
 	 * Size of avatars.
@@ -273,6 +278,7 @@ class UserList {
 		'show_postcount' => $this->show_postcount,
 		'show_bbpress_post_count' => $this->show_bbpress_post_count,
 		'show_biography' => $this->show_biography,
+		'show_email' => $this->show_email,
 		'avatar_size' => $this->avatar_size,
 		'limit' => $this->limit,
 		'min_post_count' => $this->min_post_count,
@@ -381,6 +387,14 @@ class UserList {
 			if (empty($biography)) $divcss[] = 'biography-missing';
 		}
 
+		$email = false;
+		if ($this->show_email && $user->user_id > 0) {
+			$userEmail = get_the_author_meta('user_email', $user->user_id);
+			$email = "<a href='mailto:".$userEmail."''>".$userEmail."</a>";
+			$divcss[] = 'with-email';
+			if (empty($email)) $divcss[] = 'email-missing';
+		}
+
 		if ($user->user_id == -1) {
 			// use email for commentators
 			$avatar = get_avatar($user->user_email, $avatar_size);
@@ -421,6 +435,7 @@ class UserList {
 		if ($this->show_name || $this->show_bbpress_post_count || $this->show_postcount)
 			$html .= '<span class="name">'. $name . '</span>';
 		if ($link) $html .= '</a>';
+		if ($email) $html .= '<div class="email">'. $email .'</div>';
 		if ($biography) $html .= '<div class="biography">'. $biography .'</div>';
 		
 		$tpl_vars['{class}'] = implode($divcss, ' ');
