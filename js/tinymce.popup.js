@@ -101,6 +101,11 @@ function insertAuthorAvatarsCode() {
 				tagtext += " show_name=true";
 			}
 
+			// show_email
+			if ('show_email' == jQuery(el).val()) {
+				tagtext += " show_email=true";
+			}
+
 			// show_postcount
 			if ('show_postcount' == jQuery(el).val()) {
 				tagtext += " show_postcount=true";
@@ -179,6 +184,11 @@ function insertAuthorAvatarsCode() {
 			// show_name
 			if ('show_name' == jQuery(el).val()) {
 				tagtext += " show_name=true";
+			}
+
+			// show_email
+			if ('show_email' == jQuery(el).val()) {
+				tagtext += " show_email=true";
 			}
 
 			// show_postcount

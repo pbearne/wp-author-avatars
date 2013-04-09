@@ -659,31 +659,31 @@ class UserList {
 				shuffle($users);
 				break;
 			case 'user_id':
-				usort($users, array($this, '_users_cmp_id'));
+				@usort($users, array($this, '_users_cmp_id'));
 				break;
 			case 'user_login':
-				usort($users, array($this, '_users_cmp_login'));
+				@usort($users, array($this, '_users_cmp_login'));
 				break;
 			case 'display_name':
-				usort($users, array($this, '_users_cmp_name'));
+				@usort($users, array($this, '_users_cmp_name'));
 				break;
 			case 'first_name':
-				usort($users, array($this, '_users_cmp_first_name'));
+				@usort($users, array($this, '_users_cmp_first_name'));
 				break;
 			case 'last_name':
-				usort($users, array($this, '_users_cmp_last_name'));
+				@usort($users, array($this, '_users_cmp_last_name'));
 				break;
 			case 'post_count':
-				usort($users, array($this, '_user_cmp_postcount'));
+				@usort($users, array($this, '_user_cmp_postcount'));
 				break;
 			case 'bbpress_post_count':
-				usort($users, array($this, '_user_cmp_BBPRESS_post_count'));
+				@usort($users, array($this, '_user_cmp_BBPRESS_post_count'));
 				break;				
 			case 'date_registered':
-				usort($users, array($this, '_user_cmp_regdate'));
+				@usort($users, array($this, '_user_cmp_regdate'));
 				break;
 			case 'recent_activity':
-				usort($users, array($this, '_user_cmp_activity'));
+				@usort($users, array($this, '_user_cmp_activity'));
 				break;
 		}
 	}

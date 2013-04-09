@@ -263,6 +263,7 @@ class AuthorAvatarsForm {
 	function renderFieldDisplayOptions($values=array(), $name='display') {
 		$display_options = Array(
 			'show_name' => __('Show name', 'author-avatars'),
+			'show_email' => __('Show email', 'author-avatars'),
 			'show_biography' => __('Show biography', 'author-avatars'),
 			'show_postcount' => __('Show number of posts', 'author-avatars'),
 		);

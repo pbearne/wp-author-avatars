@@ -96,6 +96,7 @@ if (!function_exists('AA_array_in_array')):
 	return FALSE;
 	}
 endif;
+
 if (!function_exists('AA_atrim')):
 	/**
 	* A simple implementation of "array_slice()" which preserves array keys.
@@ -110,6 +111,7 @@ if (!function_exists('AA_atrim')):
 			return $a;
 	}
 endif;
+
 if (!function_exists('AA_is_super_admin')):
 	/**
 	* Implementation of the function "AA_is_super_admin" if it doesn't not exists.

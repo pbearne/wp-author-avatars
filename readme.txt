@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=MZTZ5
 Tags: Avatar, Author, BuddyPress, Comment, Editor, Image, Multisite, Photo, Picture, Profile, Shortcode, Random, Sidebar, Thumbnail, User, Widget, Wpmu
 Requires at least: 2.8
 Tested up to: 3.4.1
-Stable tag: 1.6.1
+Stable tag: 1.7.0
 
 Display lists of user avatars using widgets or shortcodes.
 
@@ -57,7 +57,15 @@ You can find information for developers [on this page](http://authoravatars.word
 5. List of users with name and biography
 
 == Changelog ==
-=1.6.3 =
+= 1.7.0 =
+* Replaced wp_specialchars() with esc_html()
+* Added BBPRESS_post_count as shortcode dispaly and sort options
+* Added show_email to shortcode display option
+* Added some translation updates
+* Fixed issue with TniyMCE breaking when using HTTPS
+* And a few other tidy ups
+
+= 1.6.3 =
 * Wraped ordering code in "remove_accents" functions to to replace Uni-code accents with non unicode versions so sort works as expected.
 * Increased height of TinyMCE popup so content shows with scroll bars.
 * Replaced text donate links with image link.

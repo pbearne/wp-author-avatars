@@ -69,7 +69,12 @@ class ShowAvatarShortcode {
 		}
 		// is there an suer link request
 	
-		if (!empty($atts['user_link'])||!empty($atts['show_biography'])||!empty($atts['show_postcount'])||!empty($atts['show_name'])) {
+		if (!empty($atts['user_link'])
+				||!empty($atts['show_biography'])
+				||!empty($atts['show_postcount'])
+				||!empty($atts['show_name'])
+				||!empty($atts['show_email'])
+			) {
 		
 		// try to fetch user profile
 		$isUser = true;
@@ -88,11 +93,7 @@ class ShowAvatarShortcode {
 					$isUser = false; 
 				}
 			 }
-//			 print_r($all_meta_for_user);
-//			   if( $all_meta_for_user = get_user_meta( $id ) )     array_map( function( $a ){ return $a[0]; }, get_user_meta( $id ) );
-
-//  print_r( $all_meta_for_user );
-		
+	
 
 		if ($isUser)	{
 			if (!empty($atts['user_link'])){  
@@ -128,14 +129,20 @@ class ShowAvatarShortcode {
 					if ($link) $hrefStart = '<a href="'. $link .'">'; 
 			}
 	
-			if(!empty($atts['show_biography'])){
-				$bio = get_the_author_meta('description', $id);
-				$extraClass .= ' with-biography';
-			}
-			
 			if(!empty($atts['show_name'])){
 				$name = '<br />'.get_the_author_meta('display_name', $id);
 				$extraClass .= ' with-name';
+			}	
+
+			if(!empty($atts['show_email'])){
+				$userEmail = get_the_author_meta('user_email', $id);
+				$email = "<div class='email'><a href='mailto:".$userEmail."''>".$userEmail."</a></div>";
+				if (empty($email)) {
+					$extraClass .= 'email-missing';
+				}else{
+					$extraClass .= ' with-email';
+				}				
+			}
 
 			if(!empty($atts['show_postcount'])){
 				$name .= ' ('. $postcount = get_user_postcount($id).')';
@@ -145,16 +152,25 @@ class ShowAvatarShortcode {
 				if (function_exists('bbp_get_user_topic_count_raw')) {
 					$BBPRESS_postcount = bbp_get_user_topic_count_raw(  $id) + bbp_get_user_reply_count_raw( $id );
 					$name .= ' ('. $postcount = $BBPRESS_postcount.')';
-
+				}
+			}
+			
 			if(!empty($atts['show_biography'])){
 				$bio = get_the_author_meta('description', $id);
-				if(!empty($atts['show_name']))$bio = '<br />'. $bio ;
-				$extraClass .= ' with-biography';
-
+				if(!empty($atts['show_name']))$bio = '<div class="bio">'. $bio .'</div>';
+				if (empty($bio)) {
+					$extraClass .= 'biography-missing';
+				}else{
+					$extraClass .= ' with-biography';
+				}
+			}		
+		}
+			
+		}
 		$hrefend = '';
 		if (!empty($hrefStart)) $hrefend = '</a>' ;
 		if (!empty($style)) $style = ' style="'. $style .'"';
-		return '<div class="shortcode-show-avatar '.$extraClass.'"'. $style .'>'.$hrefStart. $avatar .$name.$hrefend.$bio.'</div>' . $content;
+		return '<div class="shortcode-show-avatar '.$extraClass.'"'. $style .'>'.$hrefStart. $avatar .$name.$hrefend.$bio.$email.'</div>' . $content;
 	}
 }
 
@@ -183,7 +199,7 @@ class ShowAvatarShortcode {
 				}
 				restore_current_blog();
 			}
-		}else {
+		}else{
 			if ( AA_is_version(3.0) ) {
 				$total += count_user_posts($user_id);
 			}else{
