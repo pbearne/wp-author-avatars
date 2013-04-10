@@ -111,6 +111,7 @@ class AuthorAvatarsEditorButton {
 		// BASIC TAB
 		$basic_left  = $form->renderFieldShortcodeType();
 		$basic_left .= '<div class="fields_type_show_avatar">';
+		$basic_left .= $form->renderFieldUsers();
 		$basic_left .= $form->renderFieldEmail();
 		$basic_left .= $form->renderFieldAlignment();
 		$basic_left .= $form->renderFieldDisplayOptions();

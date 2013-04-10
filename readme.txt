@@ -3,7 +3,7 @@ Contributors: pbearne, bforchhammer
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=MZTZ5S8MGF75C&lc=CA&item_name=Wordpress%20Development%20%2f%20Paul%20Bearne&item_number=AuthorAvatarsList%20Plugin&currency_code=CAD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted
 Tags: Avatar, Author, BuddyPress, Comment, Editor, Image, Multisite, Photo, Picture, Profile, Shortcode, Random, Sidebar, Thumbnail, User, Widget, Wpmu
 Requires at least: 2.8
-Tested up to: 3.4.1
+Tested up to: 3.5.1
 Stable tag: 1.7.0
 
 Display lists of user avatars using widgets or shortcodes.
@@ -58,6 +58,7 @@ You can find information for developers [on this page](http://authoravatars.word
 
 == Changelog ==
 = 1.7.0 =
+* Added Local User select to Single Avatar Shortcode creator
 * Replaced wp_specialchars() with esc_html()
 * Added BBPRESS_post_count as shortcode dispaly and sort options
 * Added show_email to shortcode display option
