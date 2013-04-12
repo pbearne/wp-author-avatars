@@ -441,7 +441,7 @@ class UserList {
 		$tpl_vars['{class}'] = implode($divcss, ' ');
 		$tpl_vars['{user}'] = $html;
 
-		return str_replace(array_keys($tpl_vars), $tpl_vars, apply_filters('aa_user_template', $this->user_template));
+		return str_replace(array_keys($tpl_vars), $tpl_vars, apply_filters('aa_user_template', $this->user_template,$user));
 	}
 	
 	/**
