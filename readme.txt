@@ -65,6 +65,8 @@ You can find information for developers [on this page](http://authoravatars.word
 * Added some translation updates
 * Fixed issue with TniyMCE breaking when using HTTPS
 * And a few other tidy ups
+* Added SQL fliter to only fetch the users for the rolls being requested rather than all users
+* Added caching to the main get_users function which will use an object cache if turned on
 
 = 1.6.3 =
 * Wraped ordering code in "remove_accents" functions to to replace Uni-code accents with non unicode versions so sort works as expected.

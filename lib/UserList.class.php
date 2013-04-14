@@ -490,8 +490,6 @@ class UserList {
 	function get_blog_users($roles) {
 		global $wpdb, $blog_id;
 
-
-
 		$cache_id = join("_",$roles)."_".$blog_id;
 		if(!empty($this->blogs))
 			$cache_id .= "_".join("_",$this->blogs);
@@ -538,7 +536,6 @@ class UserList {
 			wp_cache_set($cache_id, $users,"author-avatars-UserList");
 
 		}
-
 		return $users;
 	}
 
