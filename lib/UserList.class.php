@@ -451,7 +451,7 @@ class UserList {
 	 */
 	function get_users() {
 		// get all users
-		$users = $this->get_blog_users();
+		$users = $this->get_blog_users($this->roles);
 
 		// add commentators if requested
 		if(in_array('Commentator', $this->roles)) {
@@ -487,34 +487,58 @@ class UserList {
 	 * 
 	 * @return Array of users (WP_User objects).
 	 */
-	function get_blog_users() {
+	function get_blog_users($roles) {
 		global $wpdb, $blog_id;
-		
-		if (AA_is_wpmu() && !empty($this->blogs)) {
 
-			// make sure all values are integers
-			$this->blogs = array_map ('intval', $this->blogs);
-			
-			// if -1 is in the array display all users (no filtering)
-			if (in_array('-1', $this->blogs)) {
-				$blogs_condition = "meta_key LIKE '". $wpdb->base_prefix ."%capabilities'";
+
+
+		$cache_id = join("_",$roles)."_".$blog_id;
+		if(!empty($this->blogs))
+			$cache_id .= "_".join("_",$this->blogs);
+
+		$users = wp_cache_get( $cache_id,"author-avatars-UserList");
+
+		if ( false === $users ) {
+		
+			if (AA_is_wpmu() && !empty($this->blogs)) {
+
+				// make sure all values are integers
+				$this->blogs = array_map ('intval', $this->blogs);
+				
+				// if -1 is in the array display all users (no filtering)
+				if (in_array('-1', $this->blogs)) {
+					$blogs_condition = "meta_key LIKE '". $wpdb->base_prefix ."%capabilities'";
+				}
+				// else filter by set blog ids
+				else {
+					$blogs = array_map(create_function('$v', 'global $wpdb; return "\'" . $wpdb->get_blog_prefix($v) . "capabilities\'";'), $this->blogs);
+					$blogs_condition = 'meta_key IN ('.  implode(', ', $blogs) .')';
+				}
 			}
-			// else filter by set blog ids
 			else {
-				$blogs = array_map(create_function('$v', 'global $wpdb; return "\'" . $wpdb->get_blog_prefix($v) . "capabilities\'";'), $this->blogs);
-				$blogs_condition = 'meta_key IN ('.  implode(', ', $blogs) .')';
+				$blogs_condition = "meta_key = '". $wpdb->prefix ."capabilities'";
 			}
+
+			$roleQuery = "";
+			foreach ($roles as $role) {
+				$role = "%".$role."%";
+				$or = "";
+				if ($roleQuery)
+					$or = " or ";
+				$roleQuery .= $wpdb->prepare($or."meta_value like %s",$role);
+			}
+			if ($roleQuery)
+				$roleQuery = " AND(".$roleQuery.")";
+
+			$query = "SELECT user_id, user_login, display_name, user_email, user_url, user_registered, meta_key, meta_value FROM $wpdb->users, $wpdb->usermeta".
+				" WHERE " . $wpdb->users . ".ID = " . $wpdb->usermeta . ".user_id AND ". $blogs_condition . " AND user_status = 0".$roleQuery;
+
+			$users = $wpdb->get_results( $query);
+
+			wp_cache_set($cache_id, $users,"author-avatars-UserList");
+
 		}
-		else {
-			$blogs_condition = "meta_key = '". $wpdb->prefix ."capabilities'";
-		}
 
-		$query = "SELECT user_id, user_login, display_name, user_email, user_url, user_registered, meta_key, meta_value FROM $wpdb->users, $wpdb->usermeta".
-			" WHERE " . $wpdb->users . ".ID = " . $wpdb->usermeta . ".user_id AND ". $blogs_condition . " AND user_status = 0";
-
-		$users = $wpdb->get_results( $query);
-
-		
 		return $users;
 	}
 
