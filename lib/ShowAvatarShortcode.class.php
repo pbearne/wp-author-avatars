@@ -71,128 +71,152 @@ class ShowAvatarShortcode {
 	
 		if (!empty($atts['user_link'])||!empty($atts['show_biography'])||!empty($atts['show_postcount'])||!empty($atts['show_name'])) {
 		
-		// try to fetch user profile
-		$isUser = true;
+			// try to fetch user profile
+			$isUser = true;
 
-		if (  !is_numeric($id)){
-			 if ( email_exists($id) ){
-				$id = email_exists($id); 
-				
-			 }else{
-				$isUser = false; 
-			 }
-		}	 
-			 if ($isUser){
+			if (!is_numeric($id)) {
+				if (email_exists($id)) {
+					$id = email_exists($id); 
+					
+				}
+				else{
+					$isUser = false; 
+				}
+			}	 
+			if ($isUser){
 				$all_meta_for_user = get_user_meta( $id );	 
 				if (count ($all_meta_for_user) == 0){
 					$isUser = false; 
 				}
-			 }
-//			 print_r($all_meta_for_user);
-//			   if( $all_meta_for_user = get_user_meta( $id ) )     array_map( function( $a ){ return $a[0]; }, get_user_meta( $id ) );
+			}
+			
 
-//  print_r( $all_meta_for_user );
-		
-
-		if ($isUser)	{
-			if (!empty($atts['user_link'])){  
+			if ($isUser) {
+				if (!empty($atts['user_link'])){  
 			 		switch ($atts['user_link']) {
 						case 'authorpage':
 							$link = get_author_posts_url($id);
 							break;
 						case 'website':
 							$link =  get_the_author_meta('user_url', $id);
-						if (empty($link) || $link == 'http://') $link = false;
-						break;
+							if (empty($link) || $link == 'http://') {
+								$link = false;
+							}
+							break;
 						case 'blog':
 							if (AA_is_wpmu()) {
-							$blog = get_active_blog_for_user($id);
-							if (!empty($blog->siteurl)) $link = $blog->siteurl;
-						}
+								$blog = get_active_blog_for_user($id);
+								if (!empty($blog->siteurl)) {
+									$link = $blog->siteurl;
+								}
+							}
 							break;
 						case 'bp_memberpage':
-						if (function_exists('bp_core_get_user_domain')) {
-							$link = bp_core_get_user_domain($id);
-						}
-						elseif (function_exists('bp_core_get_userurl')) { // BP versions < 1.1
-							$link = bp_core_get_userurl($id);
-						}
-						break;
+							if (function_exists('bp_core_get_user_domain')) {
+								$link = bp_core_get_user_domain($id);
+							}
+							elseif (function_exists('bp_core_get_userurl')) { // BP versions < 1.1
+								$link = bp_core_get_userurl($id);
+							}
+							break;
 						case 'bbpress_memberpage':
 							if (function_exists('bbp_get_user_profile_url')) {
 								$link = bbp_get_user_profile_url( $id);
 							}
-								if (empty($link) || $link == 'http://') $link = false;
+							if (empty($link) || $link == 'http://') {
+								$link = false;
+							}
 							break;
 					}
-					if ($link) $hrefStart = '<a href="'. $link .'">'; 
+					if ($link) {
+						$hrefStart = '<a href="'. $link .'">'; 
+					}
+				}
+		
+				if (!empty($atts['show_biography'])) {
+					$bio = get_the_author_meta('description', $id);
+					$extraClass .= ' with-biography';
+				}
+				
+				if (!empty($atts['show_name'])) {
+					$name = '<br />'.get_the_author_meta('display_name', $id);
+					$extraClass .= ' with-name';
+				}
+
+				if (!empty($atts['show_postcount'])) {
+					$name .= ' ('. $postcount = get_user_postcount($id).')';
+				}
+
+				if (!empty($atts['show_bbpress_post_count'])) {
+					if (function_exists('bbp_get_user_topic_count_raw')) {
+						$BBPRESS_postcount = bbp_get_user_topic_count_raw(  $id) + bbp_get_user_reply_count_raw( $id );
+						$name .= ' ('. $postcount = $BBPRESS_postcount.')';
+					}
+				}
+
+				if (!empty($atts['show_biography'])) {
+					$bio = get_the_author_meta('description', $id);
+					if(!empty($atts['show_name'])) {
+						$bio = '<br />'. $bio ;
+						$extraClass .= ' with-biography';
+					}
+				}
+
+				$hrefend = '';
+				if (!empty($hrefStart)) {
+					$hrefend = '</a>' ;
+				}
+				if (!empty($style)) {
+					$style = ' style="'. $style .'"';
+				}
+
+				// return the user avatar
+				return '<div class="shortcode-show-avatar '.$extraClass.'"'. $style .'>'.$hrefStart. $avatar .$name.$hrefend.$bio.'</div>' . $content;
 			}
-	
-			if(!empty($atts['show_biography'])){
-				$bio = get_the_author_meta('description', $id);
-				$extraClass .= ' with-biography';
-			}
-			
-			if(!empty($atts['show_name'])){
-				$name = '<br />'.get_the_author_meta('display_name', $id);
-				$extraClass .= ' with-name';
 
-			if(!empty($atts['show_postcount'])){
-				$name .= ' ('. $postcount = get_user_postcount($id).')';
-			}
+		}
 
-			if(!empty($atts['show_bbpress_post_count'])){
-				if (function_exists('bbp_get_user_topic_count_raw')) {
-					$BBPRESS_postcount = bbp_get_user_topic_count_raw(  $id) + bbp_get_user_reply_count_raw( $id );
-					$name .= ' ('. $postcount = $BBPRESS_postcount.')';
-
-			if(!empty($atts['show_biography'])){
-				$bio = get_the_author_meta('description', $id);
-				if(!empty($atts['show_name']))$bio = '<br />'. $bio ;
-				$extraClass .= ' with-biography';
-
-		$hrefend = '';
-		if (!empty($hrefStart)) $hrefend = '</a>' ;
-		if (!empty($style)) $style = ' style="'. $style .'"';
-		return '<div class="shortcode-show-avatar '.$extraClass.'"'. $style .'>'.$hrefStart. $avatar .$name.$hrefend.$bio.'</div>' . $content;
+		// no user?? no avatar, don't return anything
+		return false;
 	}
 }
 
 
-	/**
-	 * Returns the postcount for a given user. 
-	 * On WPMU sites posts are counted from all blogs in field $blogs and summed up.
-	 *
-	 * @param int $user_id
-	 * @return int post count
-	 */
-	function get_user_postcount($user_id) {	
-		$total = 0;
-		if (AA_is_wpmu() && !empty($this->blogs)) {
-			$blogs = $this->blogs;
-			// all blogs -> only search the user's blogs
-			if (in_array('-1', (array)$this->blogs)) {
-				$blogs = (array) $this->get_user_blogs($user_id);
-			}
-			foreach ($blogs as $blog_id) {
-				switch_to_blog($blog_id);
-				if ( AA_is_version(3.0) ) {
-					$total += count_user_posts($user_id);
-				}else{
-					$total += get_usernumposts($user_id);
-				}
-				restore_current_blog();
-			}
-		}else {
+/**
+ * Returns the postcount for a given user. 
+ * On WPMU sites posts are counted from all blogs in field $blogs and summed up.
+ *
+ * @param int $user_id
+ * @return int post count
+ */
+function get_user_postcount($user_id) {	
+	$total = 0;
+	if (AA_is_wpmu() && !empty($this->blogs)) {
+		$blogs = $this->blogs;
+		// all blogs -> only search the user's blogs
+		if (in_array('-1', (array)$this->blogs)) {
+			$blogs = (array) $this->get_user_blogs($user_id);
+		}
+		foreach ($blogs as $blog_id) {
+			switch_to_blog($blog_id);
 			if ( AA_is_version(3.0) ) {
 				$total += count_user_posts($user_id);
-			}else{
+			}
+			else {
 				$total += get_usernumposts($user_id);
 			}
+			restore_current_blog();
 		}
-		
-		return $total;
+	}
+	else {
+		if ( AA_is_version(3.0) ) {
+			$total += count_user_posts($user_id);
+		}
+		else {
+			$total += get_usernumposts($user_id);
+		}
 	}
 	
-	
+	return $total;
+}
 ?>
