@@ -29,7 +29,9 @@ class ShowAvatarShortcode {
 		$hrefStart ="";
 		$name ="";
 		$bio ="";
-		$style = "";		
+		$style ="";
+		$email ="";
+		$link ="";		
 		$id = ''; // get id or email
 
 		if (!empty($atts['id'])) {
@@ -133,7 +135,7 @@ class ShowAvatarShortcode {
 				$name = '<br />'.get_the_author_meta('display_name', $id);
 				$extraClass .= ' with-name';
 			}	
-
+			
 			if(!empty($atts['show_email'])){
 				$userEmail = get_the_author_meta('user_email', $id);
 				$email = "<div class='email'><a href='mailto:".$userEmail."''>".$userEmail."</a></div>";
