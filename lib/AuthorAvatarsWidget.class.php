@@ -191,7 +191,11 @@ class AuthorAvatarsWidget extends MultiWidget
 		$adv_left .= $form->renderFieldMinPostCount($instance['display']['min_post_count'], 'display][min_post_count');
 		$adv_left .= $form->renderFieldHiddenUsers($instance['hiddenusers']);
 		
-		$adv_right  = $form->renderFieldBlogs($instance['blogs']);
+		$adv_right  = "";
+		if ($instance['blogs']) 
+			$adv_right  .= $form->renderFieldBlogs($instance['blogs']);
+		
+		
 		$adv_right .= $form->renderFieldGroupBy($instance['group_by']);
 		
 		$advanced  = '<h5>'. __('Advanced', 'author-avatars') .'</h5>';

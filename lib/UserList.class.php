@@ -475,7 +475,7 @@ class UserList {
 		
 		// and limit the number
 		if (intval($this->limit) > 0) {
-			$users = atrim($users, intval($this->limit));
+			$users = AA_atrim($users, intval($this->limit));
 		}
 		
 		return $users;
