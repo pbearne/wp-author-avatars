@@ -767,11 +767,7 @@ class UserList {
 	 * @return string first name of user
 	 */
 	function get_user_firstname($user_id) {
-		if ( AA_is_version(3.0) ) {
 			return get_user_meta( $user_id, 'first_name', true );
-		}else{
-			return get_usermeta( $user_id, 'first_name', true );
-		}
 	}
 
 	/**
@@ -795,11 +791,7 @@ class UserList {
 	 * @return string last name of user
 	 */
 	function get_user_lastname($user_id) {
-		if ( AA_is_version(3.0) ) {
 			return get_user_meta( $user_id, 'last_name', true );
-		}else{
-			return get_usermeta( $user_id, 'last_name', true );
-		}		
 	}
 	
 	/**
@@ -850,20 +842,13 @@ class UserList {
 			}
 			foreach ($blogs as $blog_id) {
 				switch_to_blog($blog_id);
-				if ( AA_is_version(3.0) ) {
-					$total += count_user_posts($user_id);
-				}else{
-					$total += get_usernumposts($user_id);
-				}
-				restore_current_blog();
+				$total += count_user_posts($user_id);
 			}
+			// reset to current blog done out side to save lot of switching
+			restore_current_blog();
 		}
 		else {
-			if ( AA_is_version(3.0) ) {
-				$total += count_user_posts($user_id);
-			}else{
-				$total += get_usernumposts($user_id);
-			}
+			$total += count_user_posts($user_id);
 		}
 		
 		return $total;
@@ -935,13 +920,8 @@ class UserList {
 	 */
 	function get_user_last_activity($user_id) {
 		if (AA_is_bp()) {
-			if ( AA_is_version(3.0) ) {
-				return gmdate( 'Y-m-d H:i:s', (int)get_user_meta( $user_id, 'last_activity' ) );
-			}else{
-				return gmdate( 'Y-m-d H:i:s', (int)get_usermeta( $user_id, 'last_activity' ) );
-			}
-		}
-		else {
+			return gmdate( 'Y-m-d H:i:s', (int)get_user_meta( $user_id, 'last_activity' ) );
+		}else{
 			global $wpdb;
 			$query = $wpdb->prepare(
 				"

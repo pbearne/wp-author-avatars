@@ -192,19 +192,12 @@ class ShowAvatarShortcode {
 			}
 			foreach ($blogs as $blog_id) {
 				switch_to_blog($blog_id);
-				if ( AA_is_version(3.0) ) {
-					$total += count_user_posts($user_id);
-				}else{
-					$total += get_usernumposts($user_id);
-				}
+				$total += count_user_posts($user_id);
+	
 				restore_current_blog();
 			}
 		}else{
-			if ( AA_is_version(3.0) ) {
-				$total += count_user_posts($user_id);
-			}else{
-				$total += get_usernumposts($user_id);
-			}
+			$total += count_user_posts($user_id);
 		}
 		
 		return $total;
