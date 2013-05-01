@@ -194,7 +194,7 @@ class AuthorAvatarsWidget extends MultiWidget
 		
 		$adv_right  = "";
 		// incase we don't have any blogs
-		if ($instance['blogs']) 
+		if (AA_is_wpmu() && !empty($instance['blogs'])) 
 			$adv_right  .= $form->renderFieldBlogs($instance['blogs']);
 		
 		
