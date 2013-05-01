@@ -18,6 +18,7 @@ class AuthorAvatarsWidget extends MultiWidget
 		$this->defaults = Array(
 			'title' => __('Blog Authors', 'author-avatars'),
 			'hiddenusers' => '',
+			'blogs'=>"",
 			'roles' => array('administrator', 'editor'),
 			'group_by' => '',
 			'display' => array(
@@ -192,6 +193,7 @@ class AuthorAvatarsWidget extends MultiWidget
 		$adv_left .= $form->renderFieldHiddenUsers($instance['hiddenusers']);
 		
 		$adv_right  = "";
+		// incase we don't have any blogs
 		if ($instance['blogs']) 
 			$adv_right  .= $form->renderFieldBlogs($instance['blogs']);
 		
