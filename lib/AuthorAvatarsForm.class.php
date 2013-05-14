@@ -263,6 +263,7 @@ class AuthorAvatarsForm {
 	function renderFieldDisplayOptions($values=array(), $name='display') {
 		$display_options = Array(
 			'show_name' => __('Show name', 'author-avatars'),
+			'show_email' => __('Show email', 'author-avatars'),
 			'show_biography' => __('Show biography', 'author-avatars'),
 			'show_postcount' => __('Show number of posts', 'author-avatars'),
 		);
@@ -461,12 +462,45 @@ class AuthorAvatarsForm {
 	function renderFieldEmail($value='', $name='email') {
 		$attributes = array(
 			'id' => $this->_getFieldId($name),
-			'label' => '<strong>' . __('Email address or user id', 'author-avatars') . ':</strong><br/>',
 			'style' => 'width: 95%;',
 		);
 		$name = $this->_getFieldName($name);
-		return '<p>'. FormHelper::input('text', $name, $value, $attributes) .'</p>';
+		return  FormHelper::input('text', $name, $value, $attributes) .'</p>';
 	}
+	/**
+	* Renders the User pick input field for the show_avatar wizard
+	*
+	* @param string $value the field value
+	* @param string $name the field name
+	* @return string
+	*/
+	function renderFieldUsers($values=array(), $name='user_id') {
+		$attributes = array(
+			'id' => $this->_getFieldId($name),
+			'label' => '<strong>' . __('Email address or user id', 'author-avatars')  . ':</strong><br/>',
+			'style' => 'width: 95%;',
+		);
+
+		$users = $this->_get_all_users(array(-1 => __('Custom value', 'author-avatars')));
+		return '<p>'. FormHelper::choice($name, $users, $values, $attributes) ;
+	}
+	/**
+	* Retrieves all roles, and returns them as an associative array (key -> role name) 
+	*
+	* @access private
+	* @return Array of role names.
+	*/
+	function _get_all_users($users = array()) {
+		global $wpdb;
+		$user_data = get_users();
+		foreach($user_data as $key => $user) {
+			$users["".$user->ID.""] = $user->user_nicename;
+		}
+	return $users;
+	}
+
+
+
 	/**
 	* Renders the alignment radio fields for the show_avatar wizard
 	*

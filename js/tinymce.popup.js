@@ -9,6 +9,17 @@ function init() {
 	// hide or show fields & bind change event handler
 	jQuery('#shortcode_type label').click(AA_updateFieldVisibility);
 
+	jQuery('select#user_id').change(function(){
+		if(jQuery(this).val()>0){
+			jQuery('input#email').hide();
+			// just in case set
+			jQuery('.fields_type_show_avatar #email').parent().removeClass('aa-form-error');
+		}else{
+			jQuery('input#email').show();
+		}
+
+	});
+
 	// initialise the resizable avatar preview
 	AA_init_avatarpreview(jQuery("div.avatar_size_preview"), jQuery('input.avatar_size_input'));
 
@@ -18,6 +29,7 @@ function init() {
 	tinyMCEPopup.resizeToInnerSize();
 }
 tinyMCEPopup.executeOnLoad('init();')
+
 
 // Checks the value of the shortcode type field and hides/shows other form fields respectively.
 function AA_updateFieldVisibility(evt) {
@@ -101,6 +113,11 @@ function insertAuthorAvatarsCode() {
 				tagtext += " show_name=true";
 			}
 
+			// show_email
+			if ('show_email' == jQuery(el).val()) {
+				tagtext += " show_email=true";
+			}
+
 			// show_postcount
 			if ('show_postcount' == jQuery(el).val()) {
 				tagtext += " show_postcount=true";
@@ -154,12 +171,18 @@ function insertAuthorAvatarsCode() {
 
 		// email or id
 		var email = jQuery('.fields_type_show_avatar #email').val() || '';
-		if (email.length > 0) {
-			jQuery('.fields_type_show_avatar #email').parent().parent().removeClass('aa-form-error');
-			tagtext += " email=" + email;
+		var user = jQuery('.fields_type_show_avatar #user_id').val()
+		if (email.length > 0 || user > 0) {
+			jQuery('.fields_type_show_avatar #email').parent().removeClass('aa-form-error');
+			if(user > 0){
+				tagtext += " email=" + user;
+			}else{
+				tagtext += " email=" + email;
+			}
+			
 		}
 		else {
-			jQuery('#email').parent().parent().addClass('aa-form-error');
+			jQuery('#email').parent().addClass('aa-form-error');
 			error = true;
 		}
 
@@ -179,6 +202,11 @@ function insertAuthorAvatarsCode() {
 			// show_name
 			if ('show_name' == jQuery(el).val()) {
 				tagtext += " show_name=true";
+			}
+
+			// show_email
+			if ('show_email' == jQuery(el).val()) {
+				tagtext += " show_email=true";
 			}
 
 			// show_postcount

@@ -18,6 +18,7 @@ class AuthorAvatarsWidget extends MultiWidget
 		$this->defaults = Array(
 			'title' => __('Blog Authors', 'author-avatars'),
 			'hiddenusers' => '',
+			'blogs'=>"",
 			'roles' => array('administrator', 'editor'),
 			'group_by' => '',
 			'display' => array(
@@ -191,7 +192,12 @@ class AuthorAvatarsWidget extends MultiWidget
 		$adv_left .= $form->renderFieldMinPostCount($instance['display']['min_post_count'], 'display][min_post_count');
 		$adv_left .= $form->renderFieldHiddenUsers($instance['hiddenusers']);
 		
-		$adv_right  = $form->renderFieldBlogs($instance['blogs']);
+		$adv_right  = "";
+		// incase we don't have any blogs
+		if (AA_is_wpmu() && !empty($instance['blogs'])) 
+			$adv_right  .= $form->renderFieldBlogs($instance['blogs']);
+		
+		
 		$adv_right .= $form->renderFieldGroupBy($instance['group_by']);
 		
 		$advanced  = '<h5>'. __('Advanced', 'author-avatars') .'</h5>';
