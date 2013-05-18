@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=MZTZ5
 Tags: Avatar, Author, BuddyPress, Comment, Editor, Image, Multisite, Photo, Picture, Profile, Shortcode, Random, Sidebar, Thumbnail, User, Widget, Wpmu
 Requires at least: 3.0
 Tested up to: 3.5.1
-Stable tag: 1.7.0
+Stable tag: 1.7.1
 
 Display lists of user avatars using widgets or shortcodes.
 
@@ -57,6 +57,9 @@ You can find information for developers [on this page](http://authoravatars.word
 5. List of users with name and biography
 
 == Changelog ==
+= 1.7.1 =
+* bubfix removed an extra ' in a SQL select in get_user_last_activity() function. Thanks to "basaja" for the bug report.
+
 = 1.7.0 =
 * Added Local User select to Single Avatar Shortcode creator
 * Replaced wp_specialchars() with esc_html()
