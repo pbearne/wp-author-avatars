@@ -5,10 +5,21 @@
  * Performs updates and initialises widgets, shortcodes, admin areas.
  */
 class AuthorAvatars {
+
 	/**
 	 * Constructor
 	 */
 	function AuthorAvatars() {
+
+		add_action( 'init', array( &$this, 'init' ), 10 );
+		
+	}
+
+
+	/**
+	 * Initializing Plugin
+	 */
+	function init() {
 		if (!$this->system_check()) {
 			echo __('Author avatars: system check failed.', 'author-avatars');
 		}
@@ -20,11 +31,14 @@ class AuthorAvatars {
 		}
 		else {
 			$this->init_settings();
-			add_action( 'init', array( $this, 'register_resources' ));
+			add_action( 'init', array( $this, 'register_resources' ), 20 );
 		//	$this->register_resources();
 			$this->init_widgets();
 			$this->init_shortcodes();
 			$this->init_controlpanels();
+
+			// add tinymce editor
+			add_action( 'init', array( &$this, 'init_tinymce_editor' ), 30 );
 		}
 	}
 
@@ -46,7 +60,7 @@ class AuthorAvatars {
 		// include settings file
 		require_once('AuthorAvatarsSettings.class.php');
 		// load translation domain on init action
-		add_action('init', array($this, 'load_translation_domain'));
+		add_action('init', array($this, 'load_translation_domain'), 20);
 	}
 
 	/**
@@ -98,11 +112,18 @@ class AuthorAvatars {
 		// include necessary file(s).
 		require_once('AuthorAvatarsShortcode.class.php');
 		require_once('ShowAvatarShortcode.class.php');
-        require_once('AuthorAvatarsEditorButton.class.php');
 		// Create objects of the shortcode classes. Registering is done in the objects' constructors
 		$this->author_avatars_shortcode = new AuthorAvatarsShortcode();
 		$this->show_avatar = new ShowAvatarShortcode();
-        $this->editor_button = new AuthorAvatarsEditorButton();
+	}
+
+	/**
+	 * Init author avatars editor button
+	 */
+	function init_tinymce_editor() {
+		// load the Editor class for TinyMCE
+		require_once('AuthorAvatarsEditorButton.class.php');
+		$this->editor_button = new AuthorAvatarsEditorButton();
 	}
 
 	/**

@@ -17,7 +17,7 @@ class AuthorAvatarsShortcode {
 	 */
 	function register() {
 		add_shortcode('authoravatars', array(&$this, 'shortcode_handler'));
-		add_action('init', array(&$this, 'enqueue_resources'));
+		add_action('init', array( &$this, 'enqueue_resources' ), 20);
 	}
 	
 	/**
