@@ -454,28 +454,54 @@ class UserList {
 		$users = $this->get_blog_users($this->roles);
 
 		// add commentators if requested
-		if(in_array('Commentator', $this->roles)) {
+		if( in_array( 'Commentator', $this->roles ) ) {
 			$commentators = $this->get_commentators();
-			if (is_array($users) && is_array($commentators)) {
-				$users = array_merge($users, $commentators);
+			if ( is_array( $users ) && is_array( $commentators ) ) {
+				$users = array_merge( $users, $commentators );
 			}
-			else if (is_array($commentators)) {
+			else if ( is_array( $commentators ) ) {
 				$users = $commentators;
 			}
 		}
+		// lets get all the co-author not maped to WP users
+
+		if( in_array( 'coauthors_plus', $this->roles ) ){
+			global $coauthors_plus;
+			$args = array( 'orderby'=>'term_order', 'order'=>'ASC' );
+			$coauthors = array();
+
+
+			$coauthor_terms = get_terms( $coauthors_plus->coauthor_taxonomy, $args );
+
+			if ( is_array( $coauthor_terms ) && !empty( $coauthor_terms ) ) {
+				foreach( $coauthor_terms as $coauthor ) {
+					$coauthor_slug = preg_replace( '#^cap\-#', '', $coauthor->slug );
+					$post_author =  $coauthors_plus->get_coauthor_by( 'user_nicename', $coauthor_slug );
+					// In case the user has been deleted while plugin was deactivated
+					if ( !empty( $post_author ) ){
+						$post_author->user_id = -1 ;// to stop the fliter from breaking
+						$post_author->user_url = $post_author->website;
+						$coauthors[] = $post_author;
+					}
+						
+				}
+			$users = array_merge($users, $coauthors);
+			}
+		}
+
 
 		// filter them
-		$this->_filter($users);
+		$this->_filter( $users );
 		
 		// sort them
-		$this->_sort($users);
+		$this->_sort( $users );
 		
 		// group them
-		$this->_group($users);
+		$this->_group( $users );
 		
 		// and limit the number
-		if (intval($this->limit) > 0) {
-			$users = AA_atrim($users, intval($this->limit));
+		if( intval( $this->limit ) > 0 ) {
+			$users = AA_atrim( $users, intval( $this->limit ) );
 		}
 		
 		return $users;
@@ -580,17 +606,26 @@ class UserList {
 			foreach($users as $id => $usr) {
 				$user = &$users[$id];
 				$add = true;
-				
+
 				// Check user role
 				// if we have set some roles to restrict by
-				if ( is_array($this->roles) && !empty($this->roles)) {
-					if (!isset($user->user_roles)) {
-						$user->user_roles = array_keys(unserialize($user->meta_value));
-					}
-					// if the current user does not have one of those roles
-					if (!AA_array_in_array($user->user_roles, $this->roles)) {
-						// do not add this user
-						$add = false;
+				$type = ( isset( $user->type ) )?$user->type:null;
+				// don't fileter gust authors
+				if("guest-author" != $type){
+					if ( is_array($this->roles) && !empty($this->roles)) {
+						if (!isset($user->user_roles)) {
+							if(isset($user->meta_value)){
+								$user->user_roles = array_keys(unserialize($user->meta_value));
+							}else{
+								$user->user_roles = $user->roles;
+							}
+
+						}
+						// if the current user does not have one of those roles
+						if (!AA_array_in_array($user->user_roles, $this->roles)) {
+							// do not add this user
+							$add = false;
+						}
 					}
 				}
 				
