@@ -323,34 +323,36 @@ class UserList {
 		$link_type = $this->user_link;
 		
 		// always use 'website' for commentators
-		if ( $user->user_id == -1) {
+		$type = ( isset( $user->type ) )?$user->type:null;
+
+		if ( $user->user_id == -1 && "guest-author" != $type ){
 			$link_type = 'website';
 		}
 
-	switch ($link_type) {
-			case 'authorpage':
-				$link = get_author_posts_url($user->user_id);
+	switch ( $link_type ) {
+		case 'authorpage':
+				$link = get_author_posts_url( $user->user_id );
 				break;
-			case 'website':
+		case 'website':
 				$link = $user->user_url;
-			if (empty($link) || $link == 'http://') $link = false;
+			if ( empty( $link ) || $link == 'http://' ) $link = false;
 			break;
-			case 'blog':
-				if (AA_is_wpmu()) {
-				$blog = get_active_blog_for_user($user->user_id);
-				if (!empty($blog->siteurl)) $link = $blog->siteurl;
+		case 'blog':
+				if ( AA_is_wpmu() ) {
+				$blog = get_active_blog_for_user( $user->user_id );
+				if (  !empty( $blog->siteurl ) ) $link = $blog->siteurl;
 			}
 				break;
-			case 'bp_memberpage':
-			if (function_exists('bp_core_get_user_domain')) {
-				$link = bp_core_get_user_domain($user->user_id);
+		case 'bp_memberpage':
+			if (function_exists( 'bp_core_get_user_domain' ) ) {
+				$link = bp_core_get_user_domain( $user->user_id );
 			}
-			elseif (function_exists('bp_core_get_userurl')) { // BP versions < 1.1
-				$link = bp_core_get_userurl($user->user_id);
+			elseif ( function_exists( 'bp_core_get_userurl' ) ) { // BP versions < 1.1
+				$link = bp_core_get_userurl( $user->user_id );
 			}
 			break;
 		case 'bbpress_memberpage':
-			if (function_exists('bbp_get_user_profile_url')) {
+			if ( function_exists( 'bbp_get_user_profile_url' ) ) {
 				$link = bbp_get_user_profile_url( $user->user_id );
 			}
 				if (empty($link) || $link == 'http://') $link = false;
@@ -359,7 +361,9 @@ class UserList {
 
 		if ($this->show_postcount) {
 			$postcount = 0;
-			if ($user->user_id == -1) {
+			$type = ( isset( $user->type ) )?$user->type:null;
+
+			if ($user->user_id == -1 && "guest-author" != $type) {
 				$postcount = $this->get_comment_count($user->user_email);
 				$title .= ' ('. sprintf(_n("%d comment", "%d comments", $postcount, 'author-avatars'), $postcount) .')';
 			}
