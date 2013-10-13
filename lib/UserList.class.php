@@ -331,11 +331,20 @@ class UserList {
 
 	switch ( $link_type ) {
 		case 'authorpage':
-				$link = get_author_posts_url( $user->user_id );
-				break;
+			if( "guest-author" == $type ){
+				$link = get_author_posts_url( $user->user_id, $user->user_nicename );
+			}else{
+				$link = get_author_posts_url( $user->user_id );	
+			}
+			break;
 		case 'website':
+			if( "guest-author" == $type ){
+				$link = get_the_author_meta('url',$user->ID);
+			}else{
 				$link = $user->user_url;
-			if ( empty( $link ) || $link == 'http://' ) $link = false;
+				if ( empty( $link ) || $link == 'http://' ) $link = false;				
+			}
+
 			break;
 		case 'blog':
 				if ( AA_is_wpmu() ) {
@@ -361,8 +370,7 @@ class UserList {
 
 		if ($this->show_postcount) {
 			$postcount = 0;
-			$type = ( isset( $user->type ) )?$user->type:null;
-
+	//var_dump($user);
 			if ($user->user_id == -1 && "guest-author" != $type) {
 				$postcount = $this->get_comment_count($user->user_email);
 				$title .= ' ('. sprintf(_n("%d comment", "%d comments", $postcount, 'author-avatars'), $postcount) .')';
@@ -384,19 +392,24 @@ class UserList {
 		}
 
 		$biography = false;
-		if ($this->show_biography && $user->user_id > 0) {
-			$biography = get_the_author_meta('description', $user->user_id);
+
+		if ( $this->show_biography ) {
+			if( "guest-author" != $type && $user->user_id > 0 ){
+				$biography = get_the_author_meta('description', $user->user_id);
+			}else{
+				$biography = ( isset( $user->description ) )?$user->description:'';
+			}
 			$divcss[] = 'with-biography';
 			$name = '<strong>'. $name .'</strong>';
-			if (empty($biography)) $divcss[] = 'biography-missing';
+			if ( empty( $biography ) ) $divcss[] = 'biography-missing';
 		}
 
 		$email = false;
-		if ($this->show_email && $user->user_id > 0) {
-			$userEmail = get_the_author_meta('user_email', $user->user_id);
+		if ($this->show_email && $user->user_email) {
+			$userEmail = $user->user_email;
 			$email = "<a href='mailto:".$userEmail."''>".$userEmail."</a>";
 			$divcss[] = 'with-email';
-			if (empty($email)) $divcss[] = 'email-missing';
+			if ( empty( $email ) ) $divcss[] = 'email-missing';
 		}
 
 		if ($user->user_id == -1) {
@@ -404,17 +417,17 @@ class UserList {
 			$avatar = get_avatar($user->user_email, $avatar_size);
 		}
 		else {
-			if (function_exists('bp_core_fetch_avatar')) {
-				$avatar = bp_core_fetch_avatar(array(
+			if ( function_exists( 'bp_core_fetch_avatar' ) ) {
+				$avatar = bp_core_fetch_avatar( array(
 					'item_id' => $user->user_id,
 					'width' => $avatar_size,
 					'height' => $avatar_size,
 					'type' => 'full',
 					'alt' => $alt,
-					'title' => $title));
+					'title' => $title ) );
 			}
 			else {
-				$avatar = get_avatar($user->user_id, $avatar_size);
+				$avatar = get_avatar( $user->user_id, $avatar_size );
 			}
 		}
 
@@ -471,9 +484,21 @@ class UserList {
 
 		if( in_array( 'coauthors_plus', $this->roles ) ){
 			global $coauthors_plus;
-			$args = array( 'orderby'=>'term_order', 'order'=>'ASC' );
+			$args = array( 'orderby'=>'term_order', 'order'=>'ASC', );
+		//	$args = array( 
+		// 		'optioncount'      => false,
+		// 		'show_fullname'    => true,
+		// 		'hide_empty'       => false,
+		// 		'feed'             => '',
+		// 		'feed_image'       => '',
+		// 		'feed_type'        => '',
+		// 		'echo'             => false,
+		// 		'html'             => false,
+		// 		'number'           => 99,  
+		// );
 			$coauthors = array();
-
+			
+		//	$coauthor_terms = coauthors_wp_list_authors( $args );
 
 			$coauthor_terms = get_terms( $coauthors_plus->coauthor_taxonomy, $args );
 
@@ -481,11 +506,13 @@ class UserList {
 				foreach( $coauthor_terms as $coauthor ) {
 					$coauthor_slug = preg_replace( '#^cap\-#', '', $coauthor->slug );
 					$post_author =  $coauthors_plus->get_coauthor_by( 'user_nicename', $coauthor_slug );
+
 					// In case the user has been deleted while plugin was deactivated
 					if ( !empty( $post_author ) ){
 						$post_author->user_id = -1 ;// to stop the fliter from breaking
 						$post_author->user_url = $post_author->website;
 						$coauthors[] = $post_author;
+						var_dump($post_author);
 					}
 						
 				}

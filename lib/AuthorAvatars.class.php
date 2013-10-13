@@ -26,7 +26,7 @@ class AuthorAvatars {
 	function AuthorAvatars() {
 
 		add_action( 'init', array( &$this, 'init' ), 10 );
-		
+
 	}
 
 
@@ -34,6 +34,7 @@ class AuthorAvatars {
 	 * Initializing Plugin
 	 */
 	function init() {
+
 		if (!$this->system_check()) {
 			_e('Author avatars: system check failed.', 'author-avatars');
 		}
@@ -100,7 +101,7 @@ class AuthorAvatars {
 	function register_resources() {
 		$aa_ver = AUTHOR_AVATARS_VERSION;
 		// make sure styles are written on wp_head action
-		add_action( 'wp_head', 'wp_print_styles' );
+//		add_action( 'wp_head', 'wp_print_styles' );
 		// styles 
 		wp_register_style( 'MCE_BoxStyles', get_stylesheet_directory_uri().'/editorstyle.css' );
 		wp_register_style( 'author-avatars-widget', WP_PLUGIN_URL . '/author-avatars/css/widget.css', array(), $aa_ver );
@@ -120,14 +121,10 @@ class AuthorAvatars {
 	//  */
 	function init_widgets() {
 		// include necessary file(s).
-
-	// 	// Create an object for the widget. Registering is done in the object's constructor
-	// 	$this->author_avatars_multiwidget = new AuthorAvatarsWidget();
 		add_action( 'widgets_init', array( $this, 'author_avatars_widget_init' ) );
-
 		
-	    add_action('wp_enqueue_scripts', array(&$this, 'enqueue_resources'));
-		add_action('admin_enqueue_scripts', array(&$this, 'enqueue_resources'));
+	    add_action('wp_enqueue_scripts', array(&$this, 'wp_enqueue_resources'));
+		add_action('admin_enqueue_scripts', array(&$this, 'admin_enqueue_resources'));
 
 	}
 
@@ -137,13 +134,21 @@ class AuthorAvatars {
 	 * @return void
 	 */
 
-	function enqueue_resources() {	
-		wp_enqueue_style('author-avatars-widget');
-
+	function admin_enqueue_resources() {	
 		if (is_admin() && basename($_SERVER['PHP_SELF']) == 'widgets.php') { 
 			wp_enqueue_script('author-avatars-widget-admin');
 			wp_enqueue_style('admin-form');
 		}
+	}
+		/**
+	 * Enqueues scripts and stylesheets
+	 *
+	 * @return void
+	 */
+
+	function wp_enqueue_resources() {
+		if (!is_admin())	
+			wp_enqueue_style('author-avatars-widget');
 	}
 
 	public function author_avatars_widget_init()

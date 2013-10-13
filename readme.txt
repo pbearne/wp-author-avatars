@@ -50,6 +50,12 @@ Please report bugs and provide feedback in the [wordpress support forum](http://
 
 You can find information for developers [on this page](http://authoravatars.wordpress.com/documentation/developers-guide/).
 
+== Upgrade Notice ==
+
+= 1.8.0 =
+Breaking change in CSS .multiwidget_author_avatars is now .widget_author_avatars. This is caused by a library change  inorder to support the jetpack visibility option.
+If you have added CSS to your theme you may have to update it for this upgrade (do a find and replace).
+
 == Screenshots ==
 
 1. Very simple set up of the widget on an empty blog.
@@ -61,6 +67,7 @@ You can find information for developers [on this page](http://authoravatars.word
 == Changelog ==
 = 1.8.0 =
 * Replaced the pre 2.6 wordpres widget code with the current widget API calls to enable visablity setting
+* CSS changed .multiwidget_author_avatars changed to .widget_author_avatars. This was caused by the widget API update
 * Added expemently support for Co-Author Pluss Plugin
 * Moved the display option to the right column to make more room for roles
 
@@ -259,6 +266,6 @@ The styling of the widget is controlled by the styles defined in [css/widgets.cs
 
 You can override the styles in that file by copying a style block to your theme's `style.css` and adjusting respectively. For example add the following to remove the padding from avatars displayed in a widget:
 
-`html .multiwidget_author_avatars .author-list .user {
+`html .widget_author_avatars .author-list .user {
   padding: 0;
 }`

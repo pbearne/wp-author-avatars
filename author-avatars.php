@@ -29,7 +29,8 @@ $aa = new AuthorAvatars();
         die ( 'Busted!');
 		// need to create class in the function scope
 		$aaa = new AuthorAvatars();
-		echo substr(str_replace('<div class="shortcode-author-avatars">','',$aaa->author_avatars_shortcode-> shortcode_handler($_POST)),0,-6);
+		$aaa->init_shortcodes(); 
+		echo substr(str_replace('<div class="shortcode-author-avatars">','',$aaa->author_avatars_shortcode->shortcode_handler($_POST)),0,-6);
 	// echo	$aaa->author_avatars_shortcode->userlist->ajax_output();//. $aa->userlist->content .$aa->userlist->pagingHTML ;
 	die(); 	
 	}
