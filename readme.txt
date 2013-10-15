@@ -1,10 +1,12 @@
 ﻿=== Author Avatars List ===
 Contributors: pbearne, bforchhammer
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=MZTZ5S8MGF75C&lc=CA&item_name=Wordpress%20Development%20%2f%20Paul%20Bearne&item_number=AuthorAvatarsList%20Plugin&currency_code=CAD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted
-Tags: Avatar, Author, BuddyPress, Comment, Editor, Image, Multisite, Photo, Picture, Profile, Shortcode, Random, Sidebar, Thumbnail, User, Widget, Wpmu
+Tags: Avatar, Author, BuddyPress, Comment, Editor, Image, Multisite, Photo, Picture, Profile, Shortcode, Random, Sidebar, Thumbnail, User, Widget, Wpmu, BBPress, co-authors
 Requires at least: 3.0
 Tested up to: 3.6.1
 Stable tag: 1.8.0
+License: GPLv2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 Display lists of user avatars using widgets or shortcodes.
 
@@ -53,8 +55,10 @@ You can find information for developers [on this page](http://authoravatars.word
 == Upgrade Notice ==
 
 = 1.8.0 =
-Breaking change in CSS .multiwidget_author_avatars is now .widget_author_avatars. This is caused by a library change  inorder to support the jetpack visibility option.
+**Breaking change** in CSS *.multiwidget_author_avatars* is now *.widget_author_avatars*. This is caused by a library change  inorder to support the jetpack visibility option.
 If you have added CSS to your theme you may have to update it for this upgrade (do a find and replace).
+Split 'Recent Activity' and 'BudyPress last activity' (only shows buddypress running) to septerate options in the advance ordering option
+Split / removed 'Recent Activity' into sitewide (pages / custom page types / posts) and just posts (any old shortcode will call just posts)
 
 == Screenshots ==
 
@@ -68,7 +72,7 @@ If you have added CSS to your theme you may have to update it for this upgrade (
 = 1.8.0 =
 * Replaced the pre 2.6 wordpres widget code with the current widget API calls to enable visablity setting
 * CSS changed .multiwidget_author_avatars changed to .widget_author_avatars. This was caused by the widget API update
-* Added expemently support for Co-Author Pluss Plugin
+* Added expemently support for Co-Author Pluss Plugin - the post count does not work for linked account - will take a patch that fixs it :-)
 * Moved the display option to the right column to make more room for roles
 
 = 1.7.1 =
