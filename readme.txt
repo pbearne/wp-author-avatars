@@ -54,11 +54,8 @@ You can find information for developers [on this page](http://authoravatars.word
 
 == Upgrade Notice ==
 
-= 1.8.0 =
 **Breaking change** in CSS *.multiwidget_author_avatars* is now *.widget_author_avatars*. This is caused by a library change  inorder to support the jetpack visibility option.
 If you have added CSS to your theme you may have to update it for this upgrade (do a find and replace).
-Split 'Recent Activity' and 'BudyPress last activity' (only shows buddypress running) to septerate options in the advance ordering option
-Split / removed 'Recent Activity' into sitewide (pages / custom page types / posts) and just posts (any old shortcode will call just posts)
 
 == Screenshots ==
 
@@ -74,6 +71,8 @@ Split / removed 'Recent Activity' into sitewide (pages / custom page types / pos
 * CSS changed .multiwidget_author_avatars changed to .widget_author_avatars. This was caused by the widget API update
 * Added expemently support for Co-Author Pluss Plugin - the post count does not work for linked account - will take a patch that fixs it :-)
 * Moved the display option to the right column to make more room for roles
+* Split 'Recent Activity' and 'BudyPress last activity' (only shows buddypress running) to septerate options in the advance ordering option
+* Split / removed 'Recent Activity' into sitewide (pages / custom page types / posts) and just posts (any old shortcode will call just posts)
 
 = 1.7.1 =
 * bubfix removed an extra ' in a SQL select in get_user_last_activity() function. Thanks to "basaja" for the bug report.
