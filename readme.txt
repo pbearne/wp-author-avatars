@@ -26,6 +26,7 @@ Both shortcode and widget can be configured to...
 *   Optionally show a user's name or biography
 *   Show users from the current blog, all blogs or a selection of blogs (on WPMU/Multisite)
 *   Group users by their blog (when showing from multiple blogs), and show the blog name above each grouping (experimental feature).
+*	Supports users from co-authors,BBpress and BudyPress
 
 * the shortcode can page the avatars for large sets add a page_size to the shortcode e.g. "page_size=30"
 
@@ -54,7 +55,7 @@ You can find information for developers [on this page](http://authoravatars.word
 
 == Upgrade Notice ==
 
-**Breaking change** in CSS *.multiwidget_author_avatars* is now *.widget_author_avatars*. This is caused by a library change  inorder to support the jetpack visibility option.
+<strong>Breaking change</strong> in CSS *.multiwidget_author_avatars* is now *.widget_author_avatars*. This is caused by a library change  inorder to support the jetpack visibility option.<br />
 If you have added CSS to your theme you may have to update it for this upgrade (do a find and replace).
 
 == Screenshots ==
