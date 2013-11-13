@@ -452,11 +452,14 @@ class UserList {
 			$avatar = preg_replace('@alt=["\'][\w]*["\'] ?@', '', $avatar);
 			$avatar = preg_replace('@title=["\'][\w]*["\'] ?@', '', $avatar);
 			/* insert alt and title parameters */
-			$avatar = preg_replace('@ ?\/>@', ' alt="'.$alt.'" title="'.$title.'" />', $avatar);
+			if(!stripos($avatar, 'title='))
+				$avatar = preg_replace('@ ?\/>@', ' title="'.$title.'" />', $avatar);
+			if(!stripos($avatar, 'alt='))
+				$avatar = preg_replace('@ ?\/>@', ' alt="'.$alt.'"  />', $avatar);
 		}
 
 		$html = '';
-		if ($link) $html .= '<a href="'. $link .'" alt="'. $title .'">';
+		if ($link) $html .= '<a href="'. $link .'" title="'. $title .'">';
 		$html .= '<span class="avatar">'. $avatar .'</span>';
 		if ($this->show_name || $this->show_bbpress_post_count || $this->show_postcount)
 			$html .= '<span class="name">'. $name . '</span>';
