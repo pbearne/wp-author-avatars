@@ -266,8 +266,7 @@ class UserList {
 	
 	// create axjax calls
 	wp_register_script('author-avatars-shortcode-paging', WP_PLUGIN_URL . '/author-avatars/js/AuthorAvatarsShortcode.paging.ajax.js', array('jquery-ui-core'), '', true);
-	wp_localize_script( 'author-avatars-shortcode-paging', 'author-avatars',
-            array( 'ajax_url' => admin_url( 'admin-ajax.php' )) );
+
 	// pass values to JS
 	$params = array(
 	
@@ -289,7 +288,8 @@ class UserList {
 		'sort_direction' => $this->sort_direction,
 		'postCommentNonce' => wp_create_nonce( 'author-avatars-shortcode-paging-nonce') , 
 		'action' => 'AA_shortcode_paging',
-		'aa_page' => 0,   
+		'aa_page' => 0,
+		'ajax_url' => admin_url( 'admin-ajax.php' )  
 	);
 
 	wp_enqueue_script('author-avatars-shortcode-paging');
