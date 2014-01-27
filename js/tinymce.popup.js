@@ -237,17 +237,20 @@ function insertAuthorAvatarsCode() {
 
     tagtext += "]";
 
-	if (error == true) {
+	if ( error == true ) {
 		return;
 	}
+	
+	if( window.tinyMCE ){
+	    if( window.tinyMCE.majorVersion <= 3 ){
+			window.tinyMCE.execInstanceCommand( 'content', 'mceInsertContent', false, tagtext );
+			tinyMCEPopup.editor.execCommand( 'mceRepaint' );
+			tinyMCEPopup.close();
+		}else{
+			top.tinymce.activeEditor.insertContent( tagtext );
+			top.tinymce.activeEditor.windowManager.close();
+		}
 
-    if (window.tinyMCE.majorVersion <= 3) {
-		window.tinyMCE.execInstanceCommand( 'content', 'mceInsertContent', false, tagtext );
-		tinyMCEPopup.editor.execCommand( 'mceRepaint' );
-		tinyMCEPopup.close();
-	}else{
-		top.tinymce.activeEditor.insertContent( tagtext );
-		top.tinymce.activeEditor.windowManager.close();
 	}
 
 	return;
