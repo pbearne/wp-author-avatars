@@ -605,7 +605,7 @@ class UserList {
 			$users = $wpdb->get_results( $query);
 
 		//	wp_cache_set($cache_id, $users,"author-avatars-UserList");
-			set_transient( $cache_id, $users );
+			set_transient( $cache_id, $users, 1 * HOUR_IN_SECONDS );
 		}
 		return $users;
 	}
