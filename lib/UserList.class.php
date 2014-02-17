@@ -462,7 +462,7 @@ class UserList {
 
 		$html = '';
 		if ($link) $html .= '<a href="'. $link .'" title="'. $title .'">';
-		$html .= '<span class="avatar">'. $avatar .'</span>';
+		$html .= '<span class="avatar" title="'. $title .'">'. $avatar .'</span>';
 		if ($this->show_name || $this->show_bbpress_post_count || $this->show_postcount)
 			$html .= '<span class="name">'. $name . '</span>';
 		if ($link) $html .= '</a>';
