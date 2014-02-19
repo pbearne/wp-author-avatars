@@ -564,7 +564,13 @@ class UserList {
 		if( !empty( $this->blogs ) )
 			$cache_id .= "_".join( "_", $this->blogs );
 
-	//	$users = wp_cache_get( $cache_id,"author-avatars-UserList");
+		//	$users = wp_cache_get( $cache_id,"author-avatars-UserList");
+
+		// if the use is loged in wipe any cache
+		if ( is_user_logged_in() ) {
+			delete_transient( $cache_id );
+		}
+
 		$users = get_transient( $cache_id );
 
 		if ( false === $users ) {
