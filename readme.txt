@@ -280,3 +280,5 @@ You can override the styles in that file by copying a style block to your theme'
 `html .widget_author_avatars .author-list .user {
   padding: 0;
 }`
+
+demo edit
