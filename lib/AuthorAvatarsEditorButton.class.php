@@ -59,7 +59,7 @@ class AuthorAvatarsEditorButton {
       */
 
     function add_tinymce_plugin($plugin_array) {
-        $plugin_array['authoravatars'] = WP_PLUGIN_URL.'/author-avatars/tinymce/editor_plugin.js';
+        $plugin_array['authoravatars'] =  plugins_url( '../tinymce/editor_plugin.js' , __FILE__ );
         return $plugin_array;
     }
 
