@@ -490,8 +490,8 @@ class UserList {
 			$cache_id .= "_".join( "_", $this->blogs );
 
 		if( !empty( $this->order ) ){
-			$cache_id .= "_".join( "_", $this->order );
-			if( stripos( $this->order, 'random' ) ){
+			$cache_id .= "_".$this->order ;
+			if( 0 <= stripos( $this->order, 'random' ) ){
 				$random = true;
 			}
 		}
@@ -500,7 +500,7 @@ class UserList {
 			$cache_id .= "_".join( "_", $this->hiddenusers );		
 
 		if( !empty( $this->group_by ) )
-			$cache_id .= "_".join( "_", $this->group_by );
+			$cache_id .= "_". $this->group_by ;
 
 		// if the use is loged in or a random order wipe any cache
 		if ( is_user_logged_in() || $random ) {
