@@ -483,20 +483,33 @@ class UserList {
 	function get_users() {
 
 		global $blog_id;
+		$random = false;
 
 		$cache_id = join( "_", $this->roles )."_".$blog_id;
 		if( !empty( $this->blogs ) )
 			$cache_id .= "_".join( "_", $this->blogs );
 
-		// if the use is loged in wipe any cache
-		if ( is_user_logged_in() ) {
+		if( !empty( $this->order ) ){
+			$cache_id .= "_".join( "_", $this->order );
+			if( stripos( $this->order, 'random' ) ){
+				$random = true;
+			}
+		}
+
+		if( !empty( $this->hiddenusers ) )
+			$cache_id .= "_".join( "_", $this->hiddenusers );		
+
+		if( !empty( $this->group_by ) )
+			$cache_id .= "_".join( "_", $this->group_by );
+
+		// if the use is loged in or a random order wipe any cache
+		if ( is_user_logged_in() || $random ) {
 			delete_transient( $cache_id );
 		}
 
 		$users = get_transient( $cache_id );
 
 		if ( false === $users ) {
-
 			// get all users
 			$users = $this->get_blog_users($this->roles);
 
