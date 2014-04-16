@@ -497,6 +497,10 @@ class UserList {
 		// if limit set then add
 		if( !empty( $this->limit ) )
 			$cache_id .= "_".join( "_", $this->limit );
+		// if order set then add
+		if( !empty( $this->order ) )
+			$cache_id .= "_".join( "_", $this->order );
+		
 
 		// if the use is loged in wipe any cache
 		if ( is_user_logged_in() ) {
