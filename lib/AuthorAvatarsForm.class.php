@@ -201,7 +201,7 @@ class AuthorAvatarsForm {
 	function _getAllRoles() {
 		global $wpdb;
 		$roles_data = get_option($wpdb->prefix.'user_roles');
-	//	var_dump($roles_data);
+
 		$roles = array();
 		if(FALSE === $roles_data){
 			return $roles;

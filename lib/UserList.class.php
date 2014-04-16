@@ -15,7 +15,11 @@ class UserList {
 	 * Array of users that are not displayed
 	 */ 
 	var $hiddenusers = array();
-	
+
+	/**
+	 * Array of users that are to be displayed
+	 */ 
+	var $onlyusers = array();	
 	/**
 	 * Array of blog ids which to take users from. (empty = only current blog, "-1" = all blogs)
 	 */
@@ -191,17 +195,17 @@ class UserList {
 	 * @uses apply_filters() Calls 'aa_userlist_group_template' hook
 	 * @return String the html formatted list of grouped users
 	 */
-	function format_groups ($groups) {
+	function format_groups ( $groups ) {
 		$html = '';	
-		foreach ($groups as $id => $group_users) {
+		foreach ( $groups as $id => $group_users ) {
 			$tpl_vars = array(
-				'{name}' => $this->_group_name($id),
-				'{group}' => $this->format_users($group_users),
+				'{name}' => $this->_group_name( $id ),
+				'{group}' => $this->format_users( $group_users ),
 			);
 			
-			$html .= str_replace(array_keys($tpl_vars), $tpl_vars, apply_filters('aa_userlist_group_template', $this->group_template));
+			$html .= str_replace( array_keys( $tpl_vars ), $tpl_vars, apply_filters( 'aa_userlist_group_template', $this->group_template ) );
 		}
-		return str_replace('{groups}', $html, apply_filters('aa_userlist_group_wrapper_template', $this->group_wrapper_template));
+		return str_replace( '{groups}', $html, apply_filters( 'aa_userlist_group_wrapper_template', $this->group_wrapper_template ) );
 	}
 	
 	/**
@@ -211,10 +215,10 @@ class UserList {
 	 * @uses apply_filters() Calls 'aa_userlist_template' hook
 	 * @return String the html formatted list of users
 	 */
-	function format_users($users) {
+	function format_users( $users ) {
 		$html = '';
-		foreach ($users as $user) {
-			$html .= $this->format_user($user);
+		foreach ( $users as $user ) {
+			$html .= $this->format_user( $user );
 		}
 		return str_replace('{users}', $html, apply_filters('aa_userlist_template', $this->userlist_template));
 	}
@@ -265,7 +269,7 @@ class UserList {
 	function setup_page_users_ajax() {	
 	
 	// create axjax calls
-	wp_register_script('author-avatars-shortcode-paging', WP_PLUGIN_URL . '/author-avatars/js/AuthorAvatarsShortcode.paging.ajax.js', array('jquery-ui-core'), '', true);
+	wp_register_script('author-avatars-shortcode-paging', plugins_url( '../js/AuthorAvatarsShortcode.paging.ajax.js', __FILE__ ), array('jquery-ui-core'), '', true);
 
 	// pass values to JS
 	$params = array(
@@ -487,6 +491,12 @@ class UserList {
 		$cache_id = join( "_", $this->roles )."_".$blog_id;
 		if( !empty( $this->blogs ) )
 			$cache_id .= "_".join( "_", $this->blogs );
+		// if onlyusers then add
+		if( !empty( $this->onlyusers ) )
+			$cache_id .= "_".join( "_", $this->onlyusers );
+		// if limit set then add
+		if( !empty( $this->limit ) )
+			$cache_id .= "_".join( "_", $this->limit );
 
 		// if the use is loged in wipe any cache
 		if ( is_user_logged_in() ) {
@@ -497,58 +507,65 @@ class UserList {
 
 		if ( false === $users ) {
 
-			// get all users
-			$users = $this->get_blog_users($this->roles);
+			if( !empty( $this->onlyusers ) ){
+				 $args = array( 'include'      => $this->onlyusers ,
+				 				'fields'       => 'all_with_meta');
+				$users = array get_users( $args );
 
-			// add commentators if requested
-			if( in_array( 'Commentator', $this->roles ) ) {
-				$commentators = $this->get_commentators();
-				if ( is_array( $users ) && is_array( $commentators ) ) {
-					$users = array_merge( $users, $commentators );
-				}
-				else if ( is_array( $commentators ) ) {
-					$users = $commentators;
-				}
-			}
-			// lets get all the co-author not maped to WP users
+			}else{
+				// get all users
+				$users = $this->get_blog_users($this->roles);
 
-			if( in_array( 'coauthors_plus', $this->roles ) ){
-				global $coauthors_plus;
-				$args = array( 'orderby'=>'term_order', 'order'=>'ASC', );
-			//	$args = array( 
-			// 		'optioncount'      => false,
-			// 		'show_fullname'    => true,
-			// 		'hide_empty'       => false,
-			// 		'feed'             => '',
-			// 		'feed_image'       => '',
-			// 		'feed_type'        => '',
-			// 		'echo'             => false,
-			// 		'html'             => false,
-			// 		'number'           => 99,  
-			// );
-				$coauthors = array();
-				
-			//	$coauthor_terms = coauthors_wp_list_authors( $args );
-
-				$coauthor_terms = get_terms( $coauthors_plus->coauthor_taxonomy, $args );
-
-				if ( is_array( $coauthor_terms ) && !empty( $coauthor_terms ) ) {
-					foreach( $coauthor_terms as $coauthor ) {
-						$coauthor_slug = preg_replace( '#^cap\-#', '', $coauthor->slug );
-						$post_author =  $coauthors_plus->get_coauthor_by( 'user_nicename', $coauthor_slug );
-
-						// In case the user has been deleted while plugin was deactivated
-						if ( !empty( $post_author ) ){
-							$post_author->user_id = -1 ;// to stop the fliter from breaking
-							$post_author->user_url = $post_author->website;
-							$coauthors[] = $post_author;
-						}
-							
+				// add commentators if requested
+				if( in_array( 'Commentator', $this->roles ) ) {
+					$commentators = $this->get_commentators();
+					if ( is_array( $users ) && is_array( $commentators ) ) {
+						$users = array_merge( $users, $commentators );
 					}
-				$users = array_merge($users, $coauthors);
+					else if ( is_array( $commentators ) ) {
+						$users = $commentators;
+					}
 				}
-			}
+				// lets get all the co-author not maped to WP users
 
+				if( in_array( 'coauthors_plus', $this->roles ) ){
+					global $coauthors_plus;
+					$args = array( 'orderby'=>'term_order', 'order'=>'ASC', );
+				//	$args = array( 
+				// 		'optioncount'      => false,
+				// 		'show_fullname'    => true,
+				// 		'hide_empty'       => false,
+				// 		'feed'             => '',
+				// 		'feed_image'       => '',
+				// 		'feed_type'        => '',
+				// 		'echo'             => false,
+				// 		'html'             => false,
+				// 		'number'           => 99,  
+				// );
+					$coauthors = array();
+					
+				//	$coauthor_terms = coauthors_wp_list_authors( $args );
+
+					$coauthor_terms = get_terms( $coauthors_plus->coauthor_taxonomy, $args );
+
+					if ( is_array( $coauthor_terms ) && !empty( $coauthor_terms ) ) {
+						foreach( $coauthor_terms as $coauthor ) {
+							$coauthor_slug = preg_replace( '#^cap\-#', '', $coauthor->slug );
+							$post_author =  $coauthors_plus->get_coauthor_by( 'user_nicename', $coauthor_slug );
+
+							// In case the user has been deleted while plugin was deactivated
+							if ( !empty( $post_author ) ){
+								$post_author->user_id = -1 ;// to stop the fliter from breaking
+								$post_author->user_url = $post_author->website;
+								$coauthors[] = $post_author;
+							}
+								
+						}
+					$users = array_merge($users, $coauthors);
+					var_dump($users);
+					}
+				}	
+			}
 
 			// filter them
 			$this->_filter( $users );
@@ -611,7 +628,7 @@ class UserList {
 		$query = "SELECT user_id, user_login, display_name, user_email, user_url, user_registered, meta_key, meta_value FROM $wpdb->users, $wpdb->usermeta".
 			" WHERE " . $wpdb->users . ".ID = " . $wpdb->usermeta . ".user_id AND ". $blogs_condition . " AND user_status = 0".$roleQuery;
 
-		$users = $wpdb->get_results( $query);
+		$users = $wpdb->get_results( $query );
 
 		return $users;
 	}
