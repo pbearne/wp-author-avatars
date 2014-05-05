@@ -500,6 +500,9 @@ class UserList {
 		// if order set then add
 		if( !empty( $this->order ) )
 			$cache_id .= "_".join( "_", $this->order );
+		// if hidden User set then add
+		if( !empty( $this->hiddenusers ) )
+			$cache_id .= "_".join( "_", $this->hiddenusers );
 		
 
 		// if the use is loged in wipe any cache
