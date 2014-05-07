@@ -503,10 +503,6 @@ class UserList {
 		// if hidden user set then add
 		if( !empty( $this->hiddenusers ) )
 			$cache_id .= "_".join( "_", $this->hiddenusers );
-		// if only users set then add
-		if( !empty( $this->onlyusers ) )
-			$cache_id .= "_".join( "_", $this->onlyusers );
-
 		
 
 		// if the use is loged in wipe any cache
@@ -517,12 +513,14 @@ class UserList {
 		$users = get_transient( $cache_id );
 
 		if ( false === $users ) {
-
+			$users = array()
 			if( !empty( $this->onlyusers ) ){
 				 $args = array( 'include'      => $this->onlyusers ,
 				 				'fields'       => 'all_with_meta');
-				$users = array get_users( $args );
-
+				$users_objects = get_users( $args );
+				if(false != $users_objects){
+					$users = $users_objects;
+				}
 			}else{
 				// get all users
 				$users = $this->get_blog_users($this->roles);
