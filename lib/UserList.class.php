@@ -489,19 +489,19 @@ class UserList {
 		global $blog_id;
 
 		$cache_id = join( "_", $this->roles )."_".$blog_id;
-		if( !empty( $this->blogs ) )
+		if ( ! empty( $this->blogs ) )
 			$cache_id .= "_".join( "_", $this->blogs );
 		// if onlyusers then add
-		if( !empty( $this->onlyusers ) )
+		if ( ! empty( $this->onlyusers ) )
 			$cache_id .= "_".join( "_", $this->onlyusers );
 		// if limit set then add
-		if( !empty( $this->limit ) )
+		if ( ! empty( $this->limit ) )
 			$cache_id .= "_".join( "_", $this->limit );
 		// if order set then add
-		if( !empty( $this->order ) )
-			$cache_id .= "_".join( "_", $this->order );
+		if ( ! empty( $this->order ) )
+			$cache_id .= "_" . $this->order;
 		// if hidden user set then add
-		if( !empty( $this->hiddenusers ) )
+		if ( ! empty( $this->hiddenusers ) )
 			$cache_id .= "_".join( "_", $this->hiddenusers );
 		
 
@@ -513,7 +513,7 @@ class UserList {
 		$users = get_transient( $cache_id );
 
 		if ( false === $users ) {
-			$users = array()
+			$users = array();
 			if( !empty( $this->onlyusers ) ){
 				 $args = array( 'include'      => $this->onlyusers ,
 				 				'fields'       => 'all_with_meta');
@@ -571,7 +571,6 @@ class UserList {
 								
 						}
 					$users = array_merge($users, $coauthors);
-					var_dump($users);
 					}
 				}	
 			}
