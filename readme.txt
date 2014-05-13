@@ -67,6 +67,14 @@ If you have added CSS to your theme you may have to update it for this upgrade (
 5. List of users with name and biography
 
 == Changelog ==
+
+= 1.8.4 =
+* Added Ukrainian Translation (by Michael Yunat:  Get Voip - http://getvoip.com)
+* Fixes around the cache id
+* Replaced Deprecated : is_site_admin() with  is_super_admin()
+* Fixed path to tinyMCE js files reomved hardcoded path
+* fix static call when starting class
+
 = 1.8.3 =
 * added a tile to the span arond the image.
 * disabled / delete the transit cache for logged in users to help clear them.
