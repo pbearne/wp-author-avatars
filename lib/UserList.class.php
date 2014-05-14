@@ -10,36 +10,36 @@ class UserList {
 	 */
 	function UserList() {
 	}
-	
+
 	/**
 	 * Array of users that are not displayed
-	 */ 
+	 */
 	var $hiddenusers = array();
 
 	/**
 	 * Array of users that are to be displayed
-	 */ 
-	var $onlyusers = array();	
+	 */
+	var $onlyusers = array();
 	/**
 	 * Array of blog ids which to take users from. (empty = only current blog, "-1" = all blogs)
 	 */
 	var $blogs = array();
-	
+
 	/**
 	 * Array of role names. Only users belonging to one of these roles are displayed.
 	 */
 	var $roles = array('administrator', 'editor');
-	
+
 	/**
 	 * Grouping of users. For example set to "blog" to group users by blogs.
 	 */
 	var $group_by = '';
-		
+
 	/**
 	 * Link the user to either the "authorpage", "blog" (wpmu) or "website"
 	 */
 	var $user_link = 'authorpage';
-	
+
 	/**
 	 * Flag whether to show the username underneith their avatar.
 	 */
@@ -63,12 +63,12 @@ class UserList {
 	 * Flag whether to show a user's email
 	 */
 	var $show_email = false;
-	
+
 	/**
 	 * Size of avatars.
 	 */
 	var $avatar_size = 0;
-	
+
 	/**
 	 * Maximum number of users.
 	 */
@@ -82,50 +82,50 @@ class UserList {
 	/**
 	 * Minimum number of posts which a user needs to have in order to be shown in the listing
 	 */
-	var $page_size = 0;	
+	var $page_size = 0;
 	var $aa_page = 0;
 	/**
 	 * The page number hrml
 	 */
-	var $pagingHTML = '';		
-	
+	var $pagingHTML = '';
+
 	/**
 	 * The order which the users are shown in.
 	 */
 	var $order = 'display_name';
-	
+
 	/**
 	 * The direction which the users are sorted in.
 	 * Possible values: 'ascending' / 'asc' or 'descending' / 'desc'.
 	 */
 	var $sort_direction = 'asc';
-	
+
 	/**
 	 * Group wrapper template
 	 * - {groups} is replaced by the list of groups
 	 */
 	var $group_wrapper_template = '<div class="grouped-author-list">{groups}</div>';
-	
+
 	/**
 	 * Group template
 	 * - {name} is replaced by the name of the group
 	 * - {group} is replaced by the list of users
 	 */
 	var $group_template = '<div class="author-group"><strong>{name}</strong><br/>{group}</div>';
-	
+
 	/**
 	 * Wrapper template
 	 * - {users} is replaced by the list of users
 	 */
 	var $userlist_template = '<div class="author-list">{users}</div>';
-		
+
 	/**
 	 * User template
 	 * - {class} is replaced by user specific classes
 	 * - {user} is replaced by the user avatar (and possibly name)
 	 */
 	var $user_template = '<div class="{class}">{user}</div>';
-	
+
 	/**
 	 * Changes the template strings so the user is rendered in a html list.
 	 *
@@ -134,14 +134,14 @@ class UserList {
 	 */
 	function use_list_template($ordered = false) {
 		if ((bool)$ordered) {
-			$this->userlist_template = '<ol class="author-list">{users}</ol>';		
+			$this->userlist_template = '<ol class="author-list">{users}</ol>';
 		}
 		else {
 			$this->userlist_template = '<ul class="author-list">{users}</ul>';
 		}
 		$this->user_template = '<li class="{class}">{user}</li>';
 	}
-	
+
 	/**
 	 * Echos the list of users.
 	 *
@@ -160,7 +160,7 @@ class UserList {
 		// pass all the value into class
 		echo $this->get_output();
 	}
-	
+
 	/**
 	 * Returns the list of users.
 	 *
@@ -170,7 +170,7 @@ class UserList {
 	function get_output() {
 		// get users
 		$users = $this->get_users();
-	
+
 		if (empty($users)) {
 			return apply_filters('aa_userlist_empty', '<p class="no_users">'. __('No users found.', 'author-avatars'). '</p>');
 		}
@@ -178,15 +178,15 @@ class UserList {
 			return $this->format_groups($this->page_users($users));
 		}
 		else {
-			return $this->format_users($this->page_users($users));		
+			return $this->format_users($this->page_users($users));
 		}
-	
+
 
 	}
-	
-	
-	
-	
+
+
+
+
 	/**
 	 * Formats a grouped list of users
 	 *
@@ -196,18 +196,18 @@ class UserList {
 	 * @return String the html formatted list of grouped users
 	 */
 	function format_groups ( $groups ) {
-		$html = '';	
+		$html = '';
 		foreach ( $groups as $id => $group_users ) {
 			$tpl_vars = array(
 				'{name}' => $this->_group_name( $id ),
 				'{group}' => $this->format_users( $group_users ),
 			);
-			
+
 			$html .= str_replace( array_keys( $tpl_vars ), $tpl_vars, apply_filters( 'aa_userlist_group_template', $this->group_template ) );
 		}
 		return str_replace( '{groups}', $html, apply_filters( 'aa_userlist_group_wrapper_template', $this->group_wrapper_template ) );
 	}
-	
+
 	/**
 	 * Formats a list of users
 	 *
@@ -245,35 +245,35 @@ class UserList {
 		}else{
 			$offset = 0;
 		}
-		
+
 		$this->pagingHTML = '<div class="aa_pageList"><div><a href="?aa_page=0" id="0">'. __('<<', 'author-avatars').'</a>';
 		for ($i = 0; $i <= count($users)/$page_size; $i++) {
 			$this->pagingHTML .= '<a href="?aa_page='.$i.'" id="'. ($i) .'"';
 			if ($i == $this->aa_page){
-				$this->pagingHTML .= 'class="current"';	
+				$this->pagingHTML .= 'class="current"';
 			}
-			$this->pagingHTML .= '>'.$i.'</a>';	
+			$this->pagingHTML .= '>'.$i.'</a>';
 		}
 		$this->pagingHTML .= '<a href="?aa_page='. ($i - 1) .'" id="'. ($i - 1) .'">'. __('>>', 'author-avatars').'</a></div></div>';
-		
+
 
 		return array_slice($users,$offset , $page_size);
-	}	
-	
+	}
+
 	/**
 	 * Ajax to update pages the list of users
 	 *
-	 * 
+	 *
 	 * @return void
 	 */
-	function setup_page_users_ajax() {	
-	
+	function setup_page_users_ajax() {
+
 	// create axjax calls
 	wp_register_script('author-avatars-shortcode-paging', plugins_url( '../js/AuthorAvatarsShortcode.paging.ajax.js', __FILE__ ), array('jquery-ui-core'), '', true);
 
 	// pass values to JS
 	$params = array(
-	
+
 		'hiddenusers' => $this->hiddenusers,
 		'blogs' => $this->blogs,
 		'roles' => $this->roles,
@@ -290,19 +290,19 @@ class UserList {
 		'page_size' => $this->page_size,
 		'order' => $this->order,
 		'sort_direction' => $this->sort_direction,
-		'postCommentNonce' => wp_create_nonce( 'author-avatars-shortcode-paging-nonce') , 
+		'postCommentNonce' => wp_create_nonce( 'author-avatars-shortcode-paging-nonce') ,
 		'action' => 'AA_shortcode_paging',
 		'aa_page' => 0,
-		'ajax_url' => admin_url( 'admin-ajax.php' )  
+		'ajax_url' => admin_url( 'admin-ajax.php' )
 	);
 
 	wp_enqueue_script('author-avatars-shortcode-paging');
-	wp_localize_script('author-avatars-shortcode-paging', 'shortCodeValues', $params);	
+	wp_localize_script('author-avatars-shortcode-paging', 'shortCodeValues', $params);
 
 	}
 
-	
-	
+
+
 	/**
 	 * Formats the given user as html.
 	 *
@@ -312,22 +312,22 @@ class UserList {
 	 */
 	function format_user($user) {
 		$tpl_vars = array('{class}' => '', '{user}' => '');
-	
+
 		$avatar_size = intval($this->avatar_size);
 		if (!$avatar_size) $avatar_size = false;
 
 		$name = "";
 		if($this->show_name)
 			$name = $user->display_name;
-		
+
 		$alt = $title = $name;
 
 		$divcss = array('user');
 		if ($this->show_name) $divcss[] = 'with-name';
-		
+
 		$link = false;
 		$link_type = $this->user_link;
-		
+
 		// always use 'website' for commentators
 		$type = ( isset( $user->type ) )?$user->type:null;
 
@@ -340,7 +340,7 @@ class UserList {
 			if( "guest-author" == $type ){
 				$link = get_author_posts_url( $user->user_id, $user->user_nicename );
 			}else{
-				$link = get_author_posts_url( $user->user_id );	
+				$link = get_author_posts_url( $user->user_id );
 			}
 			break;
 		case 'website':
@@ -348,7 +348,7 @@ class UserList {
 				$link = get_the_author_meta('url',$user->ID);
 			}else{
 				$link = $user->user_url;
-				if ( empty( $link ) || $link == 'http://' ) $link = false;				
+				if ( empty( $link ) || $link == 'http://' ) $link = false;
 			}
 
 			break;
@@ -383,7 +383,7 @@ class UserList {
 			}
 			else {
 				// this is passing 1 for coauthors
-				
+
 				if( "guest-author" == $type && $user->linked_account ){
 					$linked_user =  get_user_by( 'login', $user->linked_account );
 					// fetch the linked account and show thats count
@@ -391,7 +391,7 @@ class UserList {
 				}else{
 					$postcount = $this->get_user_postcount( $user->user_id );
 				}
-				
+
 				$title .= ' ('. sprintf(_n("%d post", "%d posts", $postcount, 'author-avatars'), $postcount) .')';
 			}
 			$name .= sprintf(' (%d)', $postcount);
@@ -472,13 +472,13 @@ class UserList {
 		if ($link) $html .= '</a>';
 		if ($email) $html .= '<div class="email">'. $email .'</div>';
 		if ($biography) $html .= '<div class="biography">'. $biography .'</div>';
-		
+
 		$tpl_vars['{class}'] = implode($divcss, ' ');
 		$tpl_vars['{user}'] = $html;
 
 		return str_replace(array_keys($tpl_vars), $tpl_vars, apply_filters('aa_user_template', $this->user_template,$user));
 	}
-	
+
 	/**
 	 * Returns a filtered and sorted list of users
 	 *
@@ -496,14 +496,14 @@ class UserList {
 			$cache_id .= "_".join( "_", $this->onlyusers );
 		// if limit set then add
 		if ( ! empty( $this->limit ) )
-			$cache_id .= "_".join( "_", $this->limit );
+			$cache_id .= "_".$this->limit;
 		// if order set then add
 		if ( ! empty( $this->order ) )
 			$cache_id .= "_" . $this->order;
 		// if hidden user set then add
 		if ( ! empty( $this->hiddenusers ) )
 			$cache_id .= "_".join( "_", $this->hiddenusers );
-		
+
 
 		// if the use is loged in wipe any cache
 		if ( is_user_logged_in() ) {
@@ -540,7 +540,7 @@ class UserList {
 				if( in_array( 'coauthors_plus', $this->roles ) ){
 					global $coauthors_plus;
 					$args = array( 'orderby'=>'term_order', 'order'=>'ASC', );
-				//	$args = array( 
+				//	$args = array(
 				// 		'optioncount'      => false,
 				// 		'show_fullname'    => true,
 				// 		'hide_empty'       => false,
@@ -549,10 +549,10 @@ class UserList {
 				// 		'feed_type'        => '',
 				// 		'echo'             => false,
 				// 		'html'             => false,
-				// 		'number'           => 99,  
+				// 		'number'           => 99,
 				// );
 					$coauthors = array();
-					
+
 				//	$coauthor_terms = coauthors_wp_list_authors( $args );
 
 					$coauthor_terms = get_terms( $coauthors_plus->coauthor_taxonomy, $args );
@@ -568,22 +568,22 @@ class UserList {
 								$post_author->user_url = $post_author->website;
 								$coauthors[] = $post_author;
 							}
-								
+
 						}
 					$users = array_merge($users, $coauthors);
 					}
-				}	
+				}
 			}
 
 			// filter them
 			$this->_filter( $users );
-			
+
 			// sort them
 			$this->_sort( $users );
-			
+
 			// group them
 			$this->_group( $users );
-			
+
 			// and limit the number
 			if( intval( $this->limit ) > 0 ) {
 				$users = AA_atrim( $users, intval( $this->limit ) );
@@ -593,21 +593,21 @@ class UserList {
 		}
 		return $users;
 	}
-	
+
 	/**
-	 * Returns array of all users from all blogs specified in field $blogs. 
+	 * Returns array of all users from all blogs specified in field $blogs.
 	 * If $blogs is empty only users from the current blog are returned.
-	 * 
+	 *
 	 * @return Array of users (WP_User objects).
 	 */
 	function get_blog_users( $roles ) {
 		global $wpdb;
-		
+
 		if ( AA_is_wpmu() && !empty( $this->blogs ) ) {
 
 			// make sure all values are integers
 			$this->blogs = array_map ('intval', $this->blogs);
-			
+
 			// if -1 is in the array display all users (no filtering)
 			if ( in_array( '-1', $this->blogs ) ) {
 				$blogs_condition = "meta_key LIKE '". $wpdb->base_prefix ."%capabilities'";
@@ -665,7 +665,7 @@ class UserList {
 
 		return $commentators;
 	}
-	
+
 	/**
 	 * Filters the given array of users by $roles and $hiddenusers if set.
 	 *
@@ -678,7 +678,7 @@ class UserList {
 			// arrays for keeping track of all 'valid' user ids and commentator emails
 			$user_ids = array();
 			$user_emails = array();
-			
+
 			foreach($users as $id => $usr) {
 				$user = &$users[$id];
 				$add = true;
@@ -704,7 +704,7 @@ class UserList {
 						}
 					}
 				}
-				
+
 				// Hide hidden users
 				if (
 					// if we have set some users which we want to hide
@@ -761,7 +761,7 @@ class UserList {
 			}
 		}
 	}
-	
+
 	/**
 	 * Returns 1 if the sort direction is "ascending" and -1 if it is "descending"
 	 *
@@ -771,13 +771,13 @@ class UserList {
 	function _sort_direction() {
 		if ($this->sort_direction == 'desc' || $this->sort_direction == 'descending')
 			return -1;
-		else 
+		else
 			return 1;
 	}
-	
+
 	/**
 	 * Sorts the given array of users.
-	 * 
+	 *
 	 * @access private
 	 * @param Array $users Array of users (WP_User objects). (by reference)
 	 * @param String $order The key to sort by. Can be one of the following: random, user_id, user_login, display_name.
@@ -810,7 +810,7 @@ class UserList {
 				break;
 			case 'bbpress_post_count':
 				@usort($users, array($this, '_user_cmp_BBPRESS_post_count'));
-				break;				
+				break;
 			case 'date_registered':
 				@usort($users, array($this, '_user_cmp_regdate'));
 				break;
@@ -820,7 +820,7 @@ class UserList {
 			case 'recent_activity': // load posts as the default for old settings
 			case 'recent_post_activity':
 				@usort($users, array($this, '_user_cmp_post_activity'));
-				break;				
+				break;
 			case 'budy_press_recent_activity':
 				@usort($users, array($this, '_user_cmp_budypress_activity'));
 				break;
@@ -829,7 +829,7 @@ class UserList {
 
 	/**
 	 * Given two users, this function compares the user_ids.
-	 * 
+	 *
 	 * @access private
 	 * @param WP_User $a
 	 * @param WP_User $b
@@ -842,7 +842,7 @@ class UserList {
 
 	/**
 	 * Given two users, this function compares the user_logins.
-	 * 
+	 *
 	 * @access private
 	 * @param WP_User $a
 	 * @param WP_User $b
@@ -854,7 +854,7 @@ class UserList {
 
 	/**
 	 * Given two users, this function compares the user's display names.
-	 * 
+	 *
 	 * @access private
 	 * @param WP_User $a
 	 * @param WP_User $b
@@ -911,10 +911,10 @@ class UserList {
 	function get_user_lastname($user_id) {
 			return get_user_meta( $user_id, 'last_name', true );
 	}
-	
+
 	/**
 	 * Given two users, this function compares the user's post count.
-	 * 
+	 *
 	 * @access private
 	 * @param WP_User $a
 	 * @param WP_User $b
@@ -923,14 +923,14 @@ class UserList {
 	function _user_cmp_postcount($a, $b) {
 		$ac = $this->get_user_postcount($a->user_id);
 		$bc = $this->get_user_postcount($b->user_id);
-		
+
 		if ($ac == $bc) return 0;
 		return $this->_sort_direction() * ($ac < $bc ? -1 : 1);
 	}
 
 	/**
 	 * Given two users, this function compares the user's post count.
-	 * 
+	 *
 	 * @access private
 	 * @param WP_User $a
 	 * @param WP_User $b
@@ -939,18 +939,18 @@ class UserList {
 	function _user_cmp_BBPRESS_post_count($a, $b) {
 		$ac = bbp_get_user_topic_count_raw(  $a->user_id) + bbp_get_user_reply_count_raw($a->user_id );
 		$bc = bbp_get_user_topic_count_raw( $b->user_id) + bbp_get_user_reply_count_raw( $b->user_id );
-	
+
 		if ($ac == $bc) return 0;
 		return $this->_sort_direction() * ($ac < $bc ? -1 : 1);
-	}	
+	}
 	/**
-	 * Returns the postcount for a given user. 
+	 * Returns the postcount for a given user.
 	 * On WPMU sites posts are counted from all blogs in field $blogs and summed up.
 	 *
 	 * @param int $user_id
 	 * @return int post count
 	 */
-	function get_user_postcount($user_id) {	
+	function get_user_postcount($user_id) {
 		$total = 0;
 		if (AA_is_wpmu() && !empty($this->blogs)) {
 			$blogs = $this->blogs;
@@ -968,13 +968,13 @@ class UserList {
 		else {
 			$total += count_user_posts($user_id);
 		}
-		
+
 		return $total;
 	}
-	
+
 	/**
 	 * Returns the comment count for a given email address.
-	 * 
+	 *
 	 * @param string $user_email
 	 * @return int number of comments
 	 */
@@ -999,7 +999,7 @@ class UserList {
 
 	/**
 	 * Given two users, this function compares the date on which the user registered.
-	 * 
+	 *
 	 * @access private
 	 * @param WP_User $a
 	 * @param WP_User $b
@@ -1008,7 +1008,7 @@ class UserList {
 	function _user_cmp_regdate($a, $b) {
 		return $this->_sort_direction() * strcasecmp($a->user_registered, $b->user_registered);
 	}
-	
+
 	/**
 	 * Given two users, this function compares the time of last user activity sitewide.
 	 *
@@ -1020,12 +1020,12 @@ class UserList {
 	function _user_cmp_site_activity($a, $b) {
 		$a_activity = $this->get_user_last_site_activity($a->user_id);
 		$b_activity = $this->get_user_last_site_activity($b->user_id);
-		
+
 		return $this->_sort_direction() * strcasecmp($a_activity, $b_activity);
 	}
-	
+
 	/**
-	 * Returns the time of last activity for a given user all post and pages. 
+	 * Returns the time of last activity for a given user all post and pages.
 	 *
 	 * Returns the date of
 	 * the latest post or page published by the given user.
@@ -1033,7 +1033,7 @@ class UserList {
 	 * @param int $user_id
 	 * @return string last activity date
 	*
-	* look at using bbp_get_user_last_posted to get the buddypress value 
+	* look at using bbp_get_user_last_posted to get the buddypress value
 	 */
 	function get_user_last_site_activity( $user_id ) {
 
@@ -1063,12 +1063,12 @@ class UserList {
 	function _user_cmp_post_activity($a, $b) {
 		$a_activity = $this->get_user_last_post_activity($a->user_id);
 		$b_activity = $this->get_user_last_post_activity($b->user_id);
-		
+
 		return $this->_sort_direction() * strcasecmp($a_activity, $b_activity);
 	}
-	
+
 	/**
-	 * Returns the time of last activity for a given user. 
+	 * Returns the time of last activity for a given user.
 	 *
 	 * Returns the date of
 	 * the latest post published by the given user.
@@ -1076,7 +1076,7 @@ class UserList {
 	 * @param int $user_id
 	 * @return string last activity date
 	*
-	* look at using bbp_get_user_last_posted to get the buddypress value 
+	* look at using bbp_get_user_last_posted to get the buddypress value
 	 */
 	function get_user_last_post_activity( $user_id ) {
 
@@ -1108,12 +1108,12 @@ class UserList {
 	function _user_cmp_budypress_activity( $a, $b ) {
 		$a_activity = $this->get_user_last_buddypress_activity( $a->user_id );
 		$b_activity = $this->get_user_last_buddypress_activity( $b->user_id );
-		
+
 		return $this->_sort_direction() * strcasecmp( $a_activity, $b_activity );
 	}
-	
+
 	/**
-	 * Returns the time of last activity for a given user. 
+	 * Returns the time of last activity for a given user.
 	 *
 	 * For BuddyPress this function uses the `last_activity` meta
 	 * data value maintained by BuddyPress. return a very old date in none found
@@ -1121,12 +1121,12 @@ class UserList {
 	 * @param int $user_id
 	 * @return string last activity date
 	*
-	* look at using bbp_get_user_last_posted to get the buddypress value 
+	* look at using bbp_get_user_last_posted to get the buddypress value
 	 */
 	function get_user_last_buddypress_activity( $user_id ) {
 			return gmdate( 'Y-m-d H:i:s', (int)get_user_meta( $user_id, 'last_activity' ) );
 	}
-	
+
 	/**
 	 * Get blogs of user
 	 *
@@ -1135,11 +1135,11 @@ class UserList {
 	 */
 	function get_user_blogs( $user_id ) {
 		global $wpdb;
-		
+
 		$user = get_userdata( (int) $user_id );
 		if ( !$user )
 			return false;
- 
+
 		$blogs = $match = array();
 		foreach ( (array) $user as $key => $value ) {
 			if ( 	false !== strpos( $key, '_capabilities' ) &&
@@ -1147,10 +1147,10 @@ class UserList {
 					preg_match( '/' . $wpdb->base_prefix . '(\d+)_capabilities/', $key, $match )
 			) $blogs[] = $match[1];
 		}
-		
+
 		return $blogs;
 	}
-	
+
 	/**
 	 * Group the given set of users if set in field "group_by"
 	 *
@@ -1160,15 +1160,15 @@ class UserList {
 	 */
 	function _group( &$users ) {
 		if ( empty( $this->group_by ) ) return;
-		
+
 		switch( $this->group_by ) {
 			case 'blog':
 				if ( AA_is_wpmu() ) {
 					$users_new = array();
-					
+
 					global $wpdb;
 					$pattern = '/' . $wpdb->base_prefix . '([0-9]+)_capabilities/';
-										
+
 					foreach($users as $user) {
 						$key = $user->meta_key;
 						$matches = array();
@@ -1182,24 +1182,24 @@ class UserList {
 							$users_new[$matches[1]][] = $user;
 						}
 					}
-					
+
 					if ( !empty( $users_new ) ) $users = $users_new;
 				}
-				
+
 				break;
 		}
 	}
-	
+
 	/**
 	 * Retrieves the name for a group
-	 * 
+	 *
 	 * @param int Group identifier
 	 * @access private
 	 * @return string
 	 */
 	function _group_name($id) {
 		$name = 'Group #'. $id;
-		if (!empty($this->group_by)) {			
+		if (!empty($this->group_by)) {
 			switch ($this->group_by) {
 				case 'blog':
 					$name = get_blog_option( $id, 'blogname');
