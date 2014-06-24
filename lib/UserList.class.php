@@ -523,7 +523,7 @@ class UserList {
 		}
 		// if limit set then add
 		if ( ! empty( $this->limit ) ) {
-			$cache_id .= "_" . join( "_", $this->limit );
+			$cache_id .= "_".$this->limit;
 		}
 		// if order set then add
 		if ( ! empty( $this->order ) ) {
