@@ -60,7 +60,7 @@ class AuthorAvatarsSitewideAdminPanel {
 	 * Renders the sitewide configuration page
 	 */
 	function config_page() {
-		if ( $_POST['action'] == 'update' ) {
+		if ( array_key_exists( 'action', $_POST ) && $_POST['action'] == 'update' ) {
 			$updated = $this->save_settings();
 		} else {
 			$updated = false;
