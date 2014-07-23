@@ -481,7 +481,7 @@ class UserList {
 		}
 
 		$html = '';
-		$html .=  '<span class="avatar" title="' . $title . '">' . $avatar . '</span>';
+		$html .= sprintf( apply_filters( 'aa_user_avatar_template', '<span class="avatar" title="%s">%s</span>',$title, $avatar ), $title, $avatar  );
 		if ( $this->show_name || $this->show_bbpress_post_count || $this->show_postcount ) {
 			$html .=  sprintf( apply_filters( 'aa_user_name_template', '<span class="name">%s</span>', $name ), $name );		}
 
