@@ -486,7 +486,7 @@ class UserList {
 			$html .=  sprintf( apply_filters( 'aa_user_name_template', '<span class="name">%s</span>', $name ), $name );		}
 
 		if ( $link ) {
-			$html = sprintf( apply_filters( 'aa_user_name_template', '<a href="%s" title="%s">%s</a>', $link , $title ), $link , $title , $html );
+			$html = sprintf( apply_filters( 'aa_user_link_template', '<a href="%s" title="%s">%s</a>', $link , $title  , $html ), $link , $title , $html );
 		}
 
 		if ( $email ) {
