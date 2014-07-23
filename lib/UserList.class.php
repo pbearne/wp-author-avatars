@@ -481,25 +481,24 @@ class UserList {
 		}
 
 		$html = '';
-		if ( $link ) {
-			$html .= '<a href="' . $link . '" title="' . $title . '">';
-		}
-		$html .= '<span class="avatar" title="' . $title . '">' . $avatar . '</span>';
+		$html .=  '<span class="avatar" title="' . $title . '">' . $avatar . '</span>';
 		if ( $this->show_name || $this->show_bbpress_post_count || $this->show_postcount ) {
-			$html .= '<span class="name">' . $name . '</span>';
-		}
+			$html .=  sprintf( apply_filters( 'aa_user_name_template', '<span class="name">%s</span>', $name ), $name );		}
+
 		if ( $link ) {
-			$html .= '</a>';
+			$html = sprintf( apply_filters( 'aa_user_name_template', '<a href="%s" title="%s">%s</a>', $link , $title ), $link , $title , $html );
 		}
+
 		if ( $email ) {
-			$html .= '<div class="email">' . $email . '</div>';
+			$html .=  sprintf( apply_filters( 'aa_user_email_template', '<div class="email">%s</div>', $email ), $email );
 		}
+
 		if ( $biography ) {
-			$html .= '<div class="biography">' . $biography . '</div>';
+			$html .= sprintf( apply_filters( 'aa_user_biography_template', '<div class="biography">%s</div>', $biography ), $biography );
 		}
 
 		$tpl_vars['{class}'] = implode( $divcss, ' ' );
-		$tpl_vars['{user}']  = $html;
+		$tpl_vars['{user}']  =  apply_filters( 'aa_user_final_content', $html, $user );
 
 		return str_replace( array_keys( $tpl_vars ), $tpl_vars, apply_filters( 'aa_user_template', $this->user_template, $user ) );
 	}
