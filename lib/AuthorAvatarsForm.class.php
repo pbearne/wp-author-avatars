@@ -140,7 +140,26 @@ class AuthorAvatarsForm {
 	 */
 	function _getAllBlogs() {
 		global $wpdb;
-		$blogs     = $wpdb->get_results( $wpdb->prepare( "SELECT blog_id, path FROM $wpdb->blogs WHERE site_id = %d AND public = '1' AND archived = '0' AND mature = '0' AND spam = '0' AND deleted = '0'", $wpdb->siteid ), ARRAY_A );
+		$where_options = array(
+			'public' => 1,
+			'archived' => 0,
+			'mature' => 0,
+			'spam' => 0,
+			'deleted' => 0
+		);
+
+		$where_options_filtered = apply_filters( 'AA_get_all_blogs_where', $where_options );
+		$where_string = '';
+		foreach ($where_options_filtered as $key => $where){
+
+			if( ! array_key_exists( $key, $where_options )){
+				continue;
+			}
+			$bool =  ( 1 == $where ) ? 1 : 0 ;
+			$where_string .= " AND $key = '$bool'";
+		}
+		$blogs = $wpdb->get_results( $wpdb->prepare( "SELECT blog_id, path FROM $wpdb->blogs WHERE 1 = 1 AND site_id = %d  $where_string", $wpdb->siteid  ), ARRAY_A );
+
 		$blog_list = array();
 		foreach ( (array) $blogs as $details ) {
 			$blog_list[ $details['blog_id'] ] = get_blog_option( $details['blog_id'], 'blogname', $details['path'] ) . ' (' . $details['blog_id'] . ')';
