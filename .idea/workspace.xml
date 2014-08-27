@@ -4,9 +4,7 @@
     <bookmark url="file://$PROJECT_DIR$/lib/AuthorAvatarsForm.class.php" line="143" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="726ab266-325e-4d49-827a-c6673ccaf2d7" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/deployAuthor-Avatars.sh" afterPath="$PROJECT_DIR$/deployAuthor-Avatars.sh" />
-    </list>
+    <list default="true" id="726ab266-325e-4d49-827a-c6673ccaf2d7" name="Default" comment="" />
     <ignored path="wp-author-avatars.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path=".idea/dataSources.local.xml" />
@@ -60,8 +58,8 @@
       <file leaf-file-name="deployAuthor-Avatars.sh" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/deployAuthor-Avatars.sh">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.8500882" vertical-offset="963" max-vertical-offset="1581">
-              <caret line="85" column="21" selection-start-line="85" selection-start-column="21" selection-end-line="85" selection-end-column="21" />
+            <state vertical-scroll-proportion="0.77954143" vertical-offset="663" max-vertical-offset="1581">
+              <caret line="65" column="40" selection-start-line="65" selection-start-column="40" selection-end-line="65" selection-end-column="40" />
               <folding />
             </state>
           </provider>
@@ -323,8 +321,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/deployAuthor-Avatars.sh">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8500882" vertical-offset="963" max-vertical-offset="1581">
-          <caret line="85" column="21" selection-start-line="85" selection-start-column="21" selection-end-line="85" selection-end-column="21" />
+        <state vertical-scroll-proportion="0.77954143" vertical-offset="663" max-vertical-offset="1581">
+          <caret line="65" column="40" selection-start-line="65" selection-start-column="40" selection-end-line="65" selection-end-column="40" />
           <folding />
         </state>
       </provider>
