@@ -104,16 +104,16 @@ class AuthorAvatars {
 		$aa_ver = AUTHOR_AVATARS_VERSION;
 
 		// styles
-		wp_register_style( 'author-avatars-widget', plugins_url( '../css/widget.css', __FILE__ ), array(), $aa_ver );
-		wp_register_style( 'author-avatars-shortcode', plugins_url( '../css/shortcode.css', __FILE__ ), array(), $aa_ver );
-		wp_register_style( 'admin-form', plugins_url( '../css/admin-form.css', __FILE__ ), array(), $aa_ver );
+		wp_register_style( 'author-avatars-widget', plugins_url( 'css/widget.css', dirname( __FILE__ ) ), array(), $aa_ver );
+		wp_register_style( 'author-avatars-shortcode', plugins_url( 'css/shortcode.css', dirname( __FILE__ ) ), array(), $aa_ver );
+		wp_register_style( 'admin-form', plugins_url( 'css/admin-form.css', dirname( __FILE__ ) ), array(), $aa_ver );
 
 		// scripts
-		wp_register_script( 'jquery-ui-resizable', plugins_url( '../js/jquery-ui.resizable.js', __FILE__ ), array( 'jquery-ui-core' ), '1.5.3' );
-		wp_register_script( 'author-avatars-form', plugins_url( '../js/form.js', __FILE__ ), array( 'jquery-ui-resizable' ), $aa_ver );
-		wp_register_script( 'author-avatars-widget-admin', plugins_url( '../js/widget.admin.js', __FILE__ ), array( 'author-avatars-form' ), $aa_ver );
+		wp_register_script( 'jquery-ui-resizable', plugins_url( 'js/jquery-ui.resizable.js', dirname( __FILE__ ) ), array( 'jquery-ui-core' ), '1.5.3' );
+		wp_register_script( 'author-avatars-form', plugins_url( 'js/form.js', dirname( __FILE__ ) ), array( 'jquery-ui-resizable' ), $aa_ver );
+		wp_register_script( 'author-avatars-widget-admin', plugins_url( 'js/widget.admin.js',dirname( __FILE__ ) ), array( 'author-avatars-form' ), $aa_ver );
 		wp_register_script( 'tinymce-popup', '/wp-includes/js/tinymce/tiny_mce_popup.js', array(), function_exists( 'mce_version' ) ? mce_version() : false );
-		wp_register_script( 'author-avatars-tinymce-popup', plugins_url( '../js/tinymce.popup.js', __FILE__ ), array(
+		wp_register_script( 'author-avatars-tinymce-popup', plugins_url( 'js/tinymce.popup.js', dirname( __FILE__ ) ), array(
 				'author-avatars-form',
 				'jquery-ui-tabs'
 			), $aa_ver );
