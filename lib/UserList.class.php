@@ -425,6 +425,8 @@ class UserList {
 			} else {
 				$biography = ( isset( $user->description ) ) ? $user->description : '';
 			}
+			$biography = apply_filters( 'aa_user_biography_filter', $biography );
+
 			$divcss[] = 'with-biography';
 			$name     = '<strong>' . $name . '</strong>';
 			if ( empty( $biography ) ) {
