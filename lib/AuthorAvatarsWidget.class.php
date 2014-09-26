@@ -80,6 +80,7 @@ class AuthorAvatarsWidget extends WP_Widget {
 			$userlist->show_postcount          = in_array( 'show_postcount', $instance['display'] );
 			$userlist->show_bbpress_post_count = in_array( 'show_bbpress_post_count', $instance['display'] );
 			$userlist->show_biography          = in_array( 'show_biography', $instance['display'] );
+			$userlist->show_last_post          = in_array( 'show_last_post', $instance['display'] );
 			$userlist->user_link               = $instance['display']['user_link'];
 			$userlist->avatar_size             = $instance['display']['avatar_size'];
 			$userlist->limit                   = $instance['display']['limit'];

@@ -132,6 +132,11 @@ function insertAuthorAvatarsCode() {
                 tagtext += " show_biography=true";
             }
 
+            // show_last_post
+            if ('show_last_post' == jQuery(el).val()) {
+                tagtext += " show_last_post=true";
+            }
+
             // BBPRESS_post_count
             if ('show_bbpress_post_count' == jQuery(el).val()) {
                 tagtext += " show_bbpress_post_count=true";
@@ -221,6 +226,11 @@ function insertAuthorAvatarsCode() {
             // show_biography
             if ('show_biography' == jQuery(el).val()) {
                 tagtext += " show_biography=true";
+            }
+
+            // show_last_post
+            if ('show_last_post' == jQuery(el).val()) {
+                tagtext += " show_last_post=true";
             }
 
             // BBPRESS_post_count

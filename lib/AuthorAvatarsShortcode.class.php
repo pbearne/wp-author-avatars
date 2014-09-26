@@ -144,6 +144,16 @@ class AuthorAvatarsShortcode {
 			}
 		}
 
+		// show last_post?
+		if ( isset( $atts['show_last_post'] ) && ( strlen( $atts['show_last_post'] ) > 0 ) ) {
+			$set_to_false = ( $atts['show_last_post'] == 'false' );
+			if ( $set_to_false ) {
+				$this->userlist->show_last_post = false;
+			} else {
+				$this->userlist->show_last_post = true;
+			}
+		}
+
 		// show show_bbpress_post_count?
 		if ( isset( $atts['show_bbpress_post_count'] ) && ( strlen( $atts['show_bbpress_post_count'] ) > 0 ) ) {
 			$set_to_false = ( $atts['show_bbpress_post_count'] == 'false' );

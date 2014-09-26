@@ -332,6 +332,7 @@ class AuthorAvatarsForm {
 			'show_email'     => __( 'Show email', 'author-avatars' ),
 			'show_biography' => __( 'Show biography', 'author-avatars' ),
 			'show_postcount' => __( 'Show number of posts', 'author-avatars' ),
+			'show_last_post' => __( 'Show link to authors last post', 'author-avatars' ),
 		);
 		if ( AA_is_bbpress() ) {
 			$display_options['show_bbpress_post_count'] = __( 'Show BBPress Post Count', 'author-avatars' );

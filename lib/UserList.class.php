@@ -58,7 +58,10 @@ class UserList {
 	 * Flag whether to show a user's biography
 	 */
 	var $show_biography = false;
-
+	/**
+	 * Flag whether to show a user's biography
+	 */
+	var $show_last_post = false;
 	/**
 	 * Flag whether to show a user's email
 	 */
@@ -285,6 +288,7 @@ class UserList {
 			'show_postcount'          => $this->show_postcount,
 			'show_bbpress_post_count' => $this->show_bbpress_post_count,
 			'show_biography'          => $this->show_biography,
+			'show_last_post'          => $this->show_last_post,
 			'show_email'              => $this->show_email,
 			'avatar_size'             => $this->avatar_size,
 			'limit'                   => $this->limit,
@@ -434,6 +438,18 @@ class UserList {
 			}
 		}
 
+		$show_last_post = false;
+
+		if ( $this->show_last_post ) {
+			$show_last_post = $this->aa_get_last_post( $user->user_id );
+			$show_last_post = apply_filters( 'aa_user_show_last_post_filter', $show_last_post );
+			$divcss[] = 'with-last-post';
+
+			if ( empty( $show_last_post ) ) {
+				$divcss[] = 'last-post-missing';
+			}
+		}
+
 		$email = false;
 		if ( $this->show_email && $user->user_email ) {
 			$userEmail = $user->user_email;
@@ -498,6 +514,11 @@ class UserList {
 		if ( $biography ) {
 			$html .= sprintf( apply_filters( 'aa_user_biography_template', '<div class="biography">%s</div>', $biography ), $biography );
 		}
+
+		if ( $show_last_post ) {
+			$html .= sprintf( apply_filters( 'aa_user_last_post_template', '<div class="show_last_post">%s</div>', $show_last_post ), $show_last_post );
+		}
+
 
 		$tpl_vars['{class}'] = implode( $divcss, ' ' );
 		$tpl_vars['{user}']  =  apply_filters( 'aa_user_final_content', $html, $user );
@@ -625,6 +646,36 @@ class UserList {
 		}
 
 		return $users;
+	}
+
+	/**
+	 * @param $user_id
+	 *
+	 * @return null|string
+	 */
+	function aa_get_last_post( $user_id ){
+		$args=array(
+			'author' => $user_id ,
+			'post_type' => 'post',
+			'post_status' => 'publish',
+			'posts_per_page' => 1,
+			'ignore_sticky_posts'=> 1
+		);
+		$my_query = null;
+		$out = null;
+		$my_query = new WP_Query($args);
+		if( $my_query->have_posts() ) {
+			while ($my_query->have_posts()) : $my_query->the_post();
+				$id = $my_query->posts[0]->ID;
+				$out .= sprintf('<a href="%s" rel="bookmark" title="Permanent Link to %s">%s</a>',
+					get_the_permalink( $id ),
+					the_title_attribute( array( 'echo'=>false, 'post'=>$id ) ),
+					get_the_title( $id )
+				);
+			endwhile;
+		}
+		wp_reset_query();  // Restore global post data stomped by the_post().
+		return $out;
 	}
 
 	/**
