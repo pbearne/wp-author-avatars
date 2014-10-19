@@ -154,6 +154,8 @@ function insertAuthorAvatarsCode() {
         if (page_size.length > 0) {
             tagtext += " page_size=" + page_size;
         }
+
+
         // min post count
         var min_post_count = jQuery("#min_post_count").val() || "";
         if (min_post_count.length > 0) {
@@ -249,7 +251,14 @@ function insertAuthorAvatarsCode() {
         tagtext += " avatar_size=" + avatar_size;
     }
 
-    tagtext += "]";
+    // max bio length
+    var bio_length = jQuery("#max_bio_length").val() || "";
+    if (bio_length.length > 0) {
+        tagtext += " max_bio_length=" + bio_length;
+    }
+
+
+    tagtext += " ccc ]";
 
     if (error == true) {
         return;
@@ -261,7 +270,7 @@ function insertAuthorAvatarsCode() {
             tinyMCEPopup.editor.execCommand('mceRepaint');
             tinyMCEPopup.close();
         } else {
-            top.tinymce.activeEditor.insertContent(tagtext);
+            top.tinymce.activeEditor.insertContent( tagtext );
             top.tinymce.activeEditor.windowManager.close();
         }
 

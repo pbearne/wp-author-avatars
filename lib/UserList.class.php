@@ -58,6 +58,12 @@ class UserList {
 	 * Flag whether to show a user's biography
 	 */
 	var $show_biography = false;
+
+	/**
+	 * Maximum number of words in bio
+	 */
+	var $bio_length = 100;
+
 	/**
 	 * Flag whether to show a user's biography
 	 */
@@ -288,6 +294,7 @@ class UserList {
 			'show_postcount'          => $this->show_postcount,
 			'show_bbpress_post_count' => $this->show_bbpress_post_count,
 			'show_biography'          => $this->show_biography,
+			'bio_length'			  => $this->bio_length,
 			'show_last_post'          => $this->show_last_post,
 			'show_email'              => $this->show_email,
 			'avatar_size'             => $this->avatar_size,
@@ -431,7 +438,10 @@ class UserList {
 			}
 			$biography = apply_filters( 'aa_user_biography_filter', $biography );
 
-			$divcss[] = 'with-biography';
+			// trim $biography to bio_length
+			$biography = wp_trim_words( $biography , apply_filters( 'aa_user_bio_length', $this->bio_length ) );
+
+			$divcss[] = 'with-biography bio-length-'.$this->bio_length;
 			$name     = '<strong>' . $name . '</strong>';
 			if ( empty( $biography ) ) {
 				$divcss[] = 'biography-missing';

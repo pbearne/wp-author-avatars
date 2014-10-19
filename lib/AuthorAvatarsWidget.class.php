@@ -26,6 +26,7 @@ class AuthorAvatarsWidget extends WP_Widget {
 				'order'          => 'display_name',
 				'sort_direction' => 'asc',
 				'user_link'      => 'authorpage',
+				'bio_length'	 => 100,
 			),
 		);
 
@@ -87,6 +88,7 @@ class AuthorAvatarsWidget extends WP_Widget {
 			$userlist->min_post_count          = $instance['display']['min_post_count'];
 			$userlist->order                   = $instance['display']['order'];
 			$userlist->sort_direction          = $instance['display']['sort_direction'];
+			$userlist->bio_length			   = $instance['display']['bio_length'];
 		}
 
 		// extract widget arguments
@@ -171,6 +173,7 @@ class AuthorAvatarsWidget extends WP_Widget {
 		$adv_left = $form->renderFieldOrder( $instance['display']['order'], 'display][order' );
 		$adv_left .= $form->renderFieldSortDirection( $instance['display']['sort_direction'], 'display][sort_direction' );
 		$adv_left .= $form->renderFieldLimit( $instance['display']['limit'], 'display][limit' );
+		$adv_left .= $form->renderFieldMaxBioLength( $instance['display']['bio_length'], 'display][bio_length');
 		$adv_left .= $form->renderFieldMinPostCount( $instance['display']['min_post_count'], 'display][min_post_count' );
 		$adv_left .= $form->renderFieldHiddenUsers( $instance['hiddenusers'] );
 

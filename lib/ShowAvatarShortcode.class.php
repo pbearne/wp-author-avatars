@@ -25,15 +25,15 @@ class ShowAvatarShortcode {
 	 * Example: [show_avatar id=pbearne@tycoelectronics.com avatar_size=30 align=right]
 	 */
 	function shortcode_handler( $atts, $content = null ) {
-		$extraClass = '';
-		$hrefStart  = '';
-		$name       = '';
-		$bio        = '';
-		$last_post  = '';
-		$style      = '';
-		$email      = '';
-		$link       = '';
-		$id         = ''; // get id or email
+		$extraClass 	= '';
+		$hrefStart 		= '';
+		$name 			= '';
+		$bio 			= '';
+		$last_post 		= '';
+		$style 			= '';
+		$email 			= '';
+		$link 			= '';
+		$id 			= ''; // get id or email
 
 		if ( ! empty( $atts['id'] ) ) {
 			$id = preg_replace( '[^\w\.\@\-]', '', $atts['id'] );
@@ -168,8 +168,9 @@ class ShowAvatarShortcode {
 
 				if ( ! empty( $atts['show_biography'] ) ) {
 					$bio = get_the_author_meta( 'description', $id );
+					$bio = wp_trim_words( $bio, apply_filters( 'aa_user_bio_length', absint( $atts['max_bio_length'] ) ) );
 					if ( ! empty( $atts['show_name'] ) ) {
-						$bio = '<div class="bio">' . $bio . '</div>';
+						$bio = '<div class="bio bio-length-'. $atts['max_bio_length'] .'">' . $bio . '</div>';
 					}
 					if ( empty( $bio ) ) {
 						$extraClass .= ' biography-missing';

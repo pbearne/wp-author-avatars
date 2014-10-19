@@ -305,6 +305,7 @@ class AuthorAvatarsForm {
 	function renderDisplayOptions( $display_values = array(), $name_base = 'display' ) {
 		$html = '';
 		$html .= $this->renderFieldDisplayOptions( $display_values, $name_base );
+		$html .= $this->renderFieldMaxBioLength( $display_values, $name_base );
 		$html .= $this->renderFieldUserLink( $display_values, $name_base . '[user_link]' );
 		$html .= $this->renderFieldOrder( $display_values['order'], $name_base . '[order]' );
 		$html .= $this->renderFieldSortDirection( $display_values['sort_direction'], $name_base . '[sort_direction]' );
@@ -337,6 +338,8 @@ class AuthorAvatarsForm {
 		if ( AA_is_bbpress() ) {
 			$display_options['show_bbpress_post_count'] = __( 'Show BBPress Post Count', 'author-avatars' );
 		}
+
+		//TODO: add the extended fields here
 
 		$attributes = array(
 			'id'          => $this->_getFieldId( $name ),
@@ -472,6 +475,28 @@ class AuthorAvatarsForm {
 			'id'    => $this->_getFieldId( $name ),
 			'label' => __( 'Max. number of avatars per page', 'author-avatars' ) . ': ',
 			'size'  => '5'
+		);
+		$name       = $this->_getFieldName( $name );
+
+		return '<p>' . FormHelper::input( 'text', $name, $value, $attributes ) . '</p>';
+	}
+
+
+	/**
+	 * Renders the "max bio length" input field
+	 *
+	 * @param string $value the field value
+	 * @param string $name the field name
+	 *
+	 * @return string
+	 */
+	function renderFieldMaxBioLength( $value = '', $name = 'max_bio_length' ) {
+		$attributes = array(
+			'id'    => $this->_getFieldId( $name ),
+			'label' => __( 'Trim Bio Length to ', 'author-avatars' ) ,
+
+			'help'  => ' Words.',
+			'size'  => '3'
 		);
 		$name       = $this->_getFieldName( $name );
 
