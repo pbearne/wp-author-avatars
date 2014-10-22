@@ -416,7 +416,7 @@ class UserList {
 
 				$title .= ' (' . sprintf( _n( "%d post", "%d posts", $postcount, 'author-avatars' ), $postcount ) . ')';
 			}
-			$name .= sprintf( ' (%d)', $postcount );
+			$name .= sprintf( apply_filters( 'aa_post_count', ' (%d)', $postcount ), $postcount );
 		}
 
 		if ( $this->show_bbpress_post_count && AA_is_bbpress() ) {
