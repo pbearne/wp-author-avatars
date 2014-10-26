@@ -318,6 +318,8 @@ class AuthorAvatarsForm {
 		return $html;
 	}
 
+
+
 	/**
 	 * Renders the display options checkbox matrix (show name?)
 	 *
@@ -338,6 +340,8 @@ class AuthorAvatarsForm {
 			$display_options['show_bbpress_post_count'] = __( 'Show BBPress Post Count', 'author-avatars' );
 		}
 
+		$display_options = apply_filters( 'AA_render_field_display_options', $display_options );
+
 		$attributes = array(
 			'id'          => $this->_getFieldId( $name ),
 			'expanded'    => true,
@@ -349,6 +353,8 @@ class AuthorAvatarsForm {
 
 		return FormHelper::choice( $name, $display_options, $values, $attributes );
 	}
+
+
 
 	/**
 	 * Renders the "order by" dropdown

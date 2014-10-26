@@ -6,16 +6,22 @@
  */
 
 // include global helper functions file.
-require_once( 'helper.functions.php' );
+require_once( dirname( __FILE__ ) . '/helper.functions.php' );
 // include settings file
-require_once( 'AuthorAvatarsSettings.class.php' );
-require_once( 'AuthorAvatarsWidget.class.php' );
+require_once( dirname( __FILE__ ) . '/AuthorAvatarsSettings.class.php' );
+require_once( dirname( __FILE__ ) . '/AuthorAvatarsWidget.class.php' );
 
-function myplugin_register_widgets() {
+
+function aa_register_widgets() {
 	register_widget( 'AuthorAvatarsWidget' );
 }
+add_action( 'widgets_init', 'aa_register_widgets' );
 
-add_action( 'widgets_init', 'myplugin_register_widgets' );
+// only add is bb is loaded
+function buddy_press_support_init() {
+	require( dirname( __FILE__ ) . '/BuddyPressSupport.class.php' );
+}
+add_action( 'bp_include', 'buddy_press_support_init' );
 
 
 class AuthorAvatars {
@@ -77,9 +83,9 @@ class AuthorAvatars {
 	 */
 	function init_settings() {
 		// include global helper functions file.
-		require_once( 'helper.functions.php' );
+		require_once( dirname( __FILE__ ) . '/helper.functions.php' );
 		// include settings file
-		require_once( 'AuthorAvatarsSettings.class.php' );
+		require_once( dirname( __FILE__ ) . '/AuthorAvatarsSettings.class.php' );
 		// load translation domain on init action
 		add_action( 'init', array( $this, 'load_translation_domain' ), 20 );
 
@@ -166,8 +172,8 @@ class AuthorAvatars {
 	 */
 	function init_shortcodes() {
 		// include necessary file(s).
-		require_once( 'AuthorAvatarsShortcode.class.php' );
-		require_once( 'ShowAvatarShortcode.class.php' );
+		require_once( dirname( __FILE__ ) . '/AuthorAvatarsShortcode.class.php' );
+		require_once( dirname( __FILE__ ) . '/ShowAvatarShortcode.class.php' );
 		// Create objects of the shortcode classes. Registering is done in the objects' constructors
 		$this->author_avatars_shortcode = new AuthorAvatarsShortcode();
 		$this->show_avatar              = new ShowAvatarShortcode();
@@ -178,7 +184,7 @@ class AuthorAvatars {
 	 */
 	function init_tinymce_editor() {
 		// load the Editor class for TinyMCE
-		require_once( 'AuthorAvatarsEditorButton.class.php' );
+		require_once( dirname( __FILE__ ) . '/AuthorAvatarsEditorButton.class.php' );
 		$this->editor_button = new AuthorAvatarsEditorButton();
 	}
 
@@ -187,7 +193,7 @@ class AuthorAvatars {
 	 */
 	function init_controlpanels() {
 		// include necessary file(s).
-		require_once( 'AuthorAvatarsSitewideAdminPanel.class.php' );
+		require_once( dirname( __FILE__ ) . '/AuthorAvatarsSitewideAdminPanel.class.php' );
 		$this->wpmu_settings = new AuthorAvatarsSitewideAdminPanel();
 	}
 

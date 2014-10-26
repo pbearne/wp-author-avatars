@@ -70,6 +70,11 @@ class UserList {
 	/**
 	 * Size of avatars.
 	 */
+	var $display_extra = array();
+
+	/**
+	 * Size of avatars.
+	 */
 	var $avatar_size = 0;
 
 	/**
@@ -519,6 +524,9 @@ class UserList {
 			$html .= sprintf( apply_filters( 'aa_user_last_post_template', '<div class="show_last_post">%s</div>', $show_last_post ), $show_last_post );
 		}
 
+		if ( ! empty ( $this->display_extra ) ) {
+			$html .= apply_filters( 'aa_user_display_extra', $this->display_extra, $user );
+		}
 
 		$tpl_vars['{class}'] = implode( $divcss, ' ' );
 		$tpl_vars['{user}']  =  apply_filters( 'aa_user_final_content', $html, $user );
