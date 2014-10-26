@@ -77,19 +77,74 @@ class AuthorAvatarsWidget extends WP_Widget {
 
 
 		if ( is_array( $instance['display'] ) ) {
-			$userlist->show_name               = in_array( 'show_name', $instance['display'] );
-			$userlist->show_postcount          = in_array( 'show_postcount', $instance['display'] );
-			$userlist->show_bbpress_post_count = in_array( 'show_bbpress_post_count', $instance['display'] );
-			$userlist->show_biography          = in_array( 'show_biography', $instance['display'] );
-			$userlist->show_last_post          = in_array( 'show_last_post', $instance['display'] );
+
+//			$userlist->show_name               = in_array( 'show_name', $instance['display'] );
+//			$userlist->show_email              = in_array( 'show_email', $instance['display'] );
+//			$userlist->show_postcount          = in_array( 'show_postcount', $instance['display'] );
+//			$userlist->show_bbpress_post_count = in_array( 'show_bbpress_post_count', $instance['display'] );
+//			$userlist->show_biography          = in_array( 'show_biography', $instance['display'] );
+//			$userlist->show_last_post          = in_array( 'show_last_post', $instance['display'] );
 			$userlist->user_link               = $instance['display']['user_link'];
+			unset($instance['display']['user_link']);
 			$userlist->avatar_size             = $instance['display']['avatar_size'];
+			unset($instance['display']['avatar_size']);
 			$userlist->limit                   = $instance['display']['limit'];
+			unset($instance['display']['limit']);
 			$userlist->min_post_count          = $instance['display']['min_post_count'];
+			unset($instance['display']['min_post_count']);
 			$userlist->order                   = $instance['display']['order'];
+			unset($instance['display']['order']);
 			$userlist->sort_direction          = $instance['display']['sort_direction'];
+			unset($instance['display']['sort_direction']);
 			$userlist->bio_length			   = $instance['display']['bio_length'];
+			unset($instance['display']['bio_length']);
 		}
+		$display_config_values = array('user_link','avatar_size','limit','min_post_count','order','sort_direction');
+		if ( is_array( $instance['display'] ) ) {
+
+			$instance['display'] = apply_filters('AA_widget_display_list', $instance['display'] );
+
+			$display = array();
+			if ( ! empty( $instance['display'] ) ) {
+				if ( ! is_array( $instance['display'] ) ) {
+					$display = explode( ',', $instance['display'] );
+				}else{
+					$display = $instance['display'];
+				}
+			}
+
+			$default_display_options = array(
+				'show_name',
+				'show_email',
+				'show_biography',
+				'show_postcount',
+				'show_last_post',
+				'show_bbpress_post_count'
+			);
+			// loop the old name=true settings and add them to the new array format
+			foreach ( $default_display_options as $default_display_option ) {
+				if ( isset( $instance['display'][ $default_display_option ] ) && ( strlen( $instance['display'][ $default_display_option ] ) > 0 ) ) {
+					if ( true == $instance['display'][ $default_display_option ] && ! in_array( $default_display_option, $display ) ) {
+						$display[] = $default_display_option;
+					}
+				}
+
+			}
+			// the defaults array and set the globals if found
+			foreach ( $default_display_options as $default_display_option ) {
+				if ( in_array( $default_display_option, $display ) ) {
+					$userlist->$default_display_option = true;
+				} else {
+					$userlist->$default_display_option = false;
+				}
+			}
+
+			$userlist->display_extra =  array_diff( $display, $default_display_options );
+
+		}
+
+
+		//var_dump($userlist->display_extra);
 
 		// extract widget arguments
 		extract( $args, EXTR_SKIP );
