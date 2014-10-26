@@ -112,8 +112,7 @@ function insertAuthorAvatarsCode() {
 
         var display = new Array();
         jQuery('.fields_type_authoravatars #display :checked').each(function (i, el) {
-console.log(jQuery(el).val());
-            display.push(jQuery(el).val());
+            display.push( jQuery(el).val() );
 
            // tagtext += " "+jQuery(el).val()+"=true";
 
