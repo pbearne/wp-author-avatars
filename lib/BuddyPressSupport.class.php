@@ -62,7 +62,8 @@ class BuddyPressSupport {
             );
          //   $out .=   bp_get_profile_field_data( $args  );
             $profile_field_data = bp_get_profile_field_data( $args  );
-            $out .=  sprintf( apply_filters( 'aa_user_display_extra_template', '<div class="extra %s">%s</div>', $args ,$profile_field_data ),$name, $profile_field_data  );
+            $css = ( false == $profile_field_data )? $name . ' aa_missing' : $name;
+            $out .=  sprintf( apply_filters( 'aa_user_display_extra_template', '<div class="extra %s">%s</div>', $args ,$profile_field_data ), $css, $profile_field_data );
             //$out .=  '<div class="extra '. $name . '">' . $profile_field_data . '</div>';
         }
 
