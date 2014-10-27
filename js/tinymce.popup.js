@@ -112,8 +112,7 @@ function insertAuthorAvatarsCode() {
 
         var display = new Array();
         jQuery('.fields_type_authoravatars #display :checked').each(function (i, el) {
-console.log(jQuery(el).val());
-            display.push(jQuery(el).val());
+            display.push( jQuery(el).val() );
 
            // tagtext += " "+jQuery(el).val()+"=true";
 
@@ -162,8 +161,6 @@ console.log(jQuery(el).val());
         if (page_size.length > 0) {
             tagtext += " page_size=" + page_size;
         }
-
-
         // min post count
         var min_post_count = jQuery("#min_post_count").val() || "";
         if (min_post_count.length > 0) {
@@ -259,14 +256,7 @@ console.log(jQuery(el).val());
         tagtext += " avatar_size=" + avatar_size;
     }
 
-    // max bio length
-    var bio_length = jQuery("#max_bio_length").val() || "";
-    if (bio_length.length > 0) {
-        tagtext += " max_bio_length=" + bio_length;
-    }
-
-
-    tagtext += " ccc ]";
+    tagtext += "]";
 
     if (error == true) {
         return;
@@ -278,7 +268,7 @@ console.log(jQuery(el).val());
             tinyMCEPopup.editor.execCommand('mceRepaint');
             tinyMCEPopup.close();
         } else {
-            top.tinymce.activeEditor.insertContent( tagtext );
+            top.tinymce.activeEditor.insertContent(tagtext);
             top.tinymce.activeEditor.windowManager.close();
         }
 
