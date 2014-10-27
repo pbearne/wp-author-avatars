@@ -256,6 +256,11 @@ function insertAuthorAvatarsCode() {
         tagtext += " avatar_size=" + avatar_size;
     }
 
+    // max bio length
+    var bio_length = jQuery("#max_bio_length").val() || "";
+    if (bio_length.length > 0) {
+        tagtext += " max_bio_length=" + bio_length;
+    }
     tagtext += "]";
 
     if (error == true) {
