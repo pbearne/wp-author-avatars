@@ -57,9 +57,11 @@ class BuddyPressSupport {
         $out = '';
         foreach( $display_extra as $name ){
             $args = array(
-                'field'   => str_replace('bp_', '', $name ), // Field name or ID.
+                'field'   => str_replace( '_', ' ', str_replace('bp_', '', $name ) ), // Field name or ID.
                 'user_id' => $user->user_id
             );
+            var_dump($args);
+            var_dump(bp_get_profile_field_data( $args  ));
          //   $out .=   bp_get_profile_field_data( $args  );
             $profile_field_data = bp_get_profile_field_data( $args  );
             $out .=  sprintf( apply_filters( 'aa_user_display_extra_template', '<div class="extra %s">%s</div>', $args ,$profile_field_data ),$name, $profile_field_data  );
