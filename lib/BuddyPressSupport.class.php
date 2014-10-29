@@ -23,16 +23,25 @@ class BuddyPressSupport {
 
         global $wpdb;
 
-        //ttdo:  try this  https://buddypress.org/support/topic/how-to-get-list-of-xprofile-filds/#post-227700
+        //https://buddypress.org/support/topic/how-to-get-list-of-xprofile-filds/#post-227700
 
-        $bp_profile_fields = $wpdb->get_results( "SELECT name FROM `{$wpdb->prefix}bp_xprofile_fields`" );
+        $profile_groups = BP_XProfile_Group::get( array( 'fetch_fields' => true	) );
 
-        $fields = array();
-        foreach( $bp_profile_fields as $ob ){
-            $id = 'bp_' . str_replace(" ", "_", $ob->name);
-            $fields[$id] = __('BP profile: ', 'author-avatars' ). $ob->name;
+        $fields2 = array();
+        if ( !empty( $profile_groups ) ) {
+            foreach ( $profile_groups as $profile_group ) {
+                if ( !empty( $profile_group->fields ) ) {
+                    $group_name = $profile_group->name;
+                    foreach ( $profile_group->fields as $field ) {
+                      //  echo $field->id . ' - ' . $field->name . '<br/>';
+                        $id = 'bp_' . str_replace(" ", "_", $field->name);
+                        $fields2[$id] = sprintf(__('BP %s profile: %s', 'author-avatars' ),$group_name, $field->name);
+                    }
+                }
+            }
         }
-        self::$profiles_field_list = $fields;
+
+        self::$profiles_field_list = $fields2;
         return  self::$profiles_field_list;
 
     }
