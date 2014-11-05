@@ -11,7 +11,8 @@ MAINFILE="author-avatars.php" # this should be the name of your main php file in
 GITPATH="$CURRENTDIR" # this file should be in the base of your git repository
 
 # svn config
-SVNPATH="/git-to-svn/$PLUGINSLUG" # path to a temp SVN repo. No trailing slash required and don't add trunk.
+WORKIMGFOLDER="/git-to-svn"
+SVNPATH=WORKIMGFOLDER"/$PLUGINSLUG" # path to a temp SVN repo. No trailing slash required and don't add trunk.
 SVNURL="http://plugins.svn.wordpress.org/author-avatars/" # Remote SVN repo on wordpress.org, with no trailing slash
 SVNUSER="pbearne" # your svn username
 
@@ -67,7 +68,7 @@ git checkout-index --quiet --all --force --prefix=$SVNPATH/trunk/
 echo "Done."
 
 echo -n "Preparing commit message..."
-git log --pretty=oneline --abbrev-commit $PREVTAG..$NEWVERSION1 > /tmp/wppdcommitmsg.tmp
+git log --pretty=oneline --abbrev-commit $PREVTAG..$NEWVERSION1 > $WORKIMGFOLDER/wppdcommitmsg.tmp
 echo "Done."
 
 echo -n "Preparing assets-wp-repo..."
@@ -106,9 +107,9 @@ svn stat | grep "^?" | awk '{print $2}' | xargs svn add --quiet
 echo "Done."
 
 echo -n "Enter a commit message for this new SVN version..."
-$DEFAULT_EDITOR /tmp/wppdcommitmsg.tmp
-COMMITMSG=`cat /tmp/wppdcommitmsg.tmp`
-rm /tmp/wppdcommitmsg.tmp
+$DEFAULT_EDITOR $WORKIMGFOLDER/wppdcommitmsg.tmp
+COMMITMSG=`cat $WORKIMGFOLDER/wppdcommitmsg.tmp`
+rm $WORKIMGFOLDER/wppdcommitmsg.tmp
 echo "Done."
 
 echo -n "Committing new SVN version..."
