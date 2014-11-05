@@ -85,19 +85,4 @@ add_filter( 'AA_render_field_display_options', 'BuddyPressSupport::filter_profil
 add_filter( 'aa_user_display_extra', 'BuddyPressSupport::get_profile_outputs', 10 , 2 );
 
 
-/**
- * Example filter
- *
- * @param $html
- * @param $args
- * @param $value
- *
- * @return mixed
- */
-function display_extra_template( $html, $args , $value ){
-   if( 'color' == $args['field'] ){
-       $html = str_replace( 'class=', 'style="background-color:' . $value . '" class=', $html );
-   }
-   return  $html;
-}
-add_filter( 'aa_user_display_extra_template', 'display_extra_template', 10 , 3 );
+
