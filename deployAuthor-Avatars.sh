@@ -103,7 +103,8 @@ README.md
 echo "Done."
 
 echo -n "Adding new files..."
-svn stat | grep "^?" | awk '{print $2}' | xargs svn add --quiet
+svn status | grep -v "^.[ \t]*\..*" | grep "^?" | awk '{print $2}' | xargs svn add
+# svn stat | grep "^?" | awk '{print $2}' | xargs svn add --quiet
 echo "Done."
 
 echo -n "Enter a commit message for this new SVN version..."
