@@ -11,8 +11,8 @@ MAINFILE="author-avatars.php" # this should be the name of your main php file in
 GITPATH="$CURRENTDIR" # this file should be in the base of your git repository
 
 # svn config
-WORKIMGFOLDER="/git-to-svn"
-SVNPATH=WORKIMGFOLDER"/$PLUGINSLUG" # path to a temp SVN repo. No trailing slash required and don't add trunk.
+WORKIMGFOLDER="c:/git-to-svn"
+SVNPATH=$WORKIMGFOLDER"/$PLUGINSLUG" # path to a temp SVN repo. No trailing slash required and don't add trunk.
 SVNURL="http://plugins.svn.wordpress.org/author-avatars/" # Remote SVN repo on wordpress.org, with no trailing slash
 SVNUSER="pbearne" # your svn username
 
@@ -107,7 +107,8 @@ svn stat | grep "^?" | awk '{print $2}' | xargs svn add --quiet
 echo "Done."
 
 echo -n "Enter a commit message for this new SVN version..."
-$DEFAULT_EDITOR $WORKIMGFOLDER/wppdcommitmsg.tmp
+# $DEFAULT_EDITOR $WORKIMGFOLDER/wppdcommitmsg.tmp
+vim $WORKIMGFOLDER/wppdcommitmsg.tmp
 COMMITMSG=`cat $WORKIMGFOLDER/wppdcommitmsg.tmp`
 rm $WORKIMGFOLDER/wppdcommitmsg.tmp
 echo "Done."
