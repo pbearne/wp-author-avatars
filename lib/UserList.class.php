@@ -552,6 +552,7 @@ class UserList {
 	function get_users() {
 
 		global $blog_id;
+		$random_order = false;
 
 		$cache_id = join( "_", $this->roles ) . "_" . $blog_id;
 		if ( ! empty( $this->blogs ) ) {
@@ -568,6 +569,7 @@ class UserList {
 		// if order set then add
 		if ( ! empty( $this->order ) ) {
 			$cache_id .= "_" . $this->order;
+			$random_order = ('random' == $this->order)?true:false;
 		}
 		// if hidden user set then add
 		if ( ! empty( $this->hiddenusers ) ) {
@@ -663,6 +665,9 @@ class UserList {
 			set_transient( $cache_id, $users, 1 * HOUR_IN_SECONDS );
 		}
 
+		if( $random_order ){
+			$this->_sort( $users );
+		}
 		return $users;
 	}
 
