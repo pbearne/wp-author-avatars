@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=MZTZ5
 Tags: Avatar, Author, BuddyPress, xprofile, Comment, Editor, Image, Multisite, Photo, Picture, Profile, Shortcode, Random, Sidebar, Thumbnail, User, Widget, Wpmu, BBPress, co-authors
 Requires at least: 3.0
 Tested up to: 4.1
-Stable tag: 1.8.6.4
+Stable tag: 1.8.6.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -68,8 +68,6 @@ If you have added CSS to your theme you may have to update it for this upgrade (
 
 == Changelog ==
 
-= 1.8.6.4 =
-Fixed the bio trimming removing HTML from content
 
 = 1.8.6.3 =
 set the bios to maintain line breaks
