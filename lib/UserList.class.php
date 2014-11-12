@@ -1111,7 +1111,17 @@ class UserList {
 			}
 			foreach ( $blogs as $blog_id ) {
 				switch_to_blog( $blog_id );
-				$total += count_user_posts( $user_id );
+
+				/*
+				 * @since 1.8.6.5
+				 *
+				 *  The dynamic portion of the hook name, $blog_id, is the current blog
+				 *
+				 * @param int $total_post The user's post count
+				 * @param int $user_id of the user post being counted.
+				 * @param int $
+		        */
+				$total += apply_filters( "aa_get_user_postcount_{$blog_id}", count_user_posts( $user_id ), $user_id, $blog_id );
 			}
 			// reset to current blog done out side to save lot of switching
 			restore_current_blog();
@@ -1119,7 +1129,13 @@ class UserList {
 			$total += count_user_posts( $user_id );
 		}
 
-		return $total;
+		/*
+		 * @since 1.8.6.5
+		 *
+		 * @param int $total_post The user's post count
+		 * @param int  $user_id of the user post being counted.
+        */
+		return apply_filters( 'aa_get_user_postcount', $total, $user_id );
 	}
 
 	/**
