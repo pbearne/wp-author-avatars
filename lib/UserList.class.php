@@ -1133,7 +1133,7 @@ class UserList {
 		 * @since 1.8.6.5
 		 *
 		 * @param int $total_post The user's post count
-		 * @param int  $user_id of the user post being counted.
+		 * @param int $user_id of the user post being counted.
         */
 		return apply_filters( 'aa_get_user_postcount', $total, $user_id );
 	}
