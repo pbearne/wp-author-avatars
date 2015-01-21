@@ -457,7 +457,15 @@ class UserList {
 
 		if ( $this->show_last_post ) {
 			$show_last_post = $this->aa_get_last_post( $user->user_id );
-			$show_last_post = apply_filters( 'aa_user_show_last_post_filter', $show_last_post );
+			/**
+			 * Filter the users last post.
+			 *
+			 * @since 1.8.6.0
+			 *
+			 * @param string $show_last_post    The HTML link to users last post.
+			 * @param object					The Current user object.
+			 */
+			$show_last_post = apply_filters( 'aa_user_show_last_post_filter', $show_last_post, $user );
 			$divcss[] = 'with-last-post';
 
 			if ( empty( $show_last_post ) ) {
@@ -468,7 +476,16 @@ class UserList {
 		$email = false;
 		if ( $this->show_email && $user->user_email ) {
 			$userEmail = $user->user_email;
-			$email     = "<a href='mailto:" . $userEmail . "''>" . $userEmail . "</a>";
+			/**
+			 * Filter the title tag content for an admin page.
+			 *
+			 * @since 1.8.6.0
+			 *
+			 * @param string 				The mailto href for sprintf the $1$s is where the email is inserted.
+			 * @param string $userEmail     The Email to be inserted.
+			 * @param object				The Current user object.
+			 */
+			$email 	   = sprintf( apply_filters( 'aa_user_email_url_template', '<a href="mailto:%1$s">%1$s</a>', $userEmail, $user ),  $userEmail );
 			$divcss[]  = 'with-email';
 			if ( empty( $email ) ) {
 				$divcss[] = 'email-missing';
@@ -479,6 +496,7 @@ class UserList {
 			// use email for commentators
 			$avatar = get_avatar( $user->user_email, $avatar_size );
 		} else {
+			// if on buddypress install use BP function
 			if ( function_exists( 'bp_core_fetch_avatar' ) ) {
 				$avatar = bp_core_fetch_avatar( array(
 					'item_id' => $user->user_id,
@@ -489,6 +507,7 @@ class UserList {
 					'title'   => $title
 				) );
 			} else {
+				// call the standard avatar function
 				$avatar = get_avatar( $user->user_id, $avatar_size );
 			}
 		}
@@ -500,6 +519,7 @@ class UserList {
 			$avatar = preg_replace( '@<\s*\/?\s*[aA]\s*.*?>@', '', $avatar );
 		}
 
+		// the buddypress code
 		if ( ! function_exists( 'bp_core_fetch_avatar' ) ) {
 			/* strip alt and title parameter */
 			$avatar = preg_replace( '@alt=["\'][\w]*["\'] ?@', '', $avatar );
@@ -514,33 +534,98 @@ class UserList {
 		}
 
 		$html = '';
-		$html .= sprintf( apply_filters( 'aa_user_avatar_template', '<span class="avatar" title="%s">%s</span>',$title, $avatar ), $title, $avatar  );
+		/**
+		 * filter the span that holds the avatar
+		 *
+		 * @param string 			The sprintf template.
+		 * @param string @title  	The value passed to the title attr in span.
+		 * @param string @avatar	The HTML returned from get_avatar() etc.
+		 * @param object $user		The user object
+		 */
+		$html .= sprintf( apply_filters( 'aa_user_avatar_template', '<span class="avatar" title="%s">%s</span>',$title, $avatar, $user ), $title, $avatar  );
+
 		if ( $this->show_name || $this->show_bbpress_post_count || $this->show_postcount ) {
-			$html .=  sprintf( apply_filters( 'aa_user_name_template', '<span class="name">%s</span>', $name ), $name );		}
+			/**
+			 * filter the span that contains the users name
+			 *
+			 * @param string 			The sprintf template.
+			 * @param string $name		The value (users name) passed into the span
+			 * @param object $user		The user object
+			 */
+			$html .=  sprintf( apply_filters( 'aa_user_name_template', '<span class="name">%s</span>', $name, $user ), $name );
+		}
 
 		if ( $link ) {
-			$html = sprintf( apply_filters( 'aa_user_link_template', '<a href="%s" title="%s">%s</a>', $link , $title  , $html ), $link , $title , $html );
+			/**
+			 * filter the href that wrap's avatar and users name
+			 *
+			 * @param string 			The sprintf template.
+			 * @param string $link		The href value.
+			 * @param string $title		The value for the href title
+			 * @param string $html 		The HTML with avatar and name
+			 * @param object $user		The user object
+			 */
+			$html = sprintf( apply_filters( 'aa_user_link_template', '<a href="%s" title="%s">%s</a>', $link , $title  , $html, $user ), $link , $title , $html );
 		}
 
 		if ( $email ) {
-			$html .=  sprintf( apply_filters( 'aa_user_email_template', '<div class="email">%s</div>', $email ), $email );
+			/**
+			 * filter that wrap's the email link in a div
+			 *
+			 * @param string 			The sprintf template.
+			 * @param string $email		The HTML containing the mailto href and email string.
+			 * @param object $user		The user object
+			 */
+			$html .=  sprintf( apply_filters( 'aa_user_email_template', '<div class="email">%s</div>', $email, $user ), $email );
 		}
 
 		if ( $biography ) {
-			$html .= sprintf( apply_filters( 'aa_user_biography_template', '<div class="biography">%s</div>', $biography ), $biography );
+			/**
+			 * filter that wrap's the BIO text in a div
+			 *
+			 * @param string 			The sprintf template.
+			 * @param string $biography	The Bio text.
+			 * @param object $user		The user object
+			 */
+			$html .= sprintf( apply_filters( 'aa_user_biography_template', '<div class="biography">%s</div>', $biography, $user ), $biography  );
 		}
 
 		if ( $show_last_post ) {
-			$html .= sprintf( apply_filters( 'aa_user_last_post_template', '<div class="show_last_post">%s</div>', $show_last_post ), $show_last_post );
+			/**
+			 * filter that wrap's the last post link in a div
+			 *
+			 * @param string 					The sprintf template.
+			 * @param string $show_last_post	The last post link.
+			 * @param object $user		The user object
+			 */
+			$html .= sprintf( apply_filters( 'aa_user_last_post_template', '<div class="show_last_post">%s</div>', $show_last_post, $user  ), $show_last_post );
 		}
 
 		if ( ! empty ( $this->display_extra ) ) {
+			/**
+			 * filter the extra HTML block before its appended
+			 *
+			 * @param string $extra		extra HTML / string.
+			 * @param object $user		The user object
+			 */
 			$html .= apply_filters( 'aa_user_display_extra', $this->display_extra, $user );
 		}
 
 		$tpl_vars['{class}'] = implode( $divcss, ' ' );
+		/**
+		 * filter on the complete HTML for the user
+		 *
+		 * @param string $html	The generated HTML.
+		 * @param object $user	the user object
+		 */
 		$tpl_vars['{user}']  =  apply_filters( 'aa_user_final_content', $html, $user );
 
+		/**
+		 * filter the outer HTML template
+		 *
+		 * @param string $html	The outer user template.
+		 * @param object $user	the user object
+		 */
 		return str_replace( array_keys( $tpl_vars ), $tpl_vars, apply_filters( 'aa_user_template', $this->user_template, $user ) );
 	}
 
@@ -685,7 +770,26 @@ class UserList {
 		if( $my_query->have_posts() ) {
 			while ($my_query->have_posts()) : $my_query->the_post();
 				$id = $my_query->posts[0]->ID;
-				$out .= sprintf('<a href="%s" rel="bookmark" title="Permanent Link to %s">%s</a>',
+				/**
+				 * Filter the users last post link HTML.
+				 *
+				 * @since 1.8.6.0
+				 *
+				 * @param string 	$permalink  The last post permalink.
+				 * @param string 	$title_attr The last post Title attribute.
+				 * @param string 	$title    	The last post Title.
+				 * @param int 		$id			The last post ID.
+				 * @param int 		$user_id	The Current user ID.
+				 */
+				$out .= sprintf(
+						apply_filters( 'aa_user_show_last_post_html_filter',
+							'<a href="%s" rel="bookmark" title="Permanent Link to %s">%s</a>',
+							get_the_permalink( $id ),
+							the_title_attribute( array( 'echo'=>false, 'post'=>$id ) ),
+							get_the_title( $id ),
+							$id,
+							$user_id
+						),
 					get_the_permalink( $id ),
 					the_title_attribute( array( 'echo'=>false, 'post'=>$id ) ),
 					get_the_title( $id )
