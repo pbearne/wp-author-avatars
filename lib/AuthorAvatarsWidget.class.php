@@ -26,7 +26,7 @@ class AuthorAvatarsWidget extends WP_Widget {
 				'order'          => 'display_name',
 				'sort_direction' => 'asc',
 				'user_link'      => 'authorpage',
-				'bio_length'	 => 100,
+				'bio_length'	 => '',
 			),
 		);
 
@@ -84,19 +84,21 @@ class AuthorAvatarsWidget extends WP_Widget {
 //			$userlist->show_bbpress_post_count = in_array( 'show_bbpress_post_count', $instance['display'] );
 //			$userlist->show_biography          = in_array( 'show_biography', $instance['display'] );
 //			$userlist->show_last_post          = in_array( 'show_last_post', $instance['display'] );
-			$userlist->user_link               = $instance['display']['user_link'];
+			// todo: add array_kay_exsists
+
+			$userlist->user_link               = (array_key_exists( 'user_link', $instance['display'] ) ) ? $instance['display']['user_link']: false;
 			unset($instance['display']['user_link']);
-			$userlist->avatar_size             = $instance['display']['avatar_size'];
+			$userlist->avatar_size             = (array_key_exists( 'avatar_size', $instance['display'] ) ) ? $instance['display']['avatar_size']: false;
 			unset($instance['display']['avatar_size']);
-			$userlist->limit                   = $instance['display']['limit'];
+			$userlist->limit                   = (array_key_exists( 'limit', $instance['display'] ) ) ? $instance['display']['limit']: false;
 			unset($instance['display']['limit']);
-			$userlist->min_post_count          = $instance['display']['min_post_count'];
+			$userlist->min_post_count          = (array_key_exists( 'min_post_count', $instance['display'] ) ) ? $instance['display']['min_post_count']: false;
 			unset($instance['display']['min_post_count']);
-			$userlist->order                   = $instance['display']['order'];
+			$userlist->order                   = (array_key_exists( 'order', $instance['display'] ) ) ? $instance['display']['order']: false;
 			unset($instance['display']['order']);
-			$userlist->sort_direction          = $instance['display']['sort_direction'];
+			$userlist->sort_direction          = (array_key_exists( 'sort_direction', $instance['display'] ) ) ? $instance['display']['sort_direction']: false;
 			unset($instance['display']['sort_direction']);
-			$userlist->bio_length			   = $instance['display']['bio_length'];
+			$userlist->bio_length			   = (array_key_exists( 'bio_length', $instance['display'] ) ) ? $instance['display']['bio_length']: false;
 			unset($instance['display']['bio_length']);
 		}
 		$display_config_values = array('user_link','avatar_size','limit','min_post_count','order','sort_direction');
@@ -225,12 +227,25 @@ class AuthorAvatarsWidget extends WP_Widget {
 		$basic .= $form->renderColumns( $basic_left, $basic_right );
 
 		// ADVANCED TAB
-		$adv_left = $form->renderFieldOrder( $instance['display']['order'], 'display][order' );
-		$adv_left .= $form->renderFieldSortDirection( $instance['display']['sort_direction'], 'display][sort_direction' );
-		$adv_left .= $form->renderFieldLimit( $instance['display']['limit'], 'display][limit' );
-		$adv_left .= $form->renderFieldMaxBioLength( $instance['display']['bio_length'], 'display][bio_length');
-		$adv_left .= $form->renderFieldMinPostCount( $instance['display']['min_post_count'], 'display][min_post_count' );
-		$adv_left .= $form->renderFieldHiddenUsers( $instance['hiddenusers'] );
+		$adv_left = '';
+		if( array_key_exists( 'order', $instance['display'] ) ){
+			$adv_left .= $form->renderFieldOrder( $instance['display']['order'], 'display][order' );
+		}
+		if( array_key_exists( 'sort_direction', $instance['display'] ) ){
+			$adv_left .= $form->renderFieldSortDirection( $instance['display']['sort_direction'], 'display][sort_direction' );
+		}
+		if( array_key_exists( 'limit', $instance['display'] ) ) {
+			$adv_left .= $form->renderFieldLimit( $instance['display']['limit'], 'display][limit' );
+		}
+		if( array_key_exists( 'bio_length', $instance['display'] ) ){
+			$adv_left .= $form->renderFieldMaxBioLength( $instance['display']['bio_length'], 'display][bio_length');
+		}
+		if( array_key_exists( 'min_post_count', $instance['display'] ) ){
+			$adv_left .= $form->renderFieldMinPostCount( $instance['display']['min_post_count'], 'display][min_post_count' );
+		}
+		if( array_key_exists( 'hiddenusers', $instance ) ) {
+			$adv_left .= $form->renderFieldHiddenUsers( $instance['hiddenusers'] );
+		}
 
 		$adv_right = "";
 		// incase we don't have any blogs

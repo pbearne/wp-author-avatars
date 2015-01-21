@@ -499,8 +499,8 @@ class AuthorAvatarsForm {
 			'id'    => $this->_getFieldId( $name ),
 			'label' => __( 'Trim Bio Length to ', 'author-avatars' ) ,
 
-			'help'  => ' Words.',
-			'size'  => '3'
+			'help'  => ' characters.',
+			'size'  => '4'
 		);
 		$name       = $this->_getFieldName( $name );
 

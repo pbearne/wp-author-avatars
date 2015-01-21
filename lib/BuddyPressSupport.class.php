@@ -23,16 +23,25 @@ class BuddyPressSupport {
 
         global $wpdb;
 
-        //ttdo:  try this  https://buddypress.org/support/topic/how-to-get-list-of-xprofile-filds/#post-227700
+        //https://buddypress.org/support/topic/how-to-get-list-of-xprofile-filds/#post-227700
 
-        $bp_profile_fields = $wpdb->get_results( "SELECT name FROM `{$wpdb->prefix}bp_xprofile_fields`" );
+        $profile_groups = BP_XProfile_Group::get( array( 'fetch_fields' => true	) );
 
-        $fields = array();
-        foreach( $bp_profile_fields as $ob ){
-            $id = 'bp_' . str_replace(" ", "_", $ob->name);
-            $fields[$id] = __('BP profile: ', 'author-avatars' ). $ob->name;
+        $fields2 = array();
+        if ( !empty( $profile_groups ) ) {
+            foreach ( $profile_groups as $profile_group ) {
+                if ( !empty( $profile_group->fields ) ) {
+                    $group_name = $profile_group->name;
+                    foreach ( $profile_group->fields as $field ) {
+                      //  echo $field->id . ' - ' . $field->name . '<br/>';
+                        $id = 'bp_' . str_replace(" ", "_", $field->name);
+                        $fields2[$id] = sprintf(__('BP %s profile: %s', 'author-avatars' ),$group_name, $field->name);
+                    }
+                }
+            }
         }
-        self::$profiles_field_list = $fields;
+
+        self::$profiles_field_list = $fields2;
         return  self::$profiles_field_list;
 
     }
@@ -57,12 +66,13 @@ class BuddyPressSupport {
         $out = '';
         foreach( $display_extra as $name ){
             $args = array(
-                'field'   => str_replace('bp_', '', $name ), // Field name or ID.
+                'field'   => str_replace( '_', ' ', str_replace('bp_', '', $name ) ), // Field name or ID.
                 'user_id' => $user->user_id
             );
          //   $out .=   bp_get_profile_field_data( $args  );
             $profile_field_data = bp_get_profile_field_data( $args  );
-            $out .=  sprintf( apply_filters( 'aa_user_display_extra_template', '<div class="extra %s">%s</div>', $args ,$profile_field_data ),$name, $profile_field_data  );
+            $css = ( false == $profile_field_data )? $name . ' aa_missing' : $name;
+            $out .=  sprintf( apply_filters( 'aa_user_display_extra_template', '<div class="extra %s">%s</div>', $args ,$profile_field_data ), $css, $profile_field_data );
             //$out .=  '<div class="extra '. $name . '">' . $profile_field_data . '</div>';
         }
 
@@ -75,19 +85,4 @@ add_filter( 'AA_render_field_display_options', 'BuddyPressSupport::filter_profil
 add_filter( 'aa_user_display_extra', 'BuddyPressSupport::get_profile_outputs', 10 , 2 );
 
 
-/**
- * Example filter
- *
- * @param $html
- * @param $args
- * @param $value
- *
- * @return mixed
- */
-function display_extra_template( $html, $args , $value ){
-   if( 'color' == $args['field'] ){
-       $html = str_replace( 'class=', 'style="background-color:' . $value . '" class=', $html );
-   }
-   return  $html;
-}
-add_filter( 'aa_user_display_extra_template', 'display_extra_template', 10 , 3 );
+
