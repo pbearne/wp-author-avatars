@@ -132,6 +132,20 @@ class ShowAvatarShortcode {
 								$link = false;
 							}
 							break;
+						case 'last_post':
+							$recent = get_posts(array(
+								'author'=>$id,
+								'orderby'=>'date',
+								'order'=>'desc',
+								'numberposts'=>1
+							));
+							$link = get_permalink( $recent[0]->ID );
+							break;
+
+						case 'last_post_all':
+							$last_post = get_most_recent_post_of_user( $id );
+							$link = get_permalink( $last_post['post_id'] );
+							break;
 					}
 					if ( $link ) {
 						$hrefStart = '<a href="' . $link . '">';
