@@ -104,7 +104,7 @@ class AuthorAvatarsWidget extends WP_Widget {
 		$display_config_values = array('user_link','avatar_size','limit','min_post_count','order','sort_direction');
 		if ( is_array( $instance['display'] ) ) {
 
-			$instance['display'] = apply_filters('AA_widget_display_list', $instance['display'] );
+			$instance['display'] = apply_filters('aa_widget_display_list', $instance['display'] );
 
 			$display = array();
 			if ( ! empty( $instance['display'] ) ) {

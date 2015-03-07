@@ -148,7 +148,7 @@ class AuthorAvatarsForm {
 			'deleted' => 0
 		);
 
-		$where_options_filtered = apply_filters( 'AA_get_all_blogs_where', $where_options );
+		$where_options_filtered = apply_filters( 'aa_get_all_blogs_where', $where_options );
 		$where_string = '';
 		foreach ($where_options_filtered as $key => $where){
 
@@ -341,7 +341,7 @@ class AuthorAvatarsForm {
 			$display_options['show_bbpress_post_count'] = __( 'Show BBPress Post Count', 'author-avatars' );
 		}
 
-		$display_options = apply_filters( 'AA_render_field_display_options', $display_options );
+		$display_options = apply_filters( 'aa_render_field_display_options', $display_options );
 
 		$attributes = array(
 			'id'          => $this->_getFieldId( $name ),
