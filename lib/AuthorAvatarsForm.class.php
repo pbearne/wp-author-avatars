@@ -403,10 +403,11 @@ class AuthorAvatarsForm {
 	 */
 	function renderFieldUserLink( $values = array(), $name = 'user_link' ) {
 		$user_link_options = Array(
-			''           => '-',
-			'authorpage' => __( 'Author Page', 'author-avatars' ),
-			'website'    => __( 'Website', 'author-avatars' ),
-			'last_post'  => __( 'Users Last Post this blog','author-avatars' ),
+			''                      => '-',
+			'authorpage'            => __( 'Author Page', 'author-avatars' ),
+			'website'               => __( 'Website', 'author-avatars' ),
+			'last_post'             => __( 'Users Last Post this blog','author-avatars' ),
+			'last_post_filtered'    => __( 'Filtered Last Post','author-avatars' ),
 		);
 		if ( AA_is_bp() ) {
 			$user_link_options['bp_memberpage'] = __( 'BP Member Page', 'author-avatars' );

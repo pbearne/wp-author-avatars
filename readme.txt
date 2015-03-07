@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=MZTZ5
 Tags: Avatar, Author, BuddyPress, xprofile, Comment, Editor, Image, Multisite, Photo, Picture, Profile, Shortcode, Random, Sidebar, Thumbnail, User, Widget, Wpmu, BBPress, co-authors
 Requires at least: 3.0
 Tested up to: 4.1
-Stable tag: 1.8.6.4
+Stable tag: 1.8.6.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -67,6 +67,11 @@ If you have added CSS to your theme you may have to update it for this upgrade (
 5. List of users with name and biography
 
 == Changelog ==
+
+= 1.8.6.5 =
+added filter (aa_user_level_for_editor) to allow control of who can see the tinyMCE editor button
+Added last_post_filter option to link options
+
 = 1.8.6.4 =
 Fixed a problem with upgrading if you had bios
 
