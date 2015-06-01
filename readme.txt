@@ -68,6 +68,9 @@ If you have added CSS to your theme you may have to update it for this upgrade (
 
 == Changelog ==
 
+= 1.8.6.6 =
+Added Hungarian Translation (by Otto Radics: Webmenedzser.hu - http://www.webmenedzser.hu)
+
 = 1.8.6.5 =
 Added filter (aa_user_level_for_editor) to allow control of who can see the tinyMCE editor button
 Added last_post_filter option to link options
