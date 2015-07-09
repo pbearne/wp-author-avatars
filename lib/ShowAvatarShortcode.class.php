@@ -169,6 +169,8 @@ class ShowAvatarShortcode {
 					if ( $link ) {
 						$hrefStart = '<a href="' . $link . '">';
 					}
+
+					$extraClass .= ' user-' . $id;
 				}
 
 				if ( ! empty( $atts['show_name'] ) ) {

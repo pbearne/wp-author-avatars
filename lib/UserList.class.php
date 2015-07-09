@@ -356,6 +356,14 @@ class UserList {
 
 		if ( $user->user_id == - 1 && "guest-author" != $type ) {
 			$link_type = 'website';
+			$divcss[] = 'user-0';
+		}else{
+			if ( "guest-author" == $type ) {
+				$divcss[] = 'guest-author-' . $user->user_id;
+			}else{
+				$divcss[] = 'user-' . $user->user_id;
+			}
+
 		}
 
 		switch ( $link_type ) {
