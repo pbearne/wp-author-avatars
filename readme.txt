@@ -73,6 +73,9 @@ replaced parent::WP_Widget()  with parent::__construct to remove php 4 construct
 remove extract( $args, EXTR_SKIP and replaced with direct extracts
 Added user id to CSS
 
+= 1.8.6.6 =
+Added Hungarian Translation (by Otto Radics: Webmenedzser.hu - http://www.webmenedzser.hu)
+
 = 1.8.6.5 =
 Added filter (aa_user_level_for_editor) to allow control of who can see the tinyMCE editor button
 Added last_post_filter option to link options
