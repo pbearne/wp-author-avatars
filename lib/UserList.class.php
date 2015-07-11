@@ -1245,7 +1245,7 @@ class UserList {
 				 *
 				 * @param int $total_post The user's post count
 				 * @param int $user_id of the user post being counted.
-				 * @param int $
+				 * @param int $blog_id the current blog being queried
 		        */
 				$total += apply_filters( "aa_get_user_postcount_{$blog_id}", count_user_posts( $user_id ), $user_id, $blog_id );
 			}
