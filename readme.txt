@@ -72,6 +72,7 @@ If you have added CSS to your theme you may have to update it for this upgrade (
 replaced parent::WP_Widget()  with parent::__construct to remove php 4 constructors
 remove extract( $args, EXTR_SKIP and replaced with direct extracts
 Added user id to CSS
+Fixed Co_Author Plus listings
 
 = 1.8.6.6 =
 Added Hungarian Translation (by Otto Radics: Webmenedzser.hu - http://www.webmenedzser.hu)

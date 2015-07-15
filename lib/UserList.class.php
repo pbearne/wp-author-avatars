@@ -748,18 +748,23 @@ class UserList {
 
 						foreach ( $coauthor_terms as $coauthor ) {
 							$coauthor_slug = preg_replace( '#^cap\-#', '', $coauthor->slug );
+
 							$post_author   = $coauthors_plus->get_coauthor_by( 'user_nicename', $coauthor_slug );
 
 							// In case the user has been deleted while plugin was deactivated
-							if ( ! empty( $post_author ) ) {
-								if ( 'guest-author' === $post_author->type ) {
-									$post_author->user_id  = - 1; // to stop the fliter from breaking
-									$post_author->user_url = $post_author->website;
-									$coauthors[]           = $post_author;
-								} else {
+							if ( ! empty( $post_author )  || false !== $post_author ) {
+								if( ! isset( $post_author->type ) ){
+									$post_author->type =  'guest-author';
+								}
+								if ( 'wpuser' === $post_author->type ) {
 									$post_author->data->ID      = $post_author->ID;
 									$post_author->data->user_id = $post_author->ID;
 									$coauthors[]                = $post_author->data;
+								} else {
+									$post_author->user_id  = '-' . $post_author->ID; // to stop the fliter from breaking
+									$post_author->user_url = $post_author->website;
+									$coauthors[]           = $post_author;
+
 								}
 							}
 						}
@@ -770,13 +775,13 @@ class UserList {
 			}
 
 			// filter them
-			$this->_filter( $users );
+			$users = $this->_filter( $users );
 
 			// sort them
-			$this->_sort( $users );
+			$users = $this->_sort( $users );
 
 			// group them
-			$this->_group( $users );
+			$users = $this->_group( $users );
 
 			// and limit the number
 			if ( intval( $this->limit ) > 0 ) {
@@ -787,9 +792,9 @@ class UserList {
 		}
 
 		if ( $random_order ) {
-			$this->_sort( $users );
+			$users = $this->_sort( $users );
 		}
-
+//		var_dump($users);
 		return $users;
 	}
 
@@ -919,15 +924,15 @@ class UserList {
 	 *
 	 * @access private
 	 *
-	 * @param $users Array of users (WP_User objects). (by reference)
+	 * @param $users Array of users (WP_User objects).
 	 *
-	 * @return void
+	 * @return $users Array of users
 	 */
-	function _filter( &$users ) {
+	function _filter( $users ) {
 		if ( is_array( $users ) ) {
 			// arrays for keeping track of all 'valid' user ids and commentator emails
-			$user_ids      = array();
-			$display_names = array();
+			$user_ids    = array();
+			$user_emails = array();
 
 			foreach ( $users as $id => $usr ) {
 				$user = $users[ $id ];
@@ -936,8 +941,9 @@ class UserList {
 				// Check user role
 				// if we have set some roles to restrict by
 				$type = ( isset( $user->type ) ) ? $user->type : null;
-				// don't fileter gust authors
-				if ( "guest-author" != $type ) {
+
+				// don't fileter guest authors
+				if ( 'wpuser' === $type ) {
 					if ( is_array( $this->roles ) && ! empty( $this->roles ) ) {
 						if ( ! isset( $user->user_roles ) ) {
 							if ( isset( $user->meta_value ) ) {
@@ -966,9 +972,9 @@ class UserList {
 					// do not add this user
 					$add = false;
 				}
-
-				// real user
-				if ( $user->user_id != - 1 ) {
+//				var_dump($user);
+				// real user and co-authors
+				if ( $user->user_id != -1 ) {
 					// Remove duplicates
 
 					if (
@@ -998,7 +1004,7 @@ class UserList {
 						// if we're not grouping anything
 						empty( $this->group_by ) &&
 						// and the current value has already been added
-						in_array( $user->display_name, $display_names )
+						in_array( $user->user_email, $user_emails )
 					) {
 						// do not add this user
 						$add = false;
@@ -1007,14 +1013,15 @@ class UserList {
 
 				if ( $add === true ) {
 					// store current user_id/user_email for uniqueness check
-					$user_ids[]      = $user->user_id;
-					$display_names[] = $user->user_email;
+					$user_ids[]    = $user->user_id;
+					$user_emails[] = $user->user_email;
 				} else {
 					// remove the current user from the array
 					unset( $users[ $id ] );
 				}
 			}
 		}
+		return $users;
 	}
 
 	/**
@@ -1036,12 +1043,12 @@ class UserList {
 	 *
 	 * @access private
 	 *
-	 * @param Array $users Array of users (WP_User objects). (by reference)
+	 * @param Array $users Array of users (WP_User objects).
 	 * @param String $order The key to sort by. Can be one of the following: random, user_id, user_login, display_name.
 	 *
-	 * @return void
+	 * @return Array $users Array of users (WP_User objects)
 	 */
-	function _sort( &$users, $order = false ) {
+	function _sort( $users, $order = false ) {
 		if ( ! $order ) {
 			$order = $this->order;
 		}
@@ -1085,6 +1092,7 @@ class UserList {
 				@usort( $users, array( $this, '_user_cmp_budypress_activity' ) );
 				break;
 		}
+		return $users;
 	}
 
 	/**
@@ -1481,11 +1489,11 @@ class UserList {
 	 * @param Array of WP_User objects, by reference
 	 *
 	 * @access private
-	 * @return void
+	 * @return Array of WP_User objects
 	 */
-	function _group( &$users ) {
+	function _group( $users ) {
 		if ( empty( $this->group_by ) ) {
-			return;
+			return $users;
 		}
 
 		switch ( $this->group_by ) {
@@ -1516,6 +1524,7 @@ class UserList {
 
 				break;
 		}
+		return $users;
 	}
 
 	/**
