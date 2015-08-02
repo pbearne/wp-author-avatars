@@ -216,6 +216,10 @@ class AuthorAvatarsWidget extends WP_Widget {
 		$form->setFieldIdCallback( array( $this, 'get_field_id' ) );
 		$form->setFieldNameCallback( array( $this, 'get_field_name' ) );
 
+		if( ! class_exists( 'FormHelper' )  ){
+			require_once( 'FormHelper.class.php' );
+		}
+
 		// widget title
 		$widget_title = '<p>' . FormHelper::input( 'text', $this->get_field_name( 'title' ), $instance['title'],
 				array(
