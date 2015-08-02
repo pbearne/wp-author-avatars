@@ -726,50 +726,53 @@ class UserList {
 
 				if ( in_array( 'coauthors_plus', $this->roles ) ) {
 					global $coauthors_plus;
-					$args = array( 'orderby' => 'term_order', 'order' => 'ASC', );
-					//	$args = array(
-					// 		'optioncount'      => false,
-					// 		'show_fullname'    => true,
-					// 		'hide_empty'       => false,
-					// 		'feed'             => '',
-					// 		'feed_image'       => '',
-					// 		'feed_type'        => '',
-					// 		'echo'             => false,
-					// 		'html'             => false,
-					// 		'number'           => 99,
-					// );
-					$coauthors = array();
+					if ( null !== $coauthors_plus ) {
 
-					//	$coauthor_terms = coauthors_wp_list_authors( $args );
+						$args = array( 'orderby' => 'term_order', 'order' => 'ASC', );
+						//	$args = array(
+						// 		'optioncount'      => false,
+						// 		'show_fullname'    => true,
+						// 		'hide_empty'       => false,
+						// 		'feed'             => '',
+						// 		'feed_image'       => '',
+						// 		'feed_type'        => '',
+						// 		'echo'             => false,
+						// 		'html'             => false,
+						// 		'number'           => 99,
+						// );
+						$coauthors = array();
 
-					$coauthor_terms = get_terms( $coauthors_plus->coauthor_taxonomy, $args );
+						//	$coauthor_terms = coauthors_wp_list_authors( $args );
 
-					if ( is_array( $coauthor_terms ) && ! empty( $coauthor_terms ) ) {
+						$coauthor_terms = get_terms( $coauthors_plus->coauthor_taxonomy, $args );
 
-						foreach ( $coauthor_terms as $coauthor ) {
-							$coauthor_slug = preg_replace( '#^cap\-#', '', $coauthor->slug );
+						if ( is_array( $coauthor_terms ) && ! empty( $coauthor_terms ) ) {
 
-							$post_author   = $coauthors_plus->get_coauthor_by( 'user_nicename', $coauthor_slug );
+							foreach ( $coauthor_terms as $coauthor ) {
+								$coauthor_slug = preg_replace( '#^cap\-#', '', $coauthor->slug );
 
-							// In case the user has been deleted while plugin was deactivated
-							if ( ! empty( $post_author )  || false !== $post_author ) {
-								if( ! isset( $post_author->type ) ){
-									$post_author->type =  'guest-author';
-								}
-								if ( 'wpuser' === $post_author->type ) {
-									$post_author->data->ID      = $post_author->ID;
-									$post_author->data->user_id = $post_author->ID;
-									$coauthors[]                = $post_author->data;
-								} else {
-									$post_author->user_id  = '-' . $post_author->ID; // to stop the fliter from breaking
-									$post_author->user_url = $post_author->website;
-									$coauthors[]           = $post_author;
+								$post_author = $coauthors_plus->get_coauthor_by( 'user_nicename', $coauthor_slug );
 
+								// In case the user has been deleted while plugin was deactivated
+								if ( ! empty( $post_author ) || false !== $post_author ) {
+									if ( ! isset( $post_author->type ) ) {
+										$post_author->type = 'guest-author';
+									}
+									if ( 'wpuser' === $post_author->type ) {
+										$post_author->data->ID      = $post_author->ID;
+										$post_author->data->user_id = $post_author->ID;
+										$coauthors[]                = $post_author->data;
+									} else {
+										$post_author->user_id  = '-' . $post_author->ID; // to stop the fliter from breaking
+										$post_author->user_url = $post_author->website;
+										$coauthors[]           = $post_author;
+
+									}
 								}
 							}
-						}
 
-						$users = array_merge( $users, $coauthors );
+							$users = array_merge( $users, $coauthors );
+						}
 					}
 				}
 			}
@@ -794,6 +797,7 @@ class UserList {
 		if ( $random_order ) {
 			$users = $this->_sort( $users );
 		}
+
 //		var_dump($users);
 		return $users;
 	}
@@ -974,7 +978,7 @@ class UserList {
 				}
 //				var_dump($user);
 				// real user and co-authors
-				if ( $user->user_id != -1 ) {
+				if ( $user->user_id != - 1 ) {
 					// Remove duplicates
 
 					if (
@@ -1021,6 +1025,7 @@ class UserList {
 				}
 			}
 		}
+
 		return $users;
 	}
 
@@ -1092,6 +1097,7 @@ class UserList {
 				@usort( $users, array( $this, '_user_cmp_budypress_activity' ) );
 				break;
 		}
+
 		return $users;
 	}
 
@@ -1524,6 +1530,7 @@ class UserList {
 
 				break;
 		}
+
 		return $users;
 	}
 
