@@ -636,7 +636,8 @@ class UserList {
 			 * @param string $extra extra HTML / string.
 			 * @param object $user The user object
 			 */
-			$html .= apply_filters( 'aa_user_display_extra', $this->display_extra, $user );
+			$html .= apply_filters( '
+			aa_user_display_extra', $this->display_extra, $user );
 		}
 
 		$tpl_vars['{class}'] = implode( $divcss, ' ' );
@@ -938,8 +939,8 @@ class UserList {
 			$user_ids    = array();
 			$user_emails = array();
 
-			foreach ( $users as $id => $usr ) {
-				$user = $users[ $id ];
+			foreach ( $users as $id => $user ) {
+			//	$user = $users[ $id ];
 				$add  = true;
 
 				// Check user role
@@ -953,9 +954,9 @@ class UserList {
 							if ( isset( $user->meta_value ) ) {
 								$user->user_roles = array_keys( unserialize( $user->meta_value ) );
 							} else {
-								$user->user_roles = $user->roles;
+								$wpuser = get_user_by( 'id', $user->ID);
+								$user->user_roles = array_merge( $wpuser->roles, array('coauthors_plus'));
 							}
-
 						}
 
 						// if the current user does not have one of those roles
@@ -976,7 +977,7 @@ class UserList {
 					// do not add this user
 					$add = false;
 				}
-//				var_dump($user);
+
 				// real user and co-authors
 				if ( $user->user_id != - 1 ) {
 					// Remove duplicates
