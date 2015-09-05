@@ -2,6 +2,8 @@
 
 /**
  * User list class: provides a filtered and ordered list of users and different ways of outputting them.
+ *
+ * uses bbp_get_user_topic_count_raw()
  */
 class UserList {
 
@@ -143,7 +145,7 @@ class UserList {
 	/**
 	 * Changes the template strings so the user is rendered in a html list.
 	 *
-	 * @param $ordered set to true to use an ordered list (<ol>) instead of an unordered one (<ul>)
+	 * @param bool|false $ordered set to true to use an ordered list (<ol>) instead of an unordered one (<ul>)
 	 *
 	 * @return void
 	 */
@@ -193,7 +195,6 @@ class UserList {
 			return $this->format_users( $this->page_users( $users ) );
 		}
 
-
 	}
 
 
@@ -223,10 +224,10 @@ class UserList {
 	/**
 	 * Formats a list of users
 	 *
-	 * @param Array $groups An array of users.
+	 * @param $users Array An array of users.
 	 *
 	 * @uses apply_filters() Calls 'aa_userlist_template' hook
-	 * @return String the html formatted list of users
+	 * @return  mixed | String the html formatted list of users
 	 */
 	function format_users( $users ) {
 		$html = '';
@@ -240,7 +241,7 @@ class UserList {
 	/**
 	 * pages the list of users
 	 *
-	 * @param Array $groups An array of users.
+	 * @param $users Array $groups An array of users.
 	 *
 	 * @return Array list of users
 	 */
@@ -271,7 +272,6 @@ class UserList {
 			$this->pagingHTML .= '>' . $i . '</a>';
 		}
 		$this->pagingHTML .= '<a href="?aa_page=' . ( $i - 1 ) . '" id="' . ( $i - 1 ) . '">' . __( '>>', 'author-avatars' ) . '</a></div></div>';
-
 
 		return array_slice( $users, $offset, $page_size );
 	}
@@ -311,7 +311,7 @@ class UserList {
 			'postCommentNonce'        => wp_create_nonce( 'author-avatars-shortcode-paging-nonce' ),
 			'action'                  => 'AA_shortcode_paging',
 			'aa_page'                 => 0,
-			'ajax_url'                => admin_url( 'admin-ajax.php' )
+			'ajax_url'                => admin_url( 'admin-ajax.php' ),
 		);
 
 		wp_enqueue_script( 'author-avatars-shortcode-paging' );
@@ -323,7 +323,8 @@ class UserList {
 	/**
 	 * Formats the given user as html.
 	 *
-	 * @param WP_User $user The user to format (object of type WP_User).
+	 * @param $user
+	 * The user to format (object of type WP_User).
 	 *
 	 * @uses apply_filters() Calls 'aa_user_template' hook
 	 * @return String html
@@ -336,7 +337,7 @@ class UserList {
 			$avatar_size = false;
 		}
 
-		$name = "";
+		$name = '';
 		if ( $this->show_name ) {
 			$name = $user->display_name;
 		}
@@ -354,32 +355,31 @@ class UserList {
 		// always use 'website' for commentators
 		$type = ( isset( $user->type ) ) ? $user->type : null;
 
-		if ( $user->user_id == - 1 && "guest-author" != $type ) {
+		if ( -1 === $user->user_id && 'guest-author' != $type ) {
 			$link_type = 'website';
 			$divcss[]  = 'user-0';
 		} else {
-			if ( "guest-author" == $type ) {
+			if ( 'guest-author' === $type ) {
 				$divcss[] = 'guest-author-' . $user->user_id;
 			} else {
 				$divcss[] = 'user-' . $user->user_id;
 			}
-
 		}
 
 		switch ( $link_type ) {
 			case 'authorpage':
-				if ( "guest-author" == $type ) {
+				if ( 'guest-author' === $type ) {
 					$link = get_author_posts_url( $user->user_id, $user->user_nicename );
 				} else {
 					$link = get_author_posts_url( $user->user_id );
 				}
 				break;
 			case 'website':
-				if ( "guest-author" == $type ) {
+				if ( 'guest-author' === $type ) {
 					$link = get_the_author_meta( 'url', $user->ID );
 				} else {
 					$link = $user->user_url;
-					if ( empty( $link ) || $link == 'http://' ) {
+					if ( empty( $link ) || 'http://' === $link  ) {
 						$link = false;
 					}
 				}
@@ -404,7 +404,7 @@ class UserList {
 				if ( function_exists( 'bbp_get_user_profile_url' ) ) {
 					$link = bbp_get_user_profile_url( $user->user_id );
 				}
-				if ( empty( $link ) || $link == 'http://' ) {
+				if ( empty( $link ) || 'http://' === $link ) {
 					$link = false;
 				}
 				break;
@@ -413,7 +413,7 @@ class UserList {
 					'author'      => $user->user_id,
 					'orderby'     => 'date',
 					'order'       => 'desc',
-					'numberposts' => 1
+					'numberposts' => 1,
 				) );
 				$link   = get_permalink( $recent[0]->ID );
 				break;
@@ -425,15 +425,14 @@ class UserList {
 		}
 
 		if ( $this->show_postcount ) {
-			$postcount = 0;
 
-			if ( $user->user_id == - 1 && "guest-author" != $type ) {
+			if ( $user->user_id == - 1 && 'guest-author' != $type ) {
 				$postcount = $this->get_comment_count( $user->user_email );
-				$title .= ' (' . sprintf( _n( "%d comment", "%d comments", $postcount, 'author-avatars' ), $postcount ) . ')';
+				$title .= ' (' . sprintf( _n( '%d comment', '%d comments', $postcount, 'author-avatars' ), $postcount ) . ')';
 			} else {
 				// this is passing 1 for coauthors
 
-				if ( "guest-author" == $type && $user->linked_account ) {
+				if ( 'guest-author' == $type && $user->linked_account ) {
 					$linked_user = get_user_by( 'login', $user->linked_account );
 					// fetch the linked account and show thats count
 					$postcount = $this->get_user_postcount( $linked_user->ID );
@@ -441,7 +440,7 @@ class UserList {
 					$postcount = $this->get_user_postcount( $user->user_id );
 				}
 
-				$title .= ' (' . sprintf( _n( "%d post", "%d posts", $postcount, 'author-avatars' ), $postcount ) . ')';
+				$title .= ' (' . sprintf( _n( '%d post', '%d posts', $postcount, 'author-avatars' ), $postcount ) . ')';
 			}
 			$name .= sprintf( apply_filters( 'aa_post_count', ' (%d)', $postcount ), $postcount );
 		}
@@ -450,7 +449,7 @@ class UserList {
 			$BBPRESS_postcount = 0;
 			if ( function_exists( 'bbp_get_user_topic_count_raw' ) ) {
 				$BBPRESS_postcount = bbp_get_user_topic_count_raw( $user->user_id ) + bbp_get_user_reply_count_raw( $user->user_id );
-				$title .= ' (' . sprintf( _n( "%d BBPress post", "%d BBPress posts", $BBPRESS_postcount, 'author-avatars' ), $BBPRESS_postcount ) . ')';
+				$title .= ' (' . sprintf( _n( '%d BBPress post', '%d BBPress posts', $BBPRESS_postcount, 'author-avatars' ), $BBPRESS_postcount ) . ')';
 			}
 			$name .= sprintf( ' (%d)', $BBPRESS_postcount );
 		}
@@ -458,14 +457,13 @@ class UserList {
 		$biography = false;
 
 		if ( $this->show_biography ) {
-			if ( "guest-author" != $type && $user->user_id > 0 ) {
+			if ( 'guest-author' != $type && $user->user_id > 0 ) {
 				$biography = get_the_author_meta( 'description', $user->user_id );
 			} else {
 				$biography = ( isset( $user->description ) ) ? $user->description : '';
 			}
 
 			$biography = apply_filters( 'aa_user_biography_filter', $biography );
-
 
 			// trim $biography to bio_length
 			if ( 0 < $this->bio_length ) {
@@ -491,7 +489,8 @@ class UserList {
 			 * @since 1.8.6.0
 			 *
 			 * @param string $show_last_post The HTML link to users last post.
-			 * @param object                    The Current user object.
+			 * @param object
+			 * The Current user object.
 			 */
 			$show_last_post = apply_filters( 'aa_user_show_last_post_filter', $show_last_post, $user );
 			$divcss[]       = 'with-last-post';
@@ -509,9 +508,11 @@ class UserList {
 			 *
 			 * @since 1.8.6.0
 			 *
-			 * @param string                The mailto href for sprintf the $1$s is where the email is inserted.
+			 * @param string
+			 * The mailto href for sprintf the $1$s is where the email is inserted.
 			 * @param string $userEmail The Email to be inserted.
-			 * @param object                The Current user object.
+			 * @param object
+			 * The Current user object.
 			 */
 			$email    = sprintf( apply_filters( 'aa_user_email_url_template', '<a href="mailto:%1$s">%1$s</a>', $userEmail, $user ), $userEmail );
 			$divcss[] = 'with-email';
@@ -532,7 +533,7 @@ class UserList {
 					'height'  => $avatar_size,
 					'type'    => 'full',
 					'alt'     => $alt,
-					'title'   => $title
+					'title'   => $title,
 				) );
 			} else {
 				// call the standard avatar function
@@ -565,9 +566,9 @@ class UserList {
 		/**
 		 * filter the span that holds the avatar
 		 *
-		 * @param string            The sprintf template.
-		 * @param string @title    The value passed to the title attr in span.
-		 * @param string @avatar    The HTML returned from get_avatar() etc.
+		 * @param string $html     The sprintf template.
+		 * @param string $title    The value passed to the title attr in span.
+		 * @param string $avatar    The HTML returned from get_avatar() etc.
 		 * @param object $user The user object
 		 */
 		$html .= sprintf( apply_filters( 'aa_user_avatar_template', '<span class="avatar" title="%s">%s</span>', $title, $avatar, $user ), $title, $avatar );
@@ -576,7 +577,7 @@ class UserList {
 			/**
 			 * filter the span that contains the users name
 			 *
-			 * @param string            The sprintf template.
+			 * @param string $html           The sprintf template.
 			 * @param string $name The value (users name) passed into the span
 			 * @param object $user The user object
 			 */
@@ -587,7 +588,7 @@ class UserList {
 			/**
 			 * filter the href that wrap's avatar and users name
 			 *
-			 * @param string            The sprintf template.
+			 * @param string $html          The sprintf template.
 			 * @param string $link The href value.
 			 * @param string $title The value for the href title
 			 * @param string $html The HTML with avatar and name
@@ -600,7 +601,7 @@ class UserList {
 			/**
 			 * filter that wrap's the email link in a div
 			 *
-			 * @param string            The sprintf template.
+			 * @param string  $html The sprintf template.
 			 * @param string $email The HTML containing the mailto href and email string.
 			 * @param object $user The user object
 			 */
@@ -611,7 +612,7 @@ class UserList {
 			/**
 			 * filter that wrap's the BIO text in a div
 			 *
-			 * @param string            The sprintf template.
+			 * @param string $html The sprintf template.
 			 * @param string $biography The Bio text.
 			 * @param object $user The user object
 			 */
@@ -622,14 +623,14 @@ class UserList {
 			/**
 			 * filter that wrap's the last post link in a div
 			 *
-			 * @param string                    The sprintf template.
+			 * @param string $html  The sprintf template.
 			 * @param string $show_last_post The last post link.
 			 * @param object $user The user object
 			 */
 			$html .= sprintf( apply_filters( 'aa_user_last_post_template', '<div class="show_last_post">%s</div>', $show_last_post, $user ), $show_last_post );
 		}
 
-		if ( ! empty ( $this->display_extra ) ) {
+		if ( ! empty( $this->display_extra ) ) {
 			/**
 			 * filter the extra HTML block before its appended
 			 *
@@ -669,28 +670,27 @@ class UserList {
 		global $blog_id;
 		$random_order = false;
 
-		$cache_id = join( "_", $this->roles ) . "_" . $blog_id;
+		$cache_id = join( '_', $this->roles ) . '_' . $blog_id;
 		if ( ! empty( $this->blogs ) ) {
-			$cache_id .= "_" . join( "_", $this->blogs );
+			$cache_id .= '_' . join( '_', $this->blogs );
 		}
 		// if onlyusers then add
 		if ( ! empty( $this->onlyusers ) ) {
-			$cache_id .= "_" . join( "_", $this->onlyusers );
+			$cache_id .= '_' . join( '_', $this->onlyusers );
 		}
 		// if limit set then add
 		if ( ! empty( $this->limit ) ) {
-			$cache_id .= "_" . $this->limit;
+			$cache_id .= '_' . $this->limit;
 		}
 		// if order set then add
 		if ( ! empty( $this->order ) ) {
-			$cache_id .= "_" . $this->order;
+			$cache_id .= '_' . $this->order;
 			$random_order = ( 'random' == $this->order ) ? true : false;
 		}
 		// if hidden user set then add
 		if ( ! empty( $this->hiddenusers ) ) {
-			$cache_id .= "_" . join( "_", $this->hiddenusers );
+			$cache_id .= '_' . join( '_', $this->hiddenusers );
 		}
-
 
 		// if the use is loged in wipe any cache
 		if ( is_user_logged_in() ) {
@@ -704,7 +704,7 @@ class UserList {
 			if ( ! empty( $this->onlyusers ) ) {
 				$args          = array(
 					'include' => $this->onlyusers,
-					'fields'  => 'all_with_meta'
+					'fields'  => 'all_with_meta',
 				);
 				$users_objects = get_users( $args );
 				if ( false != $users_objects ) {
@@ -729,7 +729,10 @@ class UserList {
 					global $coauthors_plus;
 					if ( null !== $coauthors_plus ) {
 
-						$args = array( 'orderby' => 'term_order', 'order' => 'ASC', );
+						$args = array(
+							'orderby' => 'term_order',
+							'order' => 'ASC',
+							);
 						//	$args = array(
 						// 		'optioncount'      => false,
 						// 		'show_fullname'    => true,
@@ -799,7 +802,6 @@ class UserList {
 			$users = $this->_sort( $users );
 		}
 
-//		var_dump($users);
 		return $users;
 	}
 
@@ -814,7 +816,7 @@ class UserList {
 			'post_type'           => 'post',
 			'post_status'         => 'publish',
 			'posts_per_page'      => 1,
-			'ignore_sticky_posts' => 1
+			'ignore_sticky_posts' => 1,
 		);
 		$my_query = null;
 		$out      = null;
@@ -855,8 +857,9 @@ class UserList {
 	/**
 	 * Returns array of all users from all blogs specified in field $blogs.
 	 * If $blogs is empty only users from the current blog are returned.
+	 * @param $roles
 	 *
-	 * @return Array of users (WP_User objects).
+	 * @return array|null|object Array of users (WP_User objects).
 	 */
 	function get_blog_users( $roles ) {
 		global $wpdb;
@@ -878,21 +881,21 @@ class UserList {
 			$blogs_condition = "meta_key = '" . $wpdb->prefix . "capabilities'";
 		}
 
-		$roleQuery = "";
+		$roleQuery = '';
 		foreach ( $roles as $role ) {
-			$role = "%" . $role . "%";
-			$or   = "";
+			$role = '%' . $role . '%';
+			$or   = '';
 			if ( $roleQuery ) {
-				$or = " or ";
+				$or = ' or ';
 			}
-			$roleQuery .= $wpdb->prepare( $or . "meta_value like %s", $role );
+			$roleQuery .= $wpdb->prepare( $or . 'meta_value like %s', $role );
 		}
 		if ( $roleQuery ) {
-			$roleQuery = " AND(" . $roleQuery . ")";
+			$roleQuery = ' AND(' . $roleQuery . ')';
 		}
 
-		$query = "SELECT user_id, user_login, display_name, user_email, user_url, user_registered, meta_key, meta_value FROM $wpdb->users, $wpdb->usermeta" .
-		         " WHERE " . $wpdb->users . ".ID = " . $wpdb->usermeta . ".user_id AND " . $blogs_condition . " AND user_status = 0" . $roleQuery;
+		$query = 'SELECT user_id, user_login, display_name, user_email, user_url, user_registered, meta_key, meta_value FROM $wpdb->users, $wpdb->usermeta' .
+		         ' WHERE ' . $wpdb->users . '.ID = ' . $wpdb->usermeta . '.user_id AND ' . $blogs_condition . ' AND user_status = 0' . $roleQuery;
 
 		$users = $wpdb->get_results( $query );
 
@@ -931,7 +934,7 @@ class UserList {
 	 *
 	 * @param $users Array of users (WP_User objects).
 	 *
-	 * @return $users Array of users
+	 * @return mixed $users Array of users
 	 */
 	function _filter( $users ) {
 		if ( is_array( $users ) ) {
@@ -940,8 +943,8 @@ class UserList {
 			$user_emails = array();
 
 			foreach ( $users as $id => $user ) {
-			//	$user = $users[ $id ];
-				$add  = true;
+				//	$user = $users[ $id ];
+				$add = true;
 
 				// Check user role
 				// if we have set some roles to restrict by
@@ -954,8 +957,8 @@ class UserList {
 							if ( isset( $user->meta_value ) ) {
 								$user->user_roles = array_keys( unserialize( $user->meta_value ) );
 							} else {
-								$wpuser = get_user_by( 'id', $user->ID);
-								$user->user_roles = array_merge( $wpuser->roles, array('coauthors_plus'));
+								$wpuser           = get_user_by( 'id', $user->ID );
+								$user->user_roles = array_merge( $wpuser->roles, array( 'coauthors_plus' ) );
 							}
 						}
 
@@ -1002,7 +1005,6 @@ class UserList {
 						// do not add this user
 						$add = false;
 					}
-
 				} // commentator
 				else {
 					if (
@@ -1016,7 +1018,7 @@ class UserList {
 					}
 				}
 
-				if ( $add === true ) {
+				if ( true === $add  ) {
 					// store current user_id/user_email for uniqueness check
 					$user_ids[]    = $user->user_id;
 					$user_emails[] = $user->user_email;
@@ -1050,7 +1052,7 @@ class UserList {
 	 * @access private
 	 *
 	 * @param Array $users Array of users (WP_User objects).
-	 * @param String $order The key to sort by. Can be one of the following: random, user_id, user_login, display_name.
+	 * @param $order String|bool The key to sort by. Can be one of the following: random, user_id, user_login, display_name.
 	 *
 	 * @return Array $users Array of users (WP_User objects)
 	 */
@@ -1064,38 +1066,38 @@ class UserList {
 				shuffle( $users );
 				break;
 			case 'user_id':
-				@usort( $users, array( $this, '_users_cmp_id' ) );
+				usort( $users, array( $this, '_users_cmp_id' ) );
 				break;
 			case 'user_login':
-				@usort( $users, array( $this, '_users_cmp_login' ) );
+				usort( $users, array( $this, '_users_cmp_login' ) );
 				break;
 			case 'display_name':
-				@usort( $users, array( $this, '_users_cmp_name' ) );
+				usort( $users, array( $this, '_users_cmp_name' ) );
 				break;
 			case 'first_name':
-				@usort( $users, array( $this, '_users_cmp_first_name' ) );
+				usort( $users, array( $this, '_users_cmp_first_name' ) );
 				break;
 			case 'last_name':
-				@usort( $users, array( $this, '_users_cmp_last_name' ) );
+				usort( $users, array( $this, '_users_cmp_last_name' ) );
 				break;
 			case 'post_count':
-				@usort( $users, array( $this, '_user_cmp_postcount' ) );
+				usort( $users, array( $this, '_user_cmp_postcount' ) );
 				break;
 			case 'bbpress_post_count':
-				@usort( $users, array( $this, '_user_cmp_BBPRESS_post_count' ) );
+				usort( $users, array( $this, '_user_cmp_BBPRESS_post_count' ) );
 				break;
 			case 'date_registered':
-				@usort( $users, array( $this, '_user_cmp_regdate' ) );
+				usort( $users, array( $this, '_user_cmp_regdate' ) );
 				break;
 			case 'recent_site_activity':
-				@usort( $users, array( $this, '_user_cmp_site_activity' ) );
+				usort( $users, array( $this, '_user_cmp_site_activity' ) );
 				break;
 			case 'recent_activity': // load posts as the default for old settings
 			case 'recent_post_activity':
-				@usort( $users, array( $this, '_user_cmp_post_activity' ) );
+				usort( $users, array( $this, '_user_cmp_post_activity' ) );
 				break;
 			case 'budy_press_recent_activity':
-				@usort( $users, array( $this, '_user_cmp_budypress_activity' ) );
+				usort( $users, array( $this, '_user_cmp_budypress_activity' ) );
 				break;
 		}
 
@@ -1107,8 +1109,8 @@ class UserList {
 	 *
 	 * @access private
 	 *
-	 * @param WP_User $a
-	 * @param WP_User $b
+	 * @param $a object WP_User
+	 * @param $b object WP_User
 	 *
 	 * @return int result of a string compare of the user_ids.
 	 */
@@ -1125,8 +1127,8 @@ class UserList {
 	 *
 	 * @access private
 	 *
-	 * @param WP_User $a
-	 * @param WP_User $b
+	 * @param $a object WP_User
+	 * @param $b object WP_User
 	 *
 	 * @return int result of a string compare of the user_logins.
 	 */
@@ -1139,8 +1141,8 @@ class UserList {
 	 *
 	 * @access private
 	 *
-	 * @param WP_User $a
-	 * @param WP_User $b
+	 * @param $a object WP_User
+	 * @param $b object WP_User
 	 *
 	 * @return int result of a string compare of the user display names.
 	 */
@@ -1153,8 +1155,8 @@ class UserList {
 	 *
 	 * @access private
 	 *
-	 * @param WP_User $a
-	 * @param WP_User $b
+	 * @param $a object WP_User
+	 * @param $b object WP_User
 	 *
 	 * @return int result of a string compare of the user first names.
 	 */
@@ -1181,8 +1183,8 @@ class UserList {
 	 *
 	 * @access private
 	 *
-	 * @param WP_User $a
-	 * @param WP_User $b
+	 * @param $a object WP_User
+	 * @param $b object WP_User
 	 *
 	 * @return int result of a string compare of the user display names.
 	 */
@@ -1209,8 +1211,8 @@ class UserList {
 	 *
 	 * @access private
 	 *
-	 * @param WP_User $a
-	 * @param WP_User $b
+	 * @param $a object WP_User
+	 * @param $b object WP_User
 	 *
 	 * @return int result of a string compare of the user display names.
 	 */
@@ -1230,8 +1232,8 @@ class UserList {
 	 *
 	 * @access private
 	 *
-	 * @param WP_User $a
-	 * @param WP_User $b
+	 * @param $a object WP_User
+	 * @param $b object WP_User
 	 *
 	 * @return int result of a string compare of the user display names.
 	 */
@@ -1324,8 +1326,8 @@ class UserList {
 	 *
 	 * @access private
 	 *
-	 * @param WP_User $a
-	 * @param WP_User $b
+	 * @param $a object WP_User
+	 * @param $b object WP_User
 	 *
 	 * @return int result of a string compare of the user's register date.
 	 */
@@ -1338,8 +1340,8 @@ class UserList {
 	 *
 	 * @access private
 	 *
-	 * @param WP_User $a
-	 * @param WP_User $b
+	 * @param $a object WP_User
+	 * @param $b object WP_User
 	 *
 	 * @return int result of a string compare of the user's recent activity.
 	 */
@@ -1434,8 +1436,8 @@ class UserList {
 	 *
 	 * @access private
 	 *
-	 * @param WP_User $a
-	 * @param WP_User $b
+	 * @param $a object WP_User
+	 * @param $b object WP_User
 	 *
 	 * @return int result of a string compare of the user's recent activity.
 	 */
@@ -1493,7 +1495,7 @@ class UserList {
 	/**
 	 * Group the given set of users if set in field "group_by"
 	 *
-	 * @param Array of WP_User objects, by reference
+	 * @param $users Array of WP_User objects, by reference
 	 *
 	 * @access private
 	 * @return Array of WP_User objects
@@ -1538,7 +1540,7 @@ class UserList {
 	/**
 	 * Retrieves the name for a group
 	 *
-	 * @param int Group identifier
+	 * @param $id int Group identifier
 	 *
 	 * @access private
 	 * @return string
@@ -1569,6 +1571,7 @@ class UserList {
 	 * @return string Trimmed string.
 	 */
 	function truncate_html( $text, $length = 100, $ending = '...', $exact = false, $considerHtml = true ) {
+		$open_tags    = array();
 		if ( $considerHtml ) {
 			// if the plain text is shorter than the maximum length, return the whole text
 			if ( strlen( preg_replace( '/<.*?>/', '', $text ) ) <= $length ) {
@@ -1577,7 +1580,6 @@ class UserList {
 			// splits all html-tags to scanable lines
 			preg_match_all( '/(<.+?>)?([^<>]*)/s', $text, $lines, PREG_SET_ORDER );
 			$total_length = strlen( $ending );
-			$open_tags    = array();
 			$truncate     = '';
 			foreach ( $lines as $line_matchings ) {
 				// if there is any html-tag in this line, handle it and add it (uncounted) to the output
@@ -1589,7 +1591,7 @@ class UserList {
 					} else if ( preg_match( '/^<\s*\/([^\s]+?)\s*>$/s', $line_matchings[1], $tag_matchings ) ) {
 						// delete tag from $open_tags list
 						$pos = array_search( $tag_matchings[1], $open_tags );
-						if ( $pos !== false ) {
+						if ( false !== $pos ) {
 							unset( $open_tags[ $pos ] );
 						}
 						// if tag is an opening tag
