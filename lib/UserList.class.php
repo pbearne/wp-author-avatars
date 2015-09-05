@@ -894,8 +894,8 @@ class UserList {
 			$roleQuery = ' AND(' . $roleQuery . ')';
 		}
 
-		$query = 'SELECT user_id, user_login, display_name, user_email, user_url, user_registered, meta_key, meta_value FROM $wpdb->users, $wpdb->usermeta' .
-		         ' WHERE ' . $wpdb->users . '.ID = ' . $wpdb->usermeta . '.user_id AND ' . $blogs_condition . ' AND user_status = 0' . $roleQuery;
+		$query = "SELECT user_id, user_login, display_name, user_email, user_url, user_registered, meta_key, meta_value FROM $wpdb->users, $wpdb->usermeta" .
+		         " WHERE " . $wpdb->users . ".ID = " . $wpdb->usermeta . ".user_id AND " . $blogs_condition . " AND user_status = 0" . $roleQuery;
 
 		$users = $wpdb->get_results( $query );
 
