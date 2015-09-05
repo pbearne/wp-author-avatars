@@ -269,7 +269,7 @@ class UserList {
 			if ( $i == $this->aa_page ) {
 				$this->pagingHTML .= 'class="current"';
 			}
-			$this->pagingHTML .= '>' . $i . '</a>';
+			$this->pagingHTML .= '>' . ( $i + 1 ) . '</a>';
 		}
 		$this->pagingHTML .= '<a href="?aa_page=' . ( $i - 1 ) . '" id="' . ( $i - 1 ) . '">' . __( '>>', 'author-avatars' ) . '</a></div></div>';
 
