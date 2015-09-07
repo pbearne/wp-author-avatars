@@ -68,6 +68,10 @@ If you have added CSS to your theme you may have to update it for this upgrade (
 
 == Changelog ==
 
+= 1.8.8 =
+set the page count to strat at 1 not 0
+
+
 = 1.8.7 =
 replaced parent::WP_Widget()  with parent::__construct to remove php 4 constructors
 remove extract( $args, EXTR_SKIP and replaced with direct extracts
