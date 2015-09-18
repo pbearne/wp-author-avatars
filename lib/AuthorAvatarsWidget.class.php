@@ -216,12 +216,12 @@ class AuthorAvatarsWidget extends WP_Widget {
 		$form->setFieldIdCallback( array( $this, 'get_field_id' ) );
 		$form->setFieldNameCallback( array( $this, 'get_field_name' ) );
 
-		if( ! class_exists( 'FormHelper' )  ){
-			require_once( 'FormHelper.class.php' );
+		if( ! class_exists( 'AAFormHelper' )  ){
+			require_once( 'AAFormHelper.class.php' );
 		}
 
 		// widget title
-		$widget_title = '<p>' . FormHelper::input( 'text', $this->get_field_name( 'title' ), $instance['title'],
+		$widget_title = '<p>' . AAFormHelper::input( 'text', $this->get_field_name( 'title' ), $instance['title'],
 				array(
 					'label' => '<strong>' . __( 'Title', 'author-avatars' ) . ':</strong> ',
 					'class' => 'widefat',
@@ -278,7 +278,7 @@ class AuthorAvatarsWidget extends WP_Widget {
 		echo '<div class="aa-widget-control-panel">' . $basic . $advanced . '</div>';
 
 		// hidden "submit=1" field (do we still need this?, FIXME)
-		echo FormHelper::input( 'hidden', $this->get_field_name( 'submit' ), '1', array( 'id' => $this->get_field_id( 'submit' ) ) );
+		echo AAFormHelper::input( 'hidden', $this->get_field_name( 'submit' ), '1', array( 'id' => $this->get_field_id( 'submit' ) ) );
 	}
 
 	function get_field_name( $varname ) {

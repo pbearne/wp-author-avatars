@@ -29,7 +29,7 @@ class AuthorAvatarsForm {
 	 * Constructor
 	 */
 	function AuthorAvatarsForm() {
-		require_once( 'FormHelper.class.php' );
+		require_once( 'AAFormHelper.class.php' );
 		$this->settings = AA_settings();
 		$this->tabs     = array();
 	}
@@ -117,7 +117,7 @@ class AuthorAvatarsForm {
 		if ( $this->settings->blog_selection_allowed() ) {
 			$id   = $this->_getFieldId( $name );
 			$name = $this->_getFieldName( $name );
-			$html .= '<p>' . FormHelper::choice( $name, Array( - 1 => "All" ) + $this->_getAllBlogs(), $values, array(
+			$html .= '<p>' . AAFormHelper::choice( $name, Array( - 1 => "All" ) + $this->_getAllBlogs(), $values, array(
 					'id'       => $id,
 					'multiple' => true,
 					'label'    => '<strong>' . __( 'Show users from blogs', 'author-avatars' ) . ':</strong><br />',
@@ -193,7 +193,7 @@ class AuthorAvatarsForm {
 				$attributes['wrapper_tag'] = 'p';
 			}
 			$name = $this->_getFieldName( $name );
-			$html = FormHelper::choice( $name, $group_by_options, $values, $attributes );
+			$html = AAFormHelper::choice( $name, $group_by_options, $values, $attributes );
 		}
 
 		return $html;
@@ -230,7 +230,7 @@ class AuthorAvatarsForm {
 				}
 			}
 			$name = $this->_getFieldName( $name );
-			$html .= FormHelper::choice( $name, $roles, $values, $attributes );
+			$html .= AAFormHelper::choice( $name, $roles, $values, $attributes );
 		}
 
 		return $html;
@@ -290,7 +290,7 @@ class AuthorAvatarsForm {
 		);
 		$name       = $this->_getFieldName( $name );
 
-		return '<p>' . FormHelper::input( 'text', $name, $value, $attributes ) . '</p>';
+		return '<p>' . AAFormHelper::input( 'text', $name, $value, $attributes ) . '</p>';
 	}
 
 	/**
@@ -352,7 +352,7 @@ class AuthorAvatarsForm {
 		);
 		$name       = $this->_getFieldName( $name );
 
-		return FormHelper::choice( $name, $display_options, $values, $attributes );
+		return AAFormHelper::choice( $name, $display_options, $values, $attributes );
 	}
 
 
@@ -390,7 +390,7 @@ class AuthorAvatarsForm {
 		);
 		$name       = $this->_getFieldName( $name );
 
-		return '<p>' . FormHelper::choice( $name, $order_options, $values, $attributes ) . '</p>';
+		return '<p>' . AAFormHelper::choice( $name, $order_options, $values, $attributes ) . '</p>';
 	}
 
 	/**
@@ -425,7 +425,7 @@ class AuthorAvatarsForm {
 		);
 		$name       = $this->_getFieldName( $name );
 
-		return '<p>' . FormHelper::choice( $name, $user_link_options, $values, $attributes ) . '</p>';
+		return '<p>' . AAFormHelper::choice( $name, $user_link_options, $values, $attributes ) . '</p>';
 	}
 
 	/**
@@ -447,7 +447,7 @@ class AuthorAvatarsForm {
 		);
 		$name          = $this->_getFieldName( $name );
 
-		return '<p>' . FormHelper::choice( $name, $order_options, $values, $attributes ) . '</p>';
+		return '<p>' . AAFormHelper::choice( $name, $order_options, $values, $attributes ) . '</p>';
 	}
 
 	/**
@@ -466,7 +466,7 @@ class AuthorAvatarsForm {
 		);
 		$name       = $this->_getFieldName( $name );
 
-		return '<p>' . FormHelper::input( 'text', $name, $value, $attributes ) . '</p>';
+		return '<p>' . AAFormHelper::input( 'text', $name, $value, $attributes ) . '</p>';
 	}
 
 	/**
@@ -485,7 +485,7 @@ class AuthorAvatarsForm {
 		);
 		$name       = $this->_getFieldName( $name );
 
-		return '<p>' . FormHelper::input( 'text', $name, $value, $attributes ) . '</p>';
+		return '<p>' . AAFormHelper::input( 'text', $name, $value, $attributes ) . '</p>';
 	}
 
 
@@ -507,7 +507,7 @@ class AuthorAvatarsForm {
 		);
 		$name       = $this->_getFieldName( $name );
 
-		return '<p>' . FormHelper::input( 'text', $name, $value, $attributes ) . '</p>';
+		return '<p>' . AAFormHelper::input( 'text', $name, $value, $attributes ) . '</p>';
 	}
 
 	/**
@@ -526,7 +526,7 @@ class AuthorAvatarsForm {
 		);
 		$name       = $this->_getFieldName( $name );
 
-		return '<p>' . FormHelper::input( 'text', $name, $value, $attributes ) . '</p>';
+		return '<p>' . AAFormHelper::input( 'text', $name, $value, $attributes ) . '</p>';
 	}
 
 	/**
@@ -545,7 +545,7 @@ class AuthorAvatarsForm {
 			'size'  => '5'
 		);
 		$name       = $this->_getFieldName( $name );
-		$html       = '<p>' . FormHelper::input( 'text', $name, $value, $attributes ) . '</p>';
+		$html       = '<p>' . AAFormHelper::input( 'text', $name, $value, $attributes ) . '</p>';
 		if ( $preview == true ) {
 			global $user_email;
 			get_currentuserinfo();
@@ -576,7 +576,7 @@ class AuthorAvatarsForm {
 		);
 		$name         = $this->_getFieldName( $name );
 
-		return '<p>' . FormHelper::choice( $name, $type_options, $values, $attributes ) . '</p>';
+		return '<p>' . AAFormHelper::choice( $name, $type_options, $values, $attributes ) . '</p>';
 	}
 
 	/**
@@ -594,7 +594,7 @@ class AuthorAvatarsForm {
 		);
 		$name       = $this->_getFieldName( $name );
 
-		return FormHelper::input( 'text', $name, $value, $attributes ) . '</p>';
+		return AAFormHelper::input( 'text', $name, $value, $attributes ) . '</p>';
 	}
 
 	/**
@@ -614,7 +614,7 @@ class AuthorAvatarsForm {
 
 		$users = $this->_get_all_users( array( - 1 => __( 'Custom value', 'author-avatars' ) ) );
 
-		return '<p>' . FormHelper::choice( $name, $users, $values, $attributes );
+		return '<p>' . AAFormHelper::choice( $name, $users, $values, $attributes );
 	}
 
 	/**
@@ -658,7 +658,7 @@ class AuthorAvatarsForm {
 		);
 		$name              = $this->_getFieldName( $name );
 
-		return '<p>' . FormHelper::choice( $name, $alignment_options, $values, $attributes ) . '</p>';
+		return '<p>' . AAFormHelper::choice( $name, $alignment_options, $values, $attributes ) . '</p>';
 	}
 
 	/**
@@ -673,7 +673,7 @@ class AuthorAvatarsForm {
 		if ( empty( $id ) ) {
 			$id = 'tab-' . $title;
 		}
-		$id = FormHelper::cleanHtmlId( $id );
+		$id = AAFormHelper::cleanHtmlId( $id );
 		if ( isset( $this->tabs[ $id ] ) ) {
 			trigger_error( 'Warning: id "' . $id . '" has already been used as tab identifier.', E_USER_WARNING );
 		} else {
