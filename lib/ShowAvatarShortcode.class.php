@@ -114,7 +114,7 @@ class ShowAvatarShortcode {
 							break;
 						case 'website':
 							$link = get_the_author_meta( 'user_url', $id );
-							if ( empty( $link ) || $link == 'http://' ) {
+							if ( empty( $link ) || 'http://' === $link ) {
 								$link = false;
 							}
 							break;
@@ -133,11 +133,19 @@ class ShowAvatarShortcode {
 								$link = bp_core_get_userurl( $id );
 							}
 							break;
+						case 'um_profile':
+							if ( function_exists( 'um_user_profile_url' ) ) {
+								$link = um_user_profile_url();
+							}
+							if ( empty( $link ) || 'http://' === $link ) {
+								$link = false;
+							}
+							break;
 						case 'bbpress_memberpage':
 							if ( function_exists( 'bbp_get_user_profile_url' ) ) {
 								$link = bbp_get_user_profile_url( $id );
 							}
-							if ( empty( $link ) || $link == 'http://' ) {
+							if ( empty( $link ) || 'http://' === $link ) {
 								$link = false;
 							}
 							break;

@@ -400,6 +400,17 @@ class UserList {
 					$link = bp_core_get_userurl( $user->user_id );
 				}
 				break;
+
+			case 'um_profile':
+				if ( function_exists( 'um_user_profile_url' ) ) {
+					$link = um_user_profile_url();
+				}
+				if ( empty( $link ) || 'http://' === $link  ) {
+					$link = false;
+				}
+				break;
+
+
 			case 'bbpress_memberpage':
 				if ( function_exists( 'bbp_get_user_profile_url' ) ) {
 					$link = bbp_get_user_profile_url( $user->user_id );

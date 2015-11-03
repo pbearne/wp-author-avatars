@@ -412,6 +412,9 @@ class AuthorAvatarsForm {
 		if ( AA_is_bp() ) {
 			$user_link_options['bp_memberpage'] = __( 'BP Member Page', 'author-avatars' );
 		}
+		if ( class_exists( 'UM_API' ) ) {
+			$user_link_options['um_profile'] = __( 'UM Profile Page', 'author-avatars' );
+		}
 		if ( AA_is_wpmu() ) {
 			$user_link_options['last_post_all'] = __( 'Users Last Post ALL blogs', 'author-avatars' );
 			$user_link_options['blog'] = __( 'Blog', 'author-avatars' );
