@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=MZTZ5
 Tags: Avatar, Author, BuddyPress, xprofile, Comment, Editor, Image, Multisite, Photo, Picture, Profile, Shortcode, Random, Sidebar, Thumbnail, User, Widget, Wpmu, BBPress, co-authors
 Requires at least: 3.0
 Tested up to: 4.3
-Stable tag: 1.8.7
+Stable tag: 1.8.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -16,6 +16,8 @@ This plugin makes it easy to *display lists of user avatars* on your (multiuser)
 
 Avatar lists can be inserted into your sidebar by adding a widget or into posts/pages by using a [shortcode](http://authoravatars.wordpress.com/documentation/authoravatars-shortcode/). The plugin comes with a tinymce editor plugin which makes inserting shortcodes very easy.
 
+Please help with the plugin Translations at https://translate.wordpress.org/projects/wp-plugins/author-avatars.
+
 Both shortcode and widget can be configured to...
 
 *   Show a custom title (widget only)
@@ -26,7 +28,7 @@ Both shortcode and widget can be configured to...
 *   Optionally show a user's name or biography
 *   Show users from the current blog, all blogs or a selection of blogs (on WPMU/Multisite)
 *   Group users by their blog (when showing from multiple blogs), and show the blog name above each grouping (experimental feature).
-*	Supports users from co-authors,BBpress and BudyPress
+*	Supports users from co-authors, Ultimate Member, BBpress and BudyPress
 
 * the shortcode can page the avatars for large sets add a page_size to the shortcode e.g. "page_size=30"
 
@@ -70,6 +72,7 @@ If you have added CSS to your theme you may have to update it for this upgrade (
 
 = 1.8.8 =
 set the page count to strat at 1 not 0
+Added support for UM profiles links
 
 
 = 1.8.7 =
