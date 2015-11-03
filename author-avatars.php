@@ -6,7 +6,7 @@ Description: Display lists of user avatars using <a href="widgets.php">widgets</
 Version: 1.8.7
 Author: <a href="http://bearne.ca">Paul Bearne</a>, <a href="http://mind2.de">Benedikt Forchhammer</a>
 Text Domain: author-avatars
-Domain Path: /translations/
+Domain Path: /translations
 */
 
 // The current version of the author avatars plugin. Needs to be updated every time we do a version step.

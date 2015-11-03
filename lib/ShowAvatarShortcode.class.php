@@ -210,7 +210,8 @@ class ShowAvatarShortcode {
 					}
 
 					if ( ! empty( $atts['show_name'] ) ) {
-						$bio = '<div class="bio bio-length-'. $atts['max_bio_length'] .'">' . $biography . '</div>';
+						$max_bio_length = ( isset( $atts['max_bio_length'] ) ) ? $atts['max_bio_length'] : 0;
+							$bio = '<div class="bio bio-length-'. $max_bio_length .'">' . $biography . '</div>';
 					}
 					if ( empty( $bio ) ) {
 						$extraClass .= ' biography-missing';
