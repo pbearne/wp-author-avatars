@@ -135,7 +135,9 @@ class ShowAvatarShortcode {
 							break;
 						case 'um_profile':
 							if ( function_exists( 'um_user_profile_url' ) ) {
+								um_fetch_user( $id );
 								$link = um_user_profile_url();
+								um_reset_user();
 							}
 							if ( empty( $link ) || 'http://' === $link ) {
 								$link = false;
@@ -151,20 +153,20 @@ class ShowAvatarShortcode {
 							break;
 						case 'last_post':
 							$recent = get_posts(array(
-								'author'=>$id,
-								'orderby'=>'date',
-								'order'=>'desc',
-								'numberposts'=>1
+								'author' => $id,
+								'orderby' => 'date',
+								'order' => 'desc',
+								'numberposts' => 1,
 							));
 							$link = get_permalink( $recent[0]->ID );
 							break;
 
 						case 'last_post_filtered':
 							$recent = get_posts(array(
-								'author'=>$id,
-								'orderby'=>'date',
-								'order'=>'desc',
-								'numberposts'=>1
+								'author' => $id,
+								'orderby' => 'date',
+								'order' => 'desc',
+								'numberposts' => 1,
 							));
 							$link = get_permalink( $recent[0]->ID );
 							break;

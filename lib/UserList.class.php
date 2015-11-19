@@ -403,7 +403,9 @@ class UserList {
 
 			case 'um_profile':
 				if ( function_exists( 'um_user_profile_url' ) ) {
+					um_fetch_user( $user->user_id );
 					$link = um_user_profile_url();
+					um_reset_user();
 				}
 				if ( empty( $link ) || 'http://' === $link  ) {
 					$link = false;
