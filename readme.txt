@@ -71,7 +71,8 @@ If you have added CSS to your theme you may have to update it for this upgrade (
 == Changelog ==
 
 = 1.9 =
-fix problem with WP 4.4
+fixed problem with WP 4.4 and widgets not saving
+Add help translate link
 
 = 1.8.8 =
 set the page count to strat at 1 not 0
