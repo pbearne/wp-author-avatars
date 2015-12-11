@@ -44,6 +44,7 @@ class AuthorAvatarsWidget extends WP_Widget {
 	 */
 	function AuthorAvatarsWidget() {
 
+
 		$this->_setDefaults();
 
 		parent::__construct(
@@ -182,15 +183,20 @@ class AuthorAvatarsWidget extends WP_Widget {
 	 * @param $new_instance The new widget options, sent from the widget control form.
 	 * @param $old_instance The options of the old instance in case we're updating a widget. This is empty if we're creating a new widget.
 	 * @param The instance of widget options which is saved to the database.
+	 *
+	 * @return array $instance
 	 */
 	function update( $new_instance, $old_instance ) {
+
 		$instance                = $old_instance;
 		$instance['title']       = esc_html( $new_instance['title'] );
 		$instance['hiddenusers'] = esc_html( $new_instance['hiddenusers'] );
 		$instance['roles']       = (array) $new_instance['roles'];
-		$instance['blogs']       = (array) $new_instance['blogs'];
-		$instance['group_by']    = esc_html( $new_instance['group_by'] );
+		$instance['blogs']       = ( isset( $new_instance['blogs'] ) ) ? (array) $new_instance['blogs'] : array();
+		$instance['group_by']    = ( isset( $new_instance['group_by'] ) ) ? esc_html( $new_instance['group_by'] ) : '';
 		$instance['display']     = (array) $new_instance['display'];
+
+		$instance['display']['avatar_size'] = absint( $instance['display']['avatar_size'] );
 
 		if ( empty( $instance['blogs'] ) ) {
 			$instance['blogs'] = $this->defaults['blogs'];
@@ -231,6 +237,14 @@ class AuthorAvatarsWidget extends WP_Widget {
 
 		// BASIC TAB
 		$basic_left = $widget_title;
+
+
+		if( ! isset( $instance['display']['user_link'] ) ){
+			$instance['display']['user_link'] = array();
+		}
+		if( ! isset( $instance['display']['avatar_size'] ) ){
+			$instance['display']['avatar_size'] = '';
+		}
 
 		$basic_left .= $form->renderFieldRoles( $instance['roles'] );
 		$basic_left .= $form->renderFieldUserLink( $instance['display']['user_link'], 'display][user_link' );

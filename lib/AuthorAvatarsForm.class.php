@@ -100,6 +100,12 @@ class AuthorAvatarsForm {
 		if ( $this->field_name_callback != null ) {
 			$name = call_user_func( $this->field_name_callback, $name );
 		}
+		// TODO: remove when core fixed
+		// hack to handle cange in core in WP 4.4
+		if ( ( strlen( $name ) - 1 ) !== strrpos( $name, ']' ) ) {
+			$name = $name .  ']';
+		}
+		$name = str_replace( ']]', ']', $name );
 
 		return $name;
 	}
