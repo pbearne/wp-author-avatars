@@ -367,13 +367,7 @@ class UserList {
 		}
 
 		switch ( $link_type ) {
-			case 'authorpage':
-				if ( 'guest-author' === $type ) {
-					$link = get_author_posts_url( $user->user_id, $user->user_nicename );
-				} else {
-					$link = get_author_posts_url( $user->user_id );
-				}
-				break;
+
 			case 'website':
 				if ( 'guest-author' === $type ) {
 					$link = get_the_author_meta( 'url', $user->ID );
@@ -428,9 +422,18 @@ class UserList {
 					'order'       => 'desc',
 					'numberposts' => 1,
 				) );
-				$link   = get_permalink( $recent[0]->ID );
+				if ( ! empty( $recent ) ) {
+					$link   = get_permalink( $recent[0]->ID );
+					break;
+				}
+				// fall throught if no last post to author page
+			case 'authorpage':
+				if ( 'guest-author' === $type ) {
+					$link = get_author_posts_url( $user->user_id, $user->user_nicename );
+				} else {
+					$link = get_author_posts_url( $user->user_id );
+				}
 				break;
-
 			case 'last_post_all':
 				$last_post = get_most_recent_post_of_user( $user->user_id );
 				$link      = get_permalink( $last_post['post_id'] );

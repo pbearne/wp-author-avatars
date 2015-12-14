@@ -72,6 +72,7 @@ If you have added CSS to your theme you may have to update it for this upgrade (
 
 = 1.9.2 =
 Added aa_user_show_last_post_type flister to aloow setting of post type for last post link
+added defaulted to author page if no last post is returned
 
 = 1.9 =
 fixed problem with WP 4.4 and widgets not saving
