@@ -826,7 +826,14 @@ class UserList {
 	function aa_get_last_post( $user_id ) {
 		$args     = array(
 			'author'              => $user_id,
-			'post_type'           => 'post',
+			/**
+			 * Filter the users last post type. Default is "posts"
+			 *
+			 * @since 1.9.2
+			 *
+			 * @param int $user_id The Current user ID.
+			 */
+			'post_type'           => apply_filters( 'aa_user_show_last_post_type', 'post', $user_id ),
 			'post_status'         => 'publish',
 			'posts_per_page'      => 1,
 			'ignore_sticky_posts' => 1,
