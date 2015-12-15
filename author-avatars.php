@@ -3,14 +3,14 @@
 Plugin Name: Author Avatars List
 Plugin URI: http://authoravatars.wordpress.com/
 Description: Display lists of user avatars using <a href="widgets.php">widgets</a> or <a href="https://authoravatars.wordpress.com/documentation/">shortcodes</a>.
-Version: 1.9.2
+Version: 1.9.3
 Author: <a href="http://bearne.ca">Paul Bearne</a>, <a href="http://mind2.de">Benedikt Forchhammer</a>
 Text Domain: author-avatars
 Domain Path: /translations
 */
 
 // The current version of the author avatars plugin. Needs to be updated every time we do a version step.
-define( 'AUTHOR_AVATARS_VERSION', '1.9.2' );
+define( 'AUTHOR_AVATARS_VERSION', '1.9.3' );
 
 // List of all version, used during update check. (Append new version to the end and write an update__10_11 method on AuthorAvatars class if needed)
 define( 'AUTHOR_AVATARS_VERSION_HISTORY', serialize( array(
@@ -81,8 +81,8 @@ function AA_shortcode_paging() {
 	die();
 }
 
-add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'add_action_links' );
-function add_action_links( $links ) {
+add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'AA_add_action_links' );
+function AA_add_action_links( $links ) {
 	$mylinks = array(
 		sprintf( '<a href="%s" target="_blank">%s</a>',
 			esc_url( 'https://translate.wordpress.org/projects/wp-plugins/author-avatars' ),

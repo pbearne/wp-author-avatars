@@ -69,9 +69,11 @@ If you have added CSS to your theme you may have to update it for this upgrade (
 5. List of users with name and biography
 
 == Changelog ==
+= 1.9.3 =
+renamed function causing redeclare error
 
 = 1.9.2 =
-Added aa_user_show_last_post_type flister to aloow setting of post type for last post link
+Added aa_user_show_last_post_type filter to allow setting of post type for last post link
 added defaulted to author page if no last post is returned
 
 = 1.9 =
