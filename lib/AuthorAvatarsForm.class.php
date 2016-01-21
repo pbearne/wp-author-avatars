@@ -286,13 +286,34 @@ class AuthorAvatarsForm {
 	 *
 	 * @return string
 	 */
-	function renderFieldHiddenUsers( $value = '', $name = 'hiddenusers' ) {
+	function render_field_hidden_users( $value = '', $name = 'hiddenusers' ) {
 		$attributes = array(
 			'id'    => $this->_getFieldId( $name ),
 			'label' => '<strong>' . __( 'Hidden users', 'author-avatars' ) . ':</strong><br/>',
-			'help'  => '<br/><small>(' . __( 'Comma separate list of user login ids', 'author-avatars' ) . ')</small>',
+			'help'  => '<br/><small>(' . __( 'Comma separate list of user login ids. Hidden user are removed before the white list', 'author-avatars' ) . ')</small>',
 			'rows'  => 2,
-			'style' => 'width:95%;'
+			'style' => 'width:95%;',
+		);
+		$name       = $this->_getFieldName( $name );
+
+		return '<p>' . AAFormHelper::input( 'text', $name, $value, $attributes ) . '</p>';
+	}
+
+	/**
+	 * Renders the hiddenusers input text field.
+	 *
+	 * @param string $value the field value
+	 * @param string $name the field name
+	 *
+	 * @return string
+	 */
+	function render_field_white_list_users( $value = '', $name = 'whitelistusers' ) {
+		$attributes = array(
+			'id'    => $this->_getFieldId( $name ),
+			'label' => '<strong>' . __( 'White List of users', 'author-avatars' ) . ':</strong><br/>',
+			'help'  => '<br/><small>(' . __( '0nly show these uses, Comma separate list of user login ids', 'author-avatars' ) . ')</small>',
+			'rows'  => 2,
+			'style' => 'width:95%;',
 		);
 		$name       = $this->_getFieldName( $name );
 

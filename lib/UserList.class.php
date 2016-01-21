@@ -19,6 +19,11 @@ class UserList {
 	var $hiddenusers = array();
 
 	/**
+	 * Array of users that are not displayed
+	 */
+	var $whitelistusers = array();
+
+	/**
 	 * Array of users that are to be displayed
 	 */
 	var $onlyusers = array();
@@ -291,6 +296,7 @@ class UserList {
 		$params = array(
 
 			'hiddenusers'             => $this->hiddenusers,
+			'whitelistusers'          => $this->whitelistusers,
 			'blogs'                   => $this->blogs,
 			'roles'                   => $this->roles,
 			'group_by'                => $this->group_by,
@@ -355,7 +361,7 @@ class UserList {
 		// always use 'website' for commentators
 		$type = ( isset( $user->type ) ) ? $user->type : null;
 
-		if ( -1 === $user->user_id && 'guest-author' != $type ) {
+		if ( - 1 === $user->user_id && 'guest-author' != $type ) {
 			$link_type = 'website';
 			$divcss[]  = 'user-0';
 		} else {
@@ -373,7 +379,7 @@ class UserList {
 					$link = get_the_author_meta( 'url', $user->ID );
 				} else {
 					$link = $user->user_url;
-					if ( empty( $link ) || 'http://' === $link  ) {
+					if ( empty( $link ) || 'http://' === $link ) {
 						$link = false;
 					}
 				}
@@ -401,7 +407,7 @@ class UserList {
 					$link = um_user_profile_url();
 					um_reset_user();
 				}
-				if ( empty( $link ) || 'http://' === $link  ) {
+				if ( empty( $link ) || 'http://' === $link ) {
 					$link = false;
 				}
 				break;
@@ -423,10 +429,10 @@ class UserList {
 					'numberposts' => 1,
 				) );
 				if ( ! empty( $recent ) ) {
-					$link   = get_permalink( $recent[0]->ID );
+					$link = get_permalink( $recent[0]->ID );
 					break;
 				}
-				// fall throught if no last post to author page
+			// fall throught if no last post to author page
 			case 'authorpage':
 				if ( 'guest-author' === $type ) {
 					$link = get_author_posts_url( $user->user_id, $user->user_nicename );
@@ -505,8 +511,8 @@ class UserList {
 			 * @since 1.8.6.0
 			 *
 			 * @param string $show_last_post The HTML link to users last post.
-			 * @param object
-			 * The Current user object.
+			 * @param        object
+			 *                               The Current user object.
 			 */
 			$show_last_post = apply_filters( 'aa_user_show_last_post_filter', $show_last_post, $user );
 			$divcss[]       = 'with-last-post';
@@ -524,11 +530,11 @@ class UserList {
 			 *
 			 * @since 1.8.6.0
 			 *
-			 * @param string
-			 * The mailto href for sprintf the $1$s is where the email is inserted.
+			 * @param        string
+			 *                          The mailto href for sprintf the $1$s is where the email is inserted.
 			 * @param string $userEmail The Email to be inserted.
-			 * @param object
-			 * The Current user object.
+			 * @param        object
+			 *                          The Current user object.
 			 */
 			$email    = sprintf( apply_filters( 'aa_user_email_url_template', '<a href="mailto:%1$s">%1$s</a>', $userEmail, $user ), $userEmail );
 			$divcss[] = 'with-email';
@@ -582,10 +588,10 @@ class UserList {
 		/**
 		 * filter the span that holds the avatar
 		 *
-		 * @param string $html     The sprintf template.
-		 * @param string $title    The value passed to the title attr in span.
-		 * @param string $avatar    The HTML returned from get_avatar() etc.
-		 * @param object $user The user object
+		 * @param string $html   The sprintf template.
+		 * @param string $title  The value passed to the title attr in span.
+		 * @param string $avatar The HTML returned from get_avatar() etc.
+		 * @param object $user   The user object
 		 */
 		$html .= sprintf( apply_filters( 'aa_user_avatar_template', '<span class="avatar" title="%s">%s</span>', $title, $avatar, $user ), $title, $avatar );
 
@@ -593,7 +599,7 @@ class UserList {
 			/**
 			 * filter the span that contains the users name
 			 *
-			 * @param string $html           The sprintf template.
+			 * @param string $html The sprintf template.
 			 * @param string $name The value (users name) passed into the span
 			 * @param object $user The user object
 			 */
@@ -604,11 +610,11 @@ class UserList {
 			/**
 			 * filter the href that wrap's avatar and users name
 			 *
-			 * @param string $html          The sprintf template.
-			 * @param string $link The href value.
+			 * @param string $html  The sprintf template.
+			 * @param string $link  The href value.
 			 * @param string $title The value for the href title
-			 * @param string $html The HTML with avatar and name
-			 * @param object $user The user object
+			 * @param string $html  The HTML with avatar and name
+			 * @param object $user  The user object
 			 */
 			$html = sprintf( apply_filters( 'aa_user_link_template', '<a href="%s" title="%s">%s</a>', $link, $title, $html, $user ), $link, $title, $html );
 		}
@@ -617,9 +623,9 @@ class UserList {
 			/**
 			 * filter that wrap's the email link in a div
 			 *
-			 * @param string  $html The sprintf template.
+			 * @param string $html  The sprintf template.
 			 * @param string $email The HTML containing the mailto href and email string.
-			 * @param object $user The user object
+			 * @param object $user  The user object
 			 */
 			$html .= sprintf( apply_filters( 'aa_user_email_template', '<div class="email">%s</div>', $email, $user ), $email );
 		}
@@ -628,9 +634,9 @@ class UserList {
 			/**
 			 * filter that wrap's the BIO text in a div
 			 *
-			 * @param string $html The sprintf template.
+			 * @param string $html      The sprintf template.
 			 * @param string $biography The Bio text.
-			 * @param object $user The user object
+			 * @param object $user      The user object
 			 */
 			$html .= sprintf( apply_filters( 'aa_user_biography_template', '<div class="biography">%s</div>', $biography, $user ), $biography );
 		}
@@ -639,9 +645,9 @@ class UserList {
 			/**
 			 * filter that wrap's the last post link in a div
 			 *
-			 * @param string $html  The sprintf template.
+			 * @param string $html           The sprintf template.
 			 * @param string $show_last_post The last post link.
-			 * @param object $user The user object
+			 * @param object $user           The user object
 			 */
 			$html .= sprintf( apply_filters( 'aa_user_last_post_template', '<div class="show_last_post">%s</div>', $show_last_post, $user ), $show_last_post );
 		}
@@ -651,7 +657,7 @@ class UserList {
 			 * filter the extra HTML block before its appended
 			 *
 			 * @param string $extra extra HTML / string.
-			 * @param object $user The user object
+			 * @param object $user  The user object
 			 */
 			$html .= apply_filters( '
 			aa_user_display_extra', $this->display_extra, $user );
@@ -707,7 +713,10 @@ class UserList {
 		if ( ! empty( $this->hiddenusers ) ) {
 			$cache_id .= '_' . join( '_', $this->hiddenusers );
 		}
-
+		// if whitelist users set then add
+		if ( ! empty( $this->whitelistusers ) ) {
+			$cache_id .= '_' . join( '_', $this->whitelistusers );
+		}
 		// if the use is loged in wipe any cache
 		if ( is_user_logged_in() ) {
 			delete_transient( $cache_id );
@@ -747,8 +756,8 @@ class UserList {
 
 						$args = array(
 							'orderby' => 'term_order',
-							'order' => 'ASC',
-							);
+							'order'   => 'ASC',
+						);
 						//	$args = array(
 						// 		'optioncount'      => false,
 						// 		'show_fullname'    => true,
@@ -852,11 +861,11 @@ class UserList {
 				 *
 				 * @since 1.8.6.0
 				 *
-				 * @param string $permalink The last post permalink.
+				 * @param string $permalink  The last post permalink.
 				 * @param string $title_attr The last post Title attribute.
-				 * @param string $title The last post Title.
-				 * @param int $id The last post ID.
-				 * @param int $user_id The Current user ID.
+				 * @param string $title      The last post Title.
+				 * @param int    $id         The last post ID.
+				 * @param int    $user_id    The Current user ID.
 				 */
 				$out .= sprintf(
 					apply_filters( 'aa_user_show_last_post_html_filter',
@@ -880,6 +889,7 @@ class UserList {
 	/**
 	 * Returns array of all users from all blogs specified in field $blogs.
 	 * If $blogs is empty only users from the current blog are returned.
+	 *
 	 * @param $roles
 	 *
 	 * @return array|null|object Array of users (WP_User objects).
@@ -1004,6 +1014,17 @@ class UserList {
 					$add = false;
 				}
 
+				// Hide user not in white list users
+				if (
+					// if we have set some users which we want to hide
+					is_array( $this->whitelistusers ) && ! empty( $this->whitelistusers ) &&
+					// and the current user is one of them
+
+					( ! in_array( $user->user_login, $this->whitelistusers ) && ! in_array( $user->user_id, $this->whitelistusers ) )
+				) {
+					// do not add this user
+					$add = false;
+				}
 				// real user and co-authors
 				if ( $user->user_id != - 1 ) {
 					// Remove duplicates
@@ -1041,7 +1062,7 @@ class UserList {
 					}
 				}
 
-				if ( true === $add  ) {
+				if ( true === $add ) {
 					// store current user_id/user_email for uniqueness check
 					$user_ids[]    = $user->user_id;
 					$user_emails[] = $user->user_email;
@@ -1075,7 +1096,7 @@ class UserList {
 	 * @access private
 	 *
 	 * @param Array $users Array of users (WP_User objects).
-	 * @param $order String|bool The key to sort by. Can be one of the following: random, user_id, user_login, display_name.
+	 * @param       $order String|bool The key to sort by. Can be one of the following: random, user_id, user_login, display_name.
 	 *
 	 * @return Array $users Array of users (WP_User objects)
 	 */
@@ -1585,16 +1606,16 @@ class UserList {
 	/**
 	 * truncateHtml can truncate a string up to a number of characters while preserving whole words and HTML tags
 	 *
-	 * @param string $text String to truncate.
-	 * @param integer $length Length of returned string, including ellipsis.
-	 * @param string $ending Ending to be appended to the trimmed string.
-	 * @param boolean $exact If false, $text will not be cut mid-word
+	 * @param string  $text         String to truncate.
+	 * @param integer $length       Length of returned string, including ellipsis.
+	 * @param string  $ending       Ending to be appended to the trimmed string.
+	 * @param boolean $exact        If false, $text will not be cut mid-word
 	 * @param boolean $considerHtml If true, HTML tags would be handled correctly
 	 *
 	 * @return string Trimmed string.
 	 */
 	function truncate_html( $text, $length = 100, $ending = '...', $exact = false, $considerHtml = true ) {
-		$open_tags    = array();
+		$open_tags = array();
 		if ( $considerHtml ) {
 			// if the plain text is shorter than the maximum length, return the whole text
 			if ( strlen( preg_replace( '/<.*?>/', '', $text ) ) <= $length ) {

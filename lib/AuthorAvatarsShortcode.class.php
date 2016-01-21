@@ -82,6 +82,15 @@ class AuthorAvatarsShortcode {
 		}
 		$this->userlist->hiddenusers = array_map( 'trim', $hiddenusers );
 
+		// whitelist users
+		$whitelistusers = array(); // default value: no restriction -> all users
+		if ( ! empty( $atts['whitelistusers'] ) ) {
+			if ( ! is_array( $atts['whitelistusers'] ) ) {
+				$whitelistusers = explode( ',', $atts['whitelistusers'] );
+			}
+		}
+		$this->userlist->whitelistusers = array_map( 'trim', $whitelistusers );
+
 		// just these users
 		$onlyusers = array(); // default value: no restriction -> all users
 		if ( ! empty( $atts['onlyusers'] ) ) {
