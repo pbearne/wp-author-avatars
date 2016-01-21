@@ -1166,6 +1166,10 @@ class UserList {
 	function _users_whitelist( $users ) {
 		$out = array();
 
+		if ( empty( $this->whitelistusers  ) ) {
+			return $users;
+		}
+
 		foreach ( $this->whitelistusers as $whitelist_id ) {
 			foreach ( $users as $user ) {
 				if ( $whitelist_id === $user->user_id ) {
