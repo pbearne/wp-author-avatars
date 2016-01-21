@@ -690,7 +690,8 @@ class UserList {
 	function get_users() {
 
 		global $blog_id;
-		$random_order = false;
+		$random_order     = false;
+		$white_list_order = false;
 
 		$cache_id = join( '_', $this->roles ) . '_' . $blog_id;
 		if ( ! empty( $this->blogs ) ) {
@@ -707,7 +708,8 @@ class UserList {
 		// if order set then add
 		if ( ! empty( $this->order ) ) {
 			$cache_id .= '_' . $this->order;
-			$random_order = ( 'random' == $this->order ) ? true : false;
+			$random_order     = ( 'random' == $this->order ) ? true : false;
+			$white_list_order = ( 'whitelist' == $this->order ) ? true : false;
 		}
 		// if hidden user set then add
 		if ( ! empty( $this->hiddenusers ) ) {
@@ -717,6 +719,7 @@ class UserList {
 		if ( ! empty( $this->whitelistusers ) ) {
 			$cache_id .= '_' . join( '_', $this->whitelistusers );
 		}
+
 		// if the use is loged in wipe any cache
 		if ( is_user_logged_in() ) {
 			delete_transient( $cache_id );
@@ -810,7 +813,9 @@ class UserList {
 			$users = $this->_filter( $users );
 
 			// sort them
-			$users = $this->_sort( $users );
+			if ( ! $random_order && ! $white_list_order ) {
+				$users = $this->_sort( $users );
+			}
 
 			// group them
 			$users = $this->_group( $users );
@@ -823,7 +828,7 @@ class UserList {
 			set_transient( $cache_id, $users, 1 * HOUR_IN_SECONDS );
 		}
 
-		if ( $random_order ) {
+		if ( $random_order || $white_list_order ) {
 			$users = $this->_sort( $users );
 		}
 
@@ -1076,6 +1081,7 @@ class UserList {
 		return $users;
 	}
 
+
 	/**
 	 * Returns 1 if the sort direction is "ascending" and -1 if it is "descending"
 	 *
@@ -1108,6 +1114,9 @@ class UserList {
 		switch ( $order ) {
 			case 'random':
 				shuffle( $users );
+				break;
+			case 'whitelist':
+				$users = $this->_users_whitelist( $users );
 				break;
 			case 'user_id':
 				usort( $users, array( $this, '_users_cmp_id' ) );
@@ -1146,6 +1155,26 @@ class UserList {
 		}
 
 		return $users;
+	}
+
+	/**
+	 * Returns a sorted users array by the white list order
+	 *
+	 * @access private
+	 * @return array $users WP_user
+	 */
+	function _users_whitelist( $users ) {
+		$out = array();
+
+		foreach ( $this->whitelistusers as $whitelist_id ) {
+			foreach ( $users as $user ) {
+				if ( $whitelist_id === $user->user_id ) {
+					$out[] = $user;
+				}
+			}
+		}
+
+		return $out;
 	}
 
 	/**

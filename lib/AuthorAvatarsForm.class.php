@@ -103,7 +103,7 @@ class AuthorAvatarsForm {
 		// TODO: remove when core fixed
 		// hack to handle cange in core in WP 4.4
 		if ( ( strlen( $name ) - 1 ) !== strrpos( $name, ']' ) ) {
-			$name = $name .  ']';
+			$name = $name . ']';
 		}
 		$name = str_replace( ']]', ']', $name );
 
@@ -113,8 +113,8 @@ class AuthorAvatarsForm {
 	/**
 	 * Renders the blog filter select field.
 	 *
-	 * @param mixed $values the field values
-	 * @param string $name the field name
+	 * @param mixed  $values the field values
+	 * @param string $name   the field name
 	 *
 	 * @return string
 	 */
@@ -140,31 +140,31 @@ class AuthorAvatarsForm {
 	 * The list only contains public blogs which are not marked as archived, deleted
 	 * or spam and the list is ordered by blog name.
 	 *
-	 * @see http://codex.wordpress.org/WPMU_Functions/get_blog_list
+	 * @see    http://codex.wordpress.org/WPMU_Functions/get_blog_list
 	 * @access private
 	 * @return Array of blog names
 	 */
 	function _getAllBlogs() {
 		global $wpdb;
 		$where_options = array(
-			'public' => 1,
+			'public'   => 1,
 			'archived' => 0,
-			'mature' => 0,
-			'spam' => 0,
-			'deleted' => 0
+			'mature'   => 0,
+			'spam'     => 0,
+			'deleted'  => 0
 		);
 
 		$where_options_filtered = apply_filters( 'aa_get_all_blogs_where', $where_options );
-		$where_string = '';
-		foreach ($where_options_filtered as $key => $where){
+		$where_string           = '';
+		foreach ( $where_options_filtered as $key => $where ) {
 
-			if( ! array_key_exists( $key, $where_options )){
+			if ( ! array_key_exists( $key, $where_options ) ) {
 				continue;
 			}
-			$bool =  ( 1 == $where ) ? 1 : 0 ;
+			$bool = ( 1 == $where ) ? 1 : 0;
 			$where_string .= " AND $key = '$bool'";
 		}
-		$blogs = $wpdb->get_results( $wpdb->prepare( "SELECT blog_id, path FROM $wpdb->blogs WHERE 1 = 1 AND site_id = %d  $where_string", $wpdb->siteid  ), ARRAY_A );
+		$blogs = $wpdb->get_results( $wpdb->prepare( "SELECT blog_id, path FROM $wpdb->blogs WHERE 1 = 1 AND site_id = %d  $where_string", $wpdb->siteid ), ARRAY_A );
 
 		$blog_list = array();
 		foreach ( (array) $blogs as $details ) {
@@ -178,8 +178,8 @@ class AuthorAvatarsForm {
 	/**
 	 * Renders the group by field, which is either a dropdown field or a single checkbox if only one option is available.
 	 *
-	 * @param mixed $values the field values
-	 * @param string $name the field name
+	 * @param mixed  $values the field values
+	 * @param string $name   the field name
 	 *
 	 * @return string
 	 */
@@ -208,8 +208,8 @@ class AuthorAvatarsForm {
 	/**
 	 * Renders the roles field
 	 *
-	 * @param mixed $values the field values
-	 * @param string $name the field name
+	 * @param mixed  $values the field values
+	 * @param string $name   the field name
 	 *
 	 * @return string
 	 */
@@ -282,7 +282,7 @@ class AuthorAvatarsForm {
 	 * Renders the hiddenusers input text field.
 	 *
 	 * @param string $value the field value
-	 * @param string $name the field name
+	 * @param string $name  the field name
 	 *
 	 * @return string
 	 */
@@ -303,7 +303,7 @@ class AuthorAvatarsForm {
 	 * Renders the hiddenusers input text field.
 	 *
 	 * @param string $value the field value
-	 * @param string $name the field name
+	 * @param string $name  the field name
 	 *
 	 * @return string
 	 */
@@ -347,12 +347,11 @@ class AuthorAvatarsForm {
 	}
 
 
-
 	/**
 	 * Renders the display options checkbox matrix (show name?)
 	 *
-	 * @param mixed $values the field values
-	 * @param string $name the field name
+	 * @param mixed  $values the field values
+	 * @param string $name   the field name
 	 *
 	 * @return string
 	 */
@@ -383,12 +382,11 @@ class AuthorAvatarsForm {
 	}
 
 
-
 	/**
 	 * Renders the "order by" dropdown
 	 *
-	 * @param mixed $values the field values
-	 * @param string $name the field name
+	 * @param mixed  $values the field values
+	 * @param string $name   the field name
 	 *
 	 * @return string
 	 */
@@ -401,6 +399,7 @@ class AuthorAvatarsForm {
 			'user_login'           => __( 'Login Name', 'author-avatars' ),
 			'post_count'           => __( 'Number of Posts', 'author-avatars' ),
 			'random'               => __( 'Random', 'author-avatars' ),
+			'whitelist'            => __( 'White List', 'author-avatars' ),
 			'user_id'              => __( 'User Id', 'author-avatars' ),
 			'recent_post_activity' => __( 'Recent Posts Activity', 'author-avatars' ),
 			'recent_site_activity' => __( 'Recent Sitewide Activity', 'author-avatars' ),
@@ -423,18 +422,18 @@ class AuthorAvatarsForm {
 	/**
 	 * Renders the "user_link" dropdown
 	 *
-	 * @param mixed $values the field values
-	 * @param string $name the field name
+	 * @param mixed  $values the field values
+	 * @param string $name   the field name
 	 *
 	 * @return string
 	 */
 	function renderFieldUserLink( $values = array(), $name = 'user_link' ) {
 		$user_link_options = Array(
-			''                      => '-',
-			'authorpage'            => __( 'Author Page', 'author-avatars' ),
-			'website'               => __( 'Website', 'author-avatars' ),
-			'last_post'             => __( 'Users Last Post this blog','author-avatars' ),
-			'last_post_filtered'    => __( 'Filtered Last Post','author-avatars' ),
+			''                   => '-',
+			'authorpage'         => __( 'Author Page', 'author-avatars' ),
+			'website'            => __( 'Website', 'author-avatars' ),
+			'last_post'          => __( 'Users Last Post this blog', 'author-avatars' ),
+			'last_post_filtered' => __( 'Filtered Last Post', 'author-avatars' ),
 		);
 		if ( AA_is_bp() ) {
 			$user_link_options['bp_memberpage'] = __( 'BP Member Page', 'author-avatars' );
@@ -444,7 +443,7 @@ class AuthorAvatarsForm {
 		}
 		if ( AA_is_wpmu() ) {
 			$user_link_options['last_post_all'] = __( 'Users Last Post ALL blogs', 'author-avatars' );
-			$user_link_options['blog'] = __( 'Blog', 'author-avatars' );
+			$user_link_options['blog']          = __( 'Blog', 'author-avatars' );
 		}
 		if ( AA_is_bbpress() ) {
 			$user_link_options['bbpress_memberpage'] = __( 'BBpress Member Page', 'author-avatars' );
@@ -461,8 +460,8 @@ class AuthorAvatarsForm {
 	/**
 	 * Renders the "order by" dropdown
 	 *
-	 * @param mixed $values the field values
-	 * @param string $name the field name
+	 * @param mixed  $values the field values
+	 * @param string $name   the field name
 	 *
 	 * @return string
 	 */
@@ -484,7 +483,7 @@ class AuthorAvatarsForm {
 	 * Renders the "limit" input field
 	 *
 	 * @param string $value the field value
-	 * @param string $name the field name
+	 * @param string $name  the field name
 	 *
 	 * @return string
 	 */
@@ -503,7 +502,7 @@ class AuthorAvatarsForm {
 	 * Renders the "limit" input field
 	 *
 	 * @param string $value the field value
-	 * @param string $name the field name
+	 * @param string $name  the field name
 	 *
 	 * @return string
 	 */
@@ -523,17 +522,17 @@ class AuthorAvatarsForm {
 	 * Renders the "max bio length" input field
 	 *
 	 * @param string $value the field value
-	 * @param string $name the field name
+	 * @param string $name  the field name
 	 *
 	 * @return string
 	 */
 	function renderFieldMaxBioLength( $value = '', $name = 'max_bio_length' ) {
 		$attributes = array(
 			'id'    => $this->_getFieldId( $name ),
-			'label' => __( 'Trim Bio Length to ', 'author-avatars' ) ,
+			'label' => __( 'Trim Bio Length to ', 'author-avatars' ),
 
-			'help'  => ' characters.',
-			'size'  => '4'
+			'help' => ' characters.',
+			'size' => '4'
 		);
 		$name       = $this->_getFieldName( $name );
 
@@ -544,7 +543,7 @@ class AuthorAvatarsForm {
 	 * Renders the "min_post_count" input field
 	 *
 	 * @param string $value the field value
-	 * @param string $name the field name
+	 * @param string $name  the field name
 	 *
 	 * @return string
 	 */
@@ -562,9 +561,9 @@ class AuthorAvatarsForm {
 	/**
 	 * Renders the avatar size input field.
 	 *
-	 * @param string $value the field value
-	 * @param string $name the field name
-	 * @param bool $preview If set to true (default) the "avatar_size_preview" div is rendered. jQuery UI and "js/widget.admin.js" needs to included in order for this to work.
+	 * @param string $value   the field value
+	 * @param string $name    the field name
+	 * @param bool   $preview If set to true (default) the "avatar_size_preview" div is rendered. jQuery UI and "js/widget.admin.js" needs to included in order for this to work.
 	 */
 	function renderFieldAvatarSize( $value = '', $name = 'avatar_size', $preview = true ) {
 		$attributes = array(
@@ -588,8 +587,8 @@ class AuthorAvatarsForm {
 	/**
 	 * Renders the shortcode type selection field
 	 *
-	 * @param mixed $values the field values
-	 * @param string $name the field name
+	 * @param mixed  $values the field values
+	 * @param string $name   the field name
 	 *
 	 * @return string
 	 */
@@ -613,7 +612,7 @@ class AuthorAvatarsForm {
 	 * Renders the email/userid input field for the show_avatar wizard
 	 *
 	 * @param string $value the field value
-	 * @param string $name the field name
+	 * @param string $name  the field name
 	 *
 	 * @return string
 	 */
@@ -631,7 +630,7 @@ class AuthorAvatarsForm {
 	 * Renders the User pick input field for the show_avatar wizard
 	 *
 	 * @param string $value the field value
-	 * @param string $name the field name
+	 * @param string $name  the field name
 	 *
 	 * @return string
 	 */
@@ -667,8 +666,8 @@ class AuthorAvatarsForm {
 	/**
 	 * Renders the alignment radio fields for the show_avatar wizard
 	 *
-	 * @param mixed $values the field values
-	 * @param string $name the field name
+	 * @param mixed  $values the field values
+	 * @param string $name   the field name
 	 *
 	 * @return string
 	 */
@@ -695,7 +694,7 @@ class AuthorAvatarsForm {
 	 * Renders an opening tab div
 	 *
 	 * @param string $title The tab title
-	 * @param string $id tab id (optional). Generated from $title if empty.
+	 * @param string $id    tab id (optional). Generated from $title if empty.
 	 *
 	 * @return string
 	 */
@@ -745,9 +744,9 @@ class AuthorAvatarsForm {
 	/**
 	 * Renders the two given bits of html in columns next to each other.
 	 *
-	 * @param string $left Contents of the left column
+	 * @param string $left  Contents of the left column
 	 * @param string $right Contents of the right column
-	 * @param string html
+	 * @param        string html
 	 */
 	function renderColumns( $left = '', $right = '' ) {
 		if ( empty( $left ) || empty( $right ) ) {

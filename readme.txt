@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=MZTZ5
 Tags: Avatar, Author, BuddyPress, xprofile, Comment, Editor, Image, Multisite, Photo, Picture, Profile, Shortcode, Random, Sidebar, Thumbnail, User, Widget, Wpmu, BBPress, co-authors
 Requires at least: 3.0
 Tested up to: 4.4
-Stable tag: 1.9.4
+Stable tag: 1.9.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -69,6 +69,9 @@ If you have added CSS to your theme you may have to update it for this upgrade (
 5. List of users with name and biography
 
 == Changelog ==
+
+= 1.9.5 =
+Added sorting by white list values
 
 = 1.9.4 =
 Added White list for users
