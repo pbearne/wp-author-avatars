@@ -812,10 +812,7 @@ class UserList {
 			// filter them
 			$users = $this->_filter( $users );
 
-			// sort them
-			if ( ! $random_order && ! $white_list_order ) {
-				$users = $this->_sort( $users );
-			}
+			$users = $this->_sort( $users );
 
 			// group them
 			$users = $this->_group( $users );
@@ -828,7 +825,8 @@ class UserList {
 			set_transient( $cache_id, $users, 1 * HOUR_IN_SECONDS );
 		}
 
-		if ( $random_order || $white_list_order ) {
+		// as we cache this we need to run the randon sort on the cached output
+		if ( $random_order ) {
 			$users = $this->_sort( $users );
 		}
 
@@ -1166,7 +1164,7 @@ class UserList {
 	function _users_whitelist( $users ) {
 		$out = array();
 
-		if ( empty( $this->whitelistusers  ) ) {
+		if ( empty( $this->whitelistusers ) ) {
 			return $users;
 		}
 
