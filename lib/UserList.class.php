@@ -7,11 +7,6 @@
  */
 class UserList {
 
-	/**
-	 * Constructor
-	 */
-	function UserList() {
-	}
 
 	/**
 	 * Array of users that are not displayed
@@ -464,7 +459,7 @@ class UserList {
 
 				$title .= ' (' . sprintf( _n( '%d post', '%d posts', $postcount, 'author-avatars' ), $postcount ) . ')';
 			}
-			$name .= sprintf( apply_filters( 'aa_post_count', ' (%d)', $postcount ), $postcount );
+			$name .= sprintf( apply_filters( 'aa_post_count', ' (%d)', $postcount, $user ), $postcount );
 		}
 
 		if ( $this->show_bbpress_post_count && AA_is_bbpress() ) {
@@ -473,7 +468,7 @@ class UserList {
 				$BBPRESS_postcount = bbp_get_user_topic_count_raw( $user->user_id ) + bbp_get_user_reply_count_raw( $user->user_id );
 				$title .= ' (' . sprintf( _n( '%d BBPress post', '%d BBPress posts', $BBPRESS_postcount, 'author-avatars' ), $BBPRESS_postcount ) . ')';
 			}
-			$name .= sprintf( ' (%d)', $BBPRESS_postcount );
+			$name .= sprintf(  apply_filters( 'aa_BBPress_post_count', ' (%d)', $postcount, $user ), $BBPRESS_postcount );
 		}
 
 		$biography = false;
