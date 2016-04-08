@@ -1,4 +1,4 @@
-﻿﻿=== Author Avatars List ===
+﻿=== Author Avatars List ===
 Contributors: pbearne, bforchhammer
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=MZTZ5S8MGF75C&lc=CA&item_name=Wordpress%20Development%20%2f%20Paul%20Bearne&item_number=AuthorAvatarsList%20Plugin&currency_code=CAD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted
 Tags: Avatar, Author, BuddyPress, xprofile, Comment, Editor, Image, Multisite, Photo, Picture, Profile, Shortcode, Random, Sidebar, Thumbnail, User, Widget, Wpmu, BBPress, co-authors
