@@ -351,99 +351,112 @@ class UserList {
 		}
 
 		$link      = false;
-		$link_type = $this->user_link;
+		$link_types = explode( ',',$this->user_link );
 
-		// always use 'website' for commentators
-		$type = ( isset( $user->type ) ) ? $user->type : null;
+		foreach ( $link_types as $link_type ) {
+			// always use 'website' for commentators
+			$type = ( isset( $user->type ) ) ? $user->type : null;
 
-		if ( - 1 === $user->user_id && 'guest-author' != $type ) {
-			$link_type = 'website';
-			$divcss[]  = 'user-0';
-		} else {
-			if ( 'guest-author' === $type ) {
-				$divcss[] = 'guest-author-' . $user->user_id;
+			if ( - 1 === $user->user_id && 'guest-author' != $type ) {
+				$link_type = 'website';
+				$divcss[]  = 'user-0';
 			} else {
-				$divcss[] = 'user-' . $user->user_id;
-			}
-		}
-
-		switch ( $link_type ) {
-
-			case 'website':
 				if ( 'guest-author' === $type ) {
-					$link = get_the_author_meta( 'url', $user->ID );
+					$divcss[] = 'guest-author-' . $user->user_id;
 				} else {
-					$link = $user->user_url;
+					$divcss[] = 'user-' . $user->user_id;
+				}
+			}
+
+			switch ( $link_type ) {
+
+				case 'website':
+					if ( 'guest-author' === $type ) {
+						$link = get_the_author_meta( 'url', $user->ID );
+					} else {
+						$link = $user->user_url;
+						if ( empty( $link ) || 'http://' === $link ) {
+							$link = false;
+						}
+					}
+
+					break;
+				case 'blog':
+					if ( AA_is_wpmu() ) {
+						$blog = get_active_blog_for_user( $user->user_id );
+						if ( ! empty( $blog->siteurl ) ) {
+							$link = $blog->siteurl;
+						}
+					}
+					break;
+				case 'bp_memberpage':
+					if ( function_exists( 'bp_core_get_user_domain' ) ) {
+						$link = bp_core_get_user_domain( $user->user_id );
+					} elseif ( function_exists( 'bp_core_get_userurl' ) ) { // BP versions < 1.1
+						$link = bp_core_get_userurl( $user->user_id );
+					}
+					break;
+
+				case 'um_profile':
+					if ( function_exists( 'um_user_profile_url' ) ) {
+						um_fetch_user( $user->user_id );
+						$link = um_user_profile_url();
+						um_reset_user();
+					}
 					if ( empty( $link ) || 'http://' === $link ) {
 						$link = false;
 					}
-				}
-
-				break;
-			case 'blog':
-				if ( AA_is_wpmu() ) {
-					$blog = get_active_blog_for_user( $user->user_id );
-					if ( ! empty( $blog->siteurl ) ) {
-						$link = $blog->siteurl;
-					}
-				}
-				break;
-			case 'bp_memberpage':
-				if ( function_exists( 'bp_core_get_user_domain' ) ) {
-					$link = bp_core_get_user_domain( $user->user_id );
-				} elseif ( function_exists( 'bp_core_get_userurl' ) ) { // BP versions < 1.1
-					$link = bp_core_get_userurl( $user->user_id );
-				}
-				break;
-
-			case 'um_profile':
-				if ( function_exists( 'um_user_profile_url' ) ) {
-					um_fetch_user( $user->user_id );
-					$link = um_user_profile_url();
-					um_reset_user();
-				}
-				if ( empty( $link ) || 'http://' === $link ) {
-					$link = false;
-				}
-				break;
-
-
-			case 'bbpress_memberpage':
-				if ( function_exists( 'bbp_get_user_profile_url' ) ) {
-					$link = bbp_get_user_profile_url( $user->user_id );
-				}
-				if ( empty( $link ) || 'http://' === $link ) {
-					$link = false;
-				}
-				break;
-			case 'last_post':
-				$recent = get_posts( array(
-					'author'      => $user->user_id,
-					'orderby'     => 'date',
-					'order'       => 'desc',
-					'numberposts' => 1,
-				) );
-				if ( ! empty( $recent ) ) {
-					$link = get_permalink( $recent[0]->ID );
 					break;
-				}
-			// fall throught if no last post to author page
-			case 'authorpage':
-				if ( 'guest-author' === $type ) {
-					$link = get_author_posts_url( $user->user_id, $user->user_nicename );
-				} else {
-					$link = get_author_posts_url( $user->user_id );
-				}
+
+
+				case 'bbpress_memberpage':
+					if ( function_exists( 'bbp_get_user_profile_url' ) ) {
+						$link = bbp_get_user_profile_url( $user->user_id );
+					}
+					if ( empty( $link ) || 'http://' === $link ) {
+						$link = false;
+					}
+					break;
+				case 'last_post':
+					$recent = get_posts( array(
+						'author'      => $user->user_id,
+						'orderby'     => 'date',
+						'order'       => 'desc',
+						'numberposts' => 1,
+					) );
+					if ( ! empty( $recent ) ) {
+						$link = get_permalink( $recent[0]->ID );
+						break;
+					}
+				// fall throught if no last post to author page
+				case 'authorpage':
+					if ( 'guest-author' === $type ) {
+						$link = get_author_posts_url( $user->user_id, $user->user_nicename );
+					} else {
+						$link = get_author_posts_url( $user->user_id );
+					}
+					break;
+				case 'last_post_all':
+					$last_post = get_most_recent_post_of_user( $user->user_id );
+					$link      = get_permalink( $last_post['post_id'] );
+					break;
+				default:
+					$maybe_link = get_the_author_meta( $link_type, $user->user_id );
+					if ( '' !== $maybe_link &&  is_valid_url( $maybe_link ) ) {
+
+						$link = esc_url_raw( $maybe_link );
+					}
+			}
+
+			//exit look if we have a link
+			if ( false !== $link ) {
 				break;
-			case 'last_post_all':
-				$last_post = get_most_recent_post_of_user( $user->user_id );
-				$link      = get_permalink( $last_post['post_id'] );
-				break;
+			}
 		}
 
 		if ( $this->show_postcount ) {
 
-			if ( $user->user_id == - 1 && 'guest-author' != $type ) {
+			if ( -1 == $user->user_id && 'guest-author' != $type ) {
 				$postcount = $this->get_comment_count( $user->user_email );
 				$title .= ' (' . sprintf( _n( '%d comment', '%d comments', $postcount, 'author-avatars' ), $postcount ) . ')';
 			} else {
@@ -463,12 +476,12 @@ class UserList {
 		}
 
 		if ( $this->show_bbpress_post_count && AA_is_bbpress() ) {
-			$BBPRESS_postcount = 0;
+			$bb_press_postcount = 0;
 			if ( function_exists( 'bbp_get_user_topic_count_raw' ) ) {
-				$BBPRESS_postcount = bbp_get_user_topic_count_raw( $user->user_id ) + bbp_get_user_reply_count_raw( $user->user_id );
-				$title .= ' (' . sprintf( _n( '%d BBPress post', '%d BBPress posts', $BBPRESS_postcount, 'author-avatars' ), $BBPRESS_postcount ) . ')';
+				$bb_press_postcount = bbp_get_user_topic_count_raw( $user->user_id ) + bbp_get_user_reply_count_raw( $user->user_id );
+				$title .= ' (' . sprintf( _n( '%d BBPress post', '%d BBPress posts', $bb_press_postcount, 'author-avatars' ), $bb_press_postcount ) . ')';
 			}
-			$name .= sprintf(  apply_filters( 'aa_BBPress_post_count', ' (%d)', $postcount, $user ), $BBPRESS_postcount );
+			$name .= sprintf( apply_filters( 'aa_BBPress_post_count', ' (%d)', $postcount, $user ), $bb_press_postcount );
 		}
 
 		$biography = false;
@@ -850,7 +863,15 @@ class UserList {
 		);
 		$my_query = null;
 		$out      = null;
-		$my_query = new WP_Query( $args );
+		/**
+		 * Filter the users last post Query
+		 *
+		 * @since 1.9.7
+		 *
+		 * @param string Query.
+		 * @param int $user_id The Current user ID.
+		 */
+		$my_query = new WP_Query( apply_filters( 'aa_user_show_last_post_query', $args, $user_id ) );
 		if ( $my_query->have_posts() ) {
 			while ( $my_query->have_posts() ) : $my_query->the_post();
 				$id = $my_query->posts[0]->ID;
@@ -925,6 +946,7 @@ class UserList {
 			$roleQuery = ' AND(' . $roleQuery . ')';
 		}
 
+		// can't wape into pepare as thease are all table names
 		$query = "SELECT user_id, user_login, display_name, user_email, user_url, user_registered, meta_key, meta_value FROM $wpdb->users, $wpdb->usermeta" .
 		         " WHERE " . $wpdb->users . ".ID = " . $wpdb->usermeta . ".user_id AND " . $blogs_condition . " AND user_status = 0" . $roleQuery;
 
