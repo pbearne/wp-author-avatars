@@ -113,6 +113,10 @@ class AuthorAvatarsShortcode {
 			$this->userlist->user_link = $atts['user_link'];
 		}
 
+		if ( ! empty( $atts['contact_links'] ) ) {
+			$this->userlist->contact_links = $atts['contact_links'];
+		}
+
 		$display = array();
 		if ( ! empty( $atts['display'] ) ) {
 			if ( ! is_array( $atts['display'] ) ) {

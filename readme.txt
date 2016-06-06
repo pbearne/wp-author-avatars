@@ -69,8 +69,9 @@ If you have added CSS to your theme you may have to update it for this upgrade (
 
 = 1.9.7 =
 Added filter aa_user_show_last_post_query
-Added the abilty to use any URL in the profile contact section as links
-Added the abolty for user_link to accept a comma-separated list as fail through if a url is not found in first selection
+Added the ability to use any URL in the profile contact section as a link
+Added the ability for user_link to accept a comma-separated list as fall through if a URL is not found in first selection
+Added contact_links to the short-code
 
 = 1.9.6 =
 readme update
