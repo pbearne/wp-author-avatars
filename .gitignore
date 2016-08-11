@@ -26,3 +26,4 @@ wp-config.php
 /*.jpg
 .idea
 /translations
+/.settings

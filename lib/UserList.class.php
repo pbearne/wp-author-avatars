@@ -1009,7 +1009,7 @@ class UserList {
 			$users = $this->_sort( $users );
 		}
 
-		return $users;
+		return apply_filters( 'aa_user_raw_list', $users );
 	}
 
 	/**
