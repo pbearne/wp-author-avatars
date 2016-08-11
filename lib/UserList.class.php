@@ -217,7 +217,7 @@ class UserList {
 		$html = '';
 		foreach ( $groups as $id => $group_users ) {
 			$tpl_vars = array(
-				'{name}' => $this->_group_name( $id ),
+				'{name}'  => $this->_group_name( $id ),
 				'{group}' => $this->format_users( $group_users ),
 			);
 
@@ -296,30 +296,30 @@ class UserList {
 		// pass values to JS
 		$params = array(
 
-			'hiddenusers' => $this->hiddenusers,
-			'whitelistusers' => $this->whitelistusers,
-			'blogs' => $this->blogs,
-			'roles' => $this->roles,
-			'group_by' => $this->group_by,
-			'user_link' => $this->user_link,
-			'show_name' => $this->show_name,
-			'show_postcount' => $this->show_postcount,
+			'hiddenusers'             => $this->hiddenusers,
+			'whitelistusers'          => $this->whitelistusers,
+			'blogs'                   => $this->blogs,
+			'roles'                   => $this->roles,
+			'group_by'                => $this->group_by,
+			'user_link'               => $this->user_link,
+			'show_name'               => $this->show_name,
+			'show_postcount'          => $this->show_postcount,
 			'show_bbpress_post_count' => $this->show_bbpress_post_count,
-			'show_biography' => $this->show_biography,
-			'bio_length' => $this->bio_length,
-			'show_last_post' => $this->show_last_post,
-			'show_email' => $this->show_email,
-			'contact_links' => $this->contact_links,
-			'avatar_size' => $this->avatar_size,
-			'limit' => $this->limit,
-			'min_post_count' => $this->min_post_count,
-			'page_size' => $this->page_size,
-			'order' => $this->order,
-			'sort_direction' => $this->sort_direction,
-			'postCommentNonce' => wp_create_nonce( 'author-avatars-shortcode-paging-nonce' ),
-			'action' => 'AA_shortcode_paging',
-			'aa_page' => 0,
-			'ajax_url' => admin_url( 'admin-ajax.php' ),
+			'show_biography'          => $this->show_biography,
+			'bio_length'              => $this->bio_length,
+			'show_last_post'          => $this->show_last_post,
+			'show_email'              => $this->show_email,
+			'contact_links'           => $this->contact_links,
+			'avatar_size'             => $this->avatar_size,
+			'limit'                   => $this->limit,
+			'min_post_count'          => $this->min_post_count,
+			'page_size'               => $this->page_size,
+			'order'                   => $this->order,
+			'sort_direction'          => $this->sort_direction,
+			'postCommentNonce'        => wp_create_nonce( 'author-avatars-shortcode-paging-nonce' ),
+			'action'                  => 'AA_shortcode_paging',
+			'aa_page'                 => 0,
+			'ajax_url'                => admin_url( 'admin-ajax.php' ),
 		);
 
 		wp_enqueue_script( 'author-avatars-shortcode-paging' );
@@ -357,7 +357,7 @@ class UserList {
 			$divcss[] = 'with-name';
 		}
 
-		$link = false;
+		$link       = false;
 		$link_types = explode( ',', $this->user_link );
 
 		foreach ( $link_types as $link_type ) {
@@ -366,7 +366,7 @@ class UserList {
 
 			if ( - 1 === $user->user_id && 'guest-author' != $type ) {
 				$link_type = 'website';
-				$divcss[] = 'user-0';
+				$divcss[]  = 'user-0';
 			} else {
 				if ( 'guest-author' === $type ) {
 					$divcss[] = 'guest-author-' . $user->user_id;
@@ -426,9 +426,9 @@ class UserList {
 					break;
 				case 'last_post':
 					$recent = get_posts( array(
-						'author' => $user->user_id,
-						'orderby' => 'date',
-						'order' => 'desc',
+						'author'      => $user->user_id,
+						'orderby'     => 'date',
+						'order'       => 'desc',
 						'numberposts' => 1,
 					) );
 					if ( ! empty( $recent ) ) {
@@ -445,7 +445,7 @@ class UserList {
 					break;
 				case 'last_post_all':
 					$last_post = get_most_recent_post_of_user( $user->user_id );
-					$link = get_permalink( $last_post['post_id'] );
+					$link      = get_permalink( $last_post['post_id'] );
 					break;
 				default:
 					$maybe_link = get_the_author_meta( $link_type, $user->user_id );
@@ -510,7 +510,7 @@ class UserList {
 			}
 
 			$divcss[] = 'with-biography bio-length-' . $this->bio_length;
-			$name = '<strong>' . $name . '</strong>';
+			$name     = '<strong>' . $name . '</strong>';
 			if ( empty( $biography ) ) {
 				$divcss[] = 'biography-missing';
 			}
@@ -530,7 +530,7 @@ class UserList {
 			 *                               The Current user object.
 			 */
 			$show_last_post = apply_filters( 'aa_user_show_last_post_filter', $show_last_post, $user );
-			$divcss[] = 'with-last-post';
+			$divcss[]       = 'with-last-post';
 
 			if ( empty( $show_last_post ) ) {
 				$divcss[] = 'last-post-missing';
@@ -551,7 +551,7 @@ class UserList {
 			 * @param        object
 			 *                          The Current user object.
 			 */
-			$email = sprintf( apply_filters( 'aa_user_email_url_template', '<a href="mailto:%1$s">%1$s</a>', $user_email, $user ), $user_email );
+			$email    = sprintf( apply_filters( 'aa_user_email_url_template', '<a href="mailto:%1$s">%1$s</a>', $user_email, $user ), $user_email );
 			$divcss[] = 'with-email';
 			if ( empty( $email ) ) {
 				$divcss[] = 'email-missing';
@@ -610,16 +610,16 @@ class UserList {
 						switch ( $user_contact_type ) {
 							case 'aim':
 								$contact_links .= sprintf(
-									/**
-									 * Filter the aim tag content for an admin page.
-									 *
-									 * @since 1.9.7
-									 *
-									 * @param string $html
-									 *
-									 * @param string $user_contact_types The URL to be inserted.
-									 * @param string $user_contact_type kay used to find text
-									 */
+								/**
+								 * Filter the aim tag content for an admin page.
+								 *
+								 * @since 1.9.7
+								 *
+								 * @param string $html
+								 *
+								 * @param string $user_contact_types The URL to be inserted.
+								 * @param string $user_contact_type kay used to find text
+								 */
 									apply_filters( 'aa_user_contact_links_aim_template', '<li><a href="aim:goim?screenname=%s">%s</a></li>', $user_contact_type, $user->user_id ),
 									esc_url( $user_contact_content ),
 									esc_html( $link_text )
@@ -627,16 +627,16 @@ class UserList {
 								break;
 							case 'facebook':
 								$contact_links .= sprintf(
-									/**
-									 * Filter the facebook tag content for an admin page.
-									 *
-									 * @since 1.9.7
-									 *
-									 * @param string $html
-									 *
-									 * @param string $user_contact_types The URL to be inserted.
-									 * @param string $user_contact_type kay used to find text
-									 */
+								/**
+								 * Filter the facebook tag content for an admin page.
+								 *
+								 * @since 1.9.7
+								 *
+								 * @param string $html
+								 *
+								 * @param string $user_contact_types The URL to be inserted.
+								 * @param string $user_contact_type kay used to find text
+								 */
 									apply_filters( 'aa_user_contact_links_facebook_template', '<li><a href="https://www.facebook.com/=%s">%s</a></li>', $user_contact_type, $user->user_id ),
 									esc_url( $user_contact_content ),
 									esc_html( $link_text )
@@ -644,16 +644,16 @@ class UserList {
 								break;
 							case 'skype':
 								$contact_links .= sprintf(
-									/**
-									 * Filter the skype tag content for an admin page.
-									 *
-									 * @since 1.9.7
-									 *
-									 * @param string $html
-									 *
-									 * @param string $user_contact_types The URL to be inserted.
-									 * @param string $user_contact_type kay used to find text
-									 */
+								/**
+								 * Filter the skype tag content for an admin page.
+								 *
+								 * @since 1.9.7
+								 *
+								 * @param string $html
+								 *
+								 * @param string $user_contact_types The URL to be inserted.
+								 * @param string $user_contact_type kay used to find text
+								 */
 									apply_filters( 'aa_user_contact_links_skype_template', '<li><a href="skype:%s">%s</a></li>', $user_contact_type, $user->user_id ),
 									esc_url( $user_contact_content ),
 									esc_html( $link_text )
@@ -661,16 +661,16 @@ class UserList {
 								break;
 							case 'twitter':
 								$contact_links .= sprintf(
-									/**
-									 * Filter the twitter tag content for an admin page.
-									 *
-									 * @since 1.9.7
-									 *
-									 * @param string $html
-									 *
-									 * @param string $user_contact_types The URL to be inserted.
-									 * @param string $user_contact_type kay used to find text
-									 */
+								/**
+								 * Filter the twitter tag content for an admin page.
+								 *
+								 * @since 1.9.7
+								 *
+								 * @param string $html
+								 *
+								 * @param string $user_contact_types The URL to be inserted.
+								 * @param string $user_contact_type kay used to find text
+								 */
 									apply_filters( 'aa_user_contact_links_twitter_template', '<li><a href="https://twitter.com/%s">%s</a></li>', $user_contact_type, $user->user_id ),
 									esc_url( $user_contact_content ),
 									esc_html( $link_text )
@@ -678,16 +678,16 @@ class UserList {
 								break;
 							case 'yim':
 								$contact_links .= sprintf(
-									/**
-									 * Filter the yim tag content for an admin page.
-									 *
-									 * @since 1.9.7
-									 *
-									 * @param string $html
-									 *
-									 * @param string $user_contact_types The URL to be inserted.
-									 * @param string $user_contact_type kay used to find text
-									 */
+								/**
+								 * Filter the yim tag content for an admin page.
+								 *
+								 * @since 1.9.7
+								 *
+								 * @param string $html
+								 *
+								 * @param string $user_contact_types The URL to be inserted.
+								 * @param string $user_contact_type kay used to find text
+								 */
 									apply_filters( 'aa_user_contact_links_yim_template', '<li><a href="ymsgr:sendim?%s">%s</a></li>', $user_contact_type, $user->user_id ),
 									esc_url( $user_contact_content ),
 									esc_html( $link_text )
@@ -719,11 +719,11 @@ class UserList {
 			if ( function_exists( 'bp_core_fetch_avatar' ) ) {
 				$avatar = bp_core_fetch_avatar( array(
 					'item_id' => $user->user_id,
-					'width' => $avatar_size,
-					'height' => $avatar_size,
-					'type' => 'full',
-					'alt' => $alt,
-					'title' => $title,
+					'width'   => $avatar_size,
+					'height'  => $avatar_size,
+					'type'    => 'full',
+					'alt'     => $alt,
+					'title'   => $title,
 				) );
 			} else {
 				// call the standard avatar function
@@ -869,7 +869,7 @@ class UserList {
 	function get_users() {
 
 		global $blog_id;
-		$random_order = false;
+		$random_order     = false;
 		$white_list_order = false;
 
 		$cache_id = join( '_', $this->roles ) . '_' . $blog_id;
@@ -887,7 +887,7 @@ class UserList {
 		// if order set then add
 		if ( ! empty( $this->order ) ) {
 			$cache_id .= '_' . $this->order;
-			$random_order = ( 'random' == $this->order ) ? true : false;
+			$random_order     = ( 'random' == $this->order ) ? true : false;
 			$white_list_order = ( 'whitelist' == $this->order ) ? true : false;
 		}
 		// if hidden user set then add
@@ -909,9 +909,9 @@ class UserList {
 		if ( false === $users ) {
 			$users = array();
 			if ( ! empty( $this->onlyusers ) ) {
-				$args = array(
+				$args          = array(
 					'include' => $this->onlyusers,
-					'fields' => 'all_with_meta',
+					'fields'  => 'all_with_meta',
 				);
 				$users_objects = get_users( $args );
 				if ( false != $users_objects ) {
@@ -938,7 +938,7 @@ class UserList {
 
 						$args = array(
 							'orderby' => 'term_order',
-							'order' => 'ASC',
+							'order'   => 'ASC',
 						);
 						//	$args = array(
 						// 		'optioncount'      => false,
@@ -970,13 +970,13 @@ class UserList {
 										$post_author->type = 'guest-author';
 									}
 									if ( 'wpuser' === $post_author->type ) {
-										$post_author->data->ID = $post_author->ID;
+										$post_author->data->ID      = $post_author->ID;
 										$post_author->data->user_id = $post_author->ID;
-										$coauthors[] = $post_author->data;
+										$coauthors[]                = $post_author->data;
 									} else {
-										$post_author->user_id = '-' . $post_author->ID; // to stop the fliter from breaking
+										$post_author->user_id  = '-' . $post_author->ID; // to stop the fliter from breaking
 										$post_author->user_url = $post_author->website;
-										$coauthors[] = $post_author;
+										$coauthors[]           = $post_author;
 
 									}
 								}
@@ -1018,8 +1018,8 @@ class UserList {
 	 * @return null|string
 	 */
 	function aa_get_last_post( $user_id ) {
-		$args = array(
-			'author' => $user_id,
+		$args     = array(
+			'author'              => $user_id,
 			/**
 			 * Filter the users last post type. Default is "posts"
 			 *
@@ -1027,13 +1027,13 @@ class UserList {
 			 *
 			 * @param int $user_id The Current user ID.
 			 */
-			'post_type' => apply_filters( 'aa_user_show_last_post_type', 'post', $user_id ),
-			'post_status' => 'publish',
-			'posts_per_page' => 1,
+			'post_type'           => apply_filters( 'aa_user_show_last_post_type', 'post', $user_id ),
+			'post_status'         => 'publish',
+			'posts_per_page'      => 1,
 			'ignore_sticky_posts' => 1,
 		);
 		$my_query = null;
-		$out = null;
+		$out      = null;
 		/**
 		 * Filter the users last post Query
 		 *
@@ -1097,7 +1097,7 @@ class UserList {
 				$blogs_condition = "meta_key LIKE '" . $wpdb->base_prefix . "%capabilities'";
 			} // else filter by set blog ids
 			else {
-				$blogs = array_map( create_function( '$v', 'global $wpdb; return "\'" . $wpdb->get_blog_prefix($v) . "capabilities\'";' ), $this->blogs );
+				$blogs           = array_map( create_function( '$v', 'global $wpdb; return "\'" . $wpdb->get_blog_prefix($v) . "capabilities\'";' ), $this->blogs );
 				$blogs_condition = 'meta_key IN (' . implode( ', ', $blogs ) . ')';
 			}
 		} else {
@@ -1107,7 +1107,7 @@ class UserList {
 		$roleQuery = '';
 		foreach ( $roles as $role ) {
 			$role = '%' . $role . '%';
-			$or = '';
+			$or   = '';
 			if ( $roleQuery ) {
 				$or = ' or ';
 			}
@@ -1163,7 +1163,7 @@ class UserList {
 	function _filter( $users ) {
 		if ( is_array( $users ) ) {
 			// arrays for keeping track of all 'valid' user ids and commentator emails
-			$user_ids = array();
+			$user_ids    = array();
 			$user_emails = array();
 
 			foreach ( $users as $id => $user ) {
@@ -1181,7 +1181,7 @@ class UserList {
 							if ( isset( $user->meta_value ) ) {
 								$user->user_roles = array_keys( unserialize( $user->meta_value ) );
 							} else {
-								$wpuser = get_user_by( 'id', $user->ID );
+								$wpuser           = get_user_by( 'id', $user->ID );
 								$user->user_roles = array_merge( $wpuser->roles, array( 'coauthors_plus' ) );
 							}
 						}
@@ -1255,11 +1255,11 @@ class UserList {
 
 				if ( true === $add ) {
 					// store current user_id/user_email for uniqueness check
-					$user_ids[] = $user->user_id;
+					$user_ids[]    = $user->user_id;
 					$user_emails[] = $user->user_email;
 				} else {
 					// remove the current user from the array
-					unset( $users[$id] );
+					unset( $users[ $id ] );
 				}
 			}
 		}
@@ -1570,15 +1570,15 @@ class UserList {
 		// retrieve counts for all commentators
 		if ( empty( $comment_counts ) ) {
 			global $wpdb;
-			$query = 'SELECT comment_author_email, COUNT(*) AS total FROM ' . $wpdb->comments . ' WHERE comment_approved = 1 GROUP BY comment_author_email';
+			$query   = 'SELECT comment_author_email, COUNT(*) AS total FROM ' . $wpdb->comments . ' WHERE comment_approved = 1 GROUP BY comment_author_email';
 			$results = $wpdb->get_results( $query );
 			foreach ( $results as $result ) {
-				$comment_counts[$result->comment_author_email] = $result->total;
+				$comment_counts[ $result->comment_author_email ] = $result->total;
 			}
 		}
 
 		if ( array_key_exists( $user_email, $comment_counts ) ) {
-			return $comment_counts[$user_email];
+			return $comment_counts[ $user_email ];
 		}
 
 		return 0;
@@ -1777,7 +1777,7 @@ class UserList {
 					$pattern = '/' . $wpdb->base_prefix . '([0-9]+)_capabilities/';
 
 					foreach ( $users as $user ) {
-						$key = $user->meta_key;
+						$key     = $user->meta_key;
 						$matches = array();
 
 						// blog id 1
@@ -1785,7 +1785,7 @@ class UserList {
 							$users_new[1][] = $user;
 						} // other blogs
 						else if ( preg_match( $pattern, $key, $matches ) > 0 ) {
-							$users_new[$matches[1]][] = $user;
+							$users_new[ $matches[1] ][] = $user;
 						}
 					}
 
@@ -1843,7 +1843,7 @@ class UserList {
 			// splits all html-tags to scanable lines
 			preg_match_all( '/(<.+?>)?([^<>]*)/s', $text, $lines, PREG_SET_ORDER );
 			$total_length = strlen( $ending );
-			$truncate = '';
+			$truncate     = '';
 			foreach ( $lines as $line_matchings ) {
 				// if there is any html-tag in this line, handle it and add it (uncounted) to the output
 				if ( ! empty( $line_matchings[1] ) ) {
@@ -1855,7 +1855,7 @@ class UserList {
 						// delete tag from $open_tags list
 						$pos = array_search( $tag_matchings[1], $open_tags );
 						if ( false !== $pos ) {
-							unset( $open_tags[$pos] );
+							unset( $open_tags[ $pos ] );
 						}
 						// if tag is an opening tag
 					} else if ( preg_match( '/^<\s*([^\s>!]+).*?>$/s', $line_matchings[1], $tag_matchings ) ) {
@@ -1869,7 +1869,7 @@ class UserList {
 				$content_length = strlen( preg_replace( '/&[0-9a-z]{2,8};|&#[0-9]{1,7};|[0-9a-f]{1,6};/i', ' ', $line_matchings[2] ) );
 				if ( $total_length + $content_length > $length ) {
 					// the number of characters which are left
-					$left = $length - $total_length;
+					$left            = $length - $total_length;
 					$entities_length = 0;
 					// search for html entities
 					if ( preg_match_all( '/&[0-9a-z]{2,8};|&#[0-9]{1,7};|[0-9a-f]{1,6};/i', $line_matchings[2], $entities, PREG_OFFSET_CAPTURE ) ) {
