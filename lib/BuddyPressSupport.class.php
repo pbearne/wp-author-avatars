@@ -16,7 +16,9 @@ class BuddyPressSupport {
 	 * @return array
 	 */
 	protected static function list_profiles_fields() {
+
 		if ( ! empty( self::$profiles_field_list ) ) {
+
 			return self::$profiles_field_list;
 		}
 
@@ -80,7 +82,7 @@ class BuddyPressSupport {
 	}
 }
 
-add_filter( 'AA_render_field_display_options', 'BuddyPressSupport::filter_profiles_fields' );
+add_filter( 'aa_render_field_display_options', 'BuddyPressSupport::filter_profiles_fields' );
 add_filter( 'aa_user_display_extra', 'BuddyPressSupport::get_profile_outputs', 10, 2 );
 
 

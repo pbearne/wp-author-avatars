@@ -33,7 +33,7 @@ Both the shortcode and widget can be configured to:
 *   Support users from Co-Author Plus, Ultimate Member, BBpress and BuddyPress (xprofile)
 *   Limit the number of avatars per page for large sets by adding a page_size to the shortcode e.g. "page_size=30" (shortcode only)
 
-Additionaly, single user avatars can be inserted using the [show_avatar shortcode](http://authoravatars.wordpress.com/documentation/show_avatar-shortcode/) and configured to:
+Additionally, single user avatars can be inserted using the [show_avatar shortcode](http://authoravatars.wordpress.com/documentation/show_avatar-shortcode/) and configured to:
 
 *   Adjust the size of the user avatar.
 *   Align the avatar left, centered or right.
