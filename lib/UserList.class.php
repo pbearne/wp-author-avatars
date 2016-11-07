@@ -838,8 +838,7 @@ class UserList {
 			 * @param string $extra extra HTML / string.
 			 * @param object $user The user object
 			 */
-			$html .= apply_filters( '
-			aa_user_display_extra', $this->display_extra, $user );
+			$html .= apply_filters( 'aa_user_display_extra', $this->display_extra, $user );
 		}
 
 		$tpl_vars['{class}'] = implode( $divcss, ' ' );
