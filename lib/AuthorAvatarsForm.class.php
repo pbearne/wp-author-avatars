@@ -311,7 +311,7 @@ class AuthorAvatarsForm {
 		$attributes = array(
 			'id'    => $this->_getFieldId( $name ),
 			'label' => '<strong>' . __( 'White List of users', 'author-avatars' ) . ':</strong><br/>',
-			'help'  => '<br/><small>(' . __( '0nly show these uses, Comma separate list of user login ids', 'author-avatars' ) . ')</small>',
+			'help'  => '<br/><small>(' . __( '0nly show these users, Comma separate list of user login ids', 'author-avatars' ) . ')</small>',
 			'rows'  => 2,
 			'style' => 'width:95%;',
 		);
