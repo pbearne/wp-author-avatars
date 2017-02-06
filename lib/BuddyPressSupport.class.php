@@ -26,6 +26,11 @@ class BuddyPressSupport {
 
 		//https://buddypress.org/support/topic/how-to-get-list-of-xprofile-filds/#post-227700
 
+		if( ! class_exists( 'BP_XProfile_Group' ) ){
+
+			return array();
+		}
+
 		$profile_groups = BP_XProfile_Group::get( array( 'fetch_fields' => true ) );
 
 		$fields2 = array();
