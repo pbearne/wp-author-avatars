@@ -257,7 +257,7 @@ class AuthorAvatarsForm {
 			return $roles;
 		}
 		foreach ( $roles_data as $key => $role ) {
-			$roles[ $key ] = $this->__roleStripLevel( $role['name'] );
+			$roles[ $key ] = $this->_roleStripLevel( $role['name'] );
 		}
 
 		return $roles;
@@ -272,7 +272,7 @@ class AuthorAvatarsForm {
 	 *
 	 * @return the clean role name without user level added on the end.
 	 */
-	function __roleStripLevel( $element ) {
+	function _roleStripLevel( $element ) {
 		$parts = explode( '|', $element );
 
 		return $parts[0];
