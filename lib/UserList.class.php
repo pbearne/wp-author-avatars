@@ -270,7 +270,7 @@ class UserList {
 		}
 
 		$this->pagingHTML = '<div class="aa_pageList"><div><a href="?aa_page=0" id="0">' . __( '<<', 'author-avatars' ) . '</a>';
-		for ( $i = 0; $i <= count( $users ) / $page_size; $i ++ ) {
+		for ( $i = 0; $i <= ( count( $users ) -1 ) / $page_size; $i ++ ) {
 			$this->pagingHTML .= '<a href="?aa_page=' . $i . '" id="' . ( $i ) . '"';
 			if ( $i == $this->aa_page ) {
 				$this->pagingHTML .= 'class="current"';
