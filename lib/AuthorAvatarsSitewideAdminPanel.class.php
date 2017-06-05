@@ -70,7 +70,7 @@ class AuthorAvatarsSitewideAdminPanel {
 	}
 
 	function save_settings() {
-		check_admin_referer();
+		check_admin_referer( 'wpmu_author_avatars');
 		$settings = $_POST['settings_sitewide'];
 
 		return $this->settings->save_sitewide( $settings );
@@ -96,6 +96,7 @@ class AuthorAvatarsSitewideAdminPanel {
 
 		echo '</table>';
 		echo AAFormHelper::input( 'hidden', 'action', 'update' );
+		echo AAFormHelper::input( 'hidden', '_wpnonce', wp_create_nonce( 'wpmu_author_avatars' ) );
 		echo '<p class="submit">';
 		echo AAFormHelper::input( 'submit', 'wpmu_author_avatars_settings_save', __( 'Save Changes', 'author-avatars' ) );
 		echo '</p>';
