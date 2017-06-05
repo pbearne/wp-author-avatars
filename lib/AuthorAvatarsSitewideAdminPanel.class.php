@@ -39,7 +39,7 @@ class AuthorAvatarsSitewideAdminPanel {
 	 * Adds the settings page to the "Site Admin" menu
 	 */
 	function add_submenu() {
-		get_currentuserinfo();
+		wp_get_current_user();
 		if ( ! AA_is_super_admin() ) {
 			return false;
 		} // only for site admins
