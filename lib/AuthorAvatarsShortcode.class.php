@@ -64,6 +64,15 @@ class AuthorAvatarsShortcode {
 		}
 		$this->userlist->blogs = $blogs;
 
+		// perform a switch to another MU blog_id (to set avatar/path relations)
+		$switch_back_to_blog_id = false;
+		if ( $settings->blog_selection_allowed() && ! empty( $atts['switchblog'] ) ) {
+			if ( $GLOBALS['blog_id'] != (int)$atts['switchblog'] ) {
+				$switch_back_to_blog_id = $GLOBALS['blog_id'];
+				switch_to_blog((int)$atts['switchblog']);
+			}
+		}		
+
 		// grouping
 		$group_by = '';
 		if ( isset( $atts['group_by'] ) ) {
@@ -233,6 +242,11 @@ class AuthorAvatarsShortcode {
 			}
 		}
 
-		return '<div class="shortcode-author-avatars">' . $this->userlist->get_output() . $content . $this->userlist->pagingHTML . '</div>';
+		$return = '<div class="shortcode-author-avatars">' . $this->userlist->get_output() . $content . $this->userlist->pagingHTML . '</div>';
+		if ( $switch_back_to_blog_id ) {
+			switch_to_blog($switch_back_to_blog_id);
+		}
+
+		return $return;
 	}
 }
