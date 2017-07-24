@@ -2,8 +2,11 @@
 
 /**
  * Author Avatars Shortcode: provides a shortcode for displaying avatars of blog users
+ *
  */
 class AuthorAvatarsShortcode {
+
+	var $userlist;
 
 	/**
 	 * Constructor
@@ -29,6 +32,11 @@ class AuthorAvatarsShortcode {
 
 	/**
 	 * The shortcode handler for the [authoravatars] shortcode.
+	 *
+	 * @param $atts
+	 * @param null $content
+	 *
+	 * @return string
 	 */
 	function shortcode_handler( $atts, $content = null ) {
 		require_once( 'UserList.class.php' );
@@ -71,12 +79,12 @@ class AuthorAvatarsShortcode {
 				$switch_back_to_blog_id = $GLOBALS['blog_id'];
 				switch_to_blog((int)$atts['switchblog']);
 			}
-		}		
+		}
 
 		// grouping
 		$group_by = '';
 		if ( isset( $atts['group_by'] ) ) {
-			if ( AA_is_wpmu() && $atts['group_by'] == 'blog' ) {
+			if ( AA_is_wpmu() && 'blog' === $atts['group_by'] ) {
 				$group_by = 'blog';
 			}
 		}
