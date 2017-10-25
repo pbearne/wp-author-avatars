@@ -732,7 +732,7 @@ class AuthorAvatarsForm {
 
 			return;
 		}
-		$html = "\n" . '<ul>';
+		$html = "\n" . '<ul class="ui-tabs-nav">';
 		foreach ( $this->tabs as $id => $title ) {
 			$html .= "\n\t" . '<li><a href="#' . $id . '">' . $title . '</a></li>';
 		}

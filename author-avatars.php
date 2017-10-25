@@ -10,7 +10,7 @@ Domain Path: /translations
 */
 
 // The current version of the author avatars plugin. Needs to be updated every time we do a version step.
-define( 'AUTHOR_AVATARS_VERSION', '1.11' );
+define( 'AUTHOR_AVATARS_VERSION', '1.12' );
 
 // List of all version, used during update check. (Append new version to the end and write an update__10_11 method on AuthorAvatars class if needed)
 define( 'AUTHOR_AVATARS_VERSION_HISTORY', serialize( array(
