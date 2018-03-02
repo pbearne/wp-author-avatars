@@ -360,6 +360,7 @@ class UserList {
 		$divcss = array( 'user' );
 		if ( $this->show_name ) {
 			$divcss[] = 'with-name';
+			$divcss[] = 'name-group-' . substr( $user->display_name, 1, 1 );
 		}
 
 
@@ -376,6 +377,8 @@ class UserList {
 		$alt = $title = $name;
 		if ( $this->show_nickname) {
 			$divcss[] = 'with-nickname';
+			$divcss[] = 'nickname-group-' . substr( $nickname, 1, 1 );
+
 		}
 
 		$link       = false;
@@ -861,8 +864,13 @@ class UserList {
 			 */
 			$html .= apply_filters( 'aa_user_display_extra', $this->display_extra, $user );
 		}
-
-		$tpl_vars['{class}'] = implode( $divcss, ' ' );
+		/**
+		 * filter the array used to create the css for the user
+		 *
+		 * @param array $CSS The array of string used to create classes on user DIV.
+		 * @param object $user the user object
+		 */
+		$tpl_vars['{class}'] = implode( apply_filters( 'aa_user_final_css', $divcss, $user ), ' ' );
 		/**
 		 * filter on the complete HTML for the user
 		 *
