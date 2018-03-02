@@ -503,7 +503,7 @@ class UserList {
 
 				$title .= ' (' . sprintf( _n( '%d post', '%d posts', $postcount, 'author-avatars' ), $postcount ) . ')';
 			}
-			$name .= sprintf( apply_filters( 'aa_post_count', ' (%d)', $postcount, $user ), $postcount );
+			$name .= sprintf( apply_filters( 'aa_post_count', ' <span class="aa-post-count-wrap-start">(</span>%d<span class="aa-post-count-wrap-end">)</span>', $postcount, $user ), $postcount );
 		}
 
 		if ( $this->show_bbpress_post_count && AA_is_bbpress() ) {
