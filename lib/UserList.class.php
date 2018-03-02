@@ -360,7 +360,7 @@ class UserList {
 		$divcss = array( 'user' );
 		if ( $this->show_name ) {
 			$divcss[] = 'with-name';
-			$divcss[] = 'name-group-' . substr( $user->display_name, 1, 1 );
+			$divcss[] = 'name-group-' . substr( $user->display_name, 0, 1 );
 		}
 
 
@@ -377,7 +377,7 @@ class UserList {
 		$alt = $title = $name;
 		if ( $this->show_nickname) {
 			$divcss[] = 'with-nickname';
-			$divcss[] = 'nickname-group-' . substr( $nickname, 1, 1 );
+			$divcss[] = 'nickname-group-' . substr( $nickname, 0, 1 );
 
 		}
 
