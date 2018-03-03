@@ -153,6 +153,11 @@ class UserList {
 	 */
 	var $user_template = '<div class="{class}">{user}</div>';
 
+
+	function __construct() {
+		add_filter( 'aa_show_name_css', array( $this, 'group_name' ), 10, 2 );
+	}
+
 	/**
 	 * Changes the template strings so the user is rendered in a html list.
 	 *
@@ -353,33 +358,27 @@ class UserList {
 
 
 		$name = '';
-		if ( $this->show_name ) {
-			$name = $user->display_name;
-		}
-
 		$divcss = array( 'user' );
 		if ( $this->show_name ) {
+			$name = $user->display_name;
 			$divcss[] = 'with-name';
-			$divcss[] = 'name-group-' . substr( $user->display_name, 0, 1 );
+			$divcss = apply_filters( 'aa_show_name_css', $divcss, $user->display_name );
 		}
 
 
 		if ( $this->show_nickname ) {
 			$nickname = get_the_author_meta( 'nickname', $user->user_id );
+			$divcss[] = 'nickname-group-' . strtolower( substr( $nickname, 0, 1 ) );
 
 			if( $this->show_name ) {
 				$nickname = sprintf( apply_filters( 'AA_nickname_with_name_wrap', ' (%s)' ),  $nickname );
 			}
 
 			$name .= $nickname;
+			$divcss[] = 'with-nickname';
 		}
 
 		$alt = $title = $name;
-		if ( $this->show_nickname) {
-			$divcss[] = 'with-nickname';
-			$divcss[] = 'nickname-group-' . substr( $nickname, 0, 1 );
-
-		}
 
 		$link       = false;
 		$link_types = explode( ',', $this->user_link );
@@ -887,6 +886,22 @@ class UserList {
 		 */
 
 		return str_replace( array_keys( $tpl_vars ), $tpl_vars, apply_filters( 'aa_user_template', $this->user_template, $user ) );
+	}
+
+
+	function group_name( $divcss, $name_string ){
+
+		$names = explode( ' ', $name_string );
+		foreach ( $names as $key => $name ){
+
+			$keys = array_keys( $names );
+			if( $key === end( $keys ) ){
+				$key = 'last';
+			}
+			$divcss[] = 'name-group-' . $key . '-' . strtolower( substr( $name, 0, 1 ) );
+		}
+
+	    return $divcss;
 	}
 
 	/**

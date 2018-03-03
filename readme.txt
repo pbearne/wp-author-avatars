@@ -69,6 +69,7 @@ If you have added CSS to your theme you may have to update it for this upgrade (
 = 1.15 =
 Added filter aa_user_final_css to fileter the classes on the user div
 added name-{first_letter} class
+Added span wrape around post count brackets
 
 = 1.14 =
 Added nickname what could be show
