@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=MZTZ5
 Tags: Avatar, Author, BuddyPress, xprofile, Comment, Editor, Image, Multisite, Photo, Picture, Profile, Shortcode, Random, Sidebar, Thumbnail, User, Widget, Wpmu, BBPress, co-authors
 Requires at least: 3.0
 Tested up to: 4.9.4
-Stable tag: 1.15
+Stable tag: 1.16
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -66,8 +66,11 @@ If you have added CSS to your theme you may have to update it for this upgrade (
 5. List of users with name and biography
 
 == Changelog ==
+= 1.16 =
+fixed name not loading in ajax paging calls
+
 = 1.15 =
-Added filter aa_user_final_css to fileter the classes on the user div
+Added filter aa_user_final_css to filter the classes on the user div
 added name-{first_letter} class
 Added span wrape around post count brackets
 

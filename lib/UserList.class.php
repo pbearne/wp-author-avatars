@@ -217,7 +217,7 @@ class UserList {
 	/**
 	 * Formats a grouped list of users
 	 *
-	 * @param Array $groups Array of an array of users. The array keys are used to retrieve the group name (see _group_name())
+	 * @param array $groups Array of an array of users. The array keys are used to retrieve the group name (see _group_name())
 	 *
 	 * @uses apply_filters() Calls 'aa_userlist_group_wrapper_template' hook
 	 * @uses apply_filters() Calls 'aa_userlist_group_template' hook
@@ -240,7 +240,7 @@ class UserList {
 	/**
 	 * Formats a list of users
 	 *
-	 * @param $users Array An array of users.
+	 * @param $users array An array of users.
 	 *
 	 * @uses apply_filters() Calls 'aa_userlist_template' hook
 	 * @return  mixed | String the html formatted list of users
@@ -257,9 +257,9 @@ class UserList {
 	/**
 	 * pages the list of users
 	 *
-	 * @param $users Array $groups An array of users.
+	 * @param $users array $groups An array of users.
 	 *
-	 * @return Array list of users
+	 * @return array list of users
 	 */
 	function page_users( $users ) {
 		if ( empty( $this->page_size ) ) {
@@ -313,7 +313,7 @@ class UserList {
 			'group_by'                => $this->group_by,
 			'user_link'               => $this->user_link,
 			'show_name'               => $this->show_name,
-			'show_name'               => $this->show_nickname,
+			'show_nickname'           => $this->show_nickname,
 			'show_postcount'          => $this->show_postcount,
 			'show_bbpress_post_count' => $this->show_bbpress_post_count,
 			'show_biography'          => $this->show_biography,
@@ -907,7 +907,7 @@ class UserList {
 	/**
 	 * Returns a filtered and sorted list of users
 	 *
-	 * @return Array of users (WP_User objects), filtered, sorted and limited to the maximum number.
+	 * @return array of users (WP_User objects), filtered, sorted and limited to the maximum number.
 	 */
 	function get_users() {
 
@@ -1199,7 +1199,7 @@ class UserList {
 	 *
 	 * @access private
 	 *
-	 * @param $users Array of users (WP_User objects).
+	 * @param $users array of users (WP_User objects).
 	 *
 	 * @return mixed $users Array of users
 	 */
@@ -1330,10 +1330,10 @@ class UserList {
 	 *
 	 * @access private
 	 *
-	 * @param Array $users Array of users (WP_User objects).
+	 * @param array $users Array of users (WP_User objects).
 	 * @param       $order String|bool The key to sort by. Can be one of the following: random, user_id, user_login, display_name.
 	 *
-	 * @return Array $users Array of users (WP_User objects)
+	 * @return array $users Array of users (WP_User objects)
 	 */
 	function _sort( $users, $order = false ) {
 		if ( ! $order ) {
@@ -1393,6 +1393,9 @@ class UserList {
 	 * Returns a sorted users array by the white list order
 	 *
 	 * @access private
+	 *
+	 * @param $users
+	 *
 	 * @return array $users WP_user
 	 */
 	function _users_whitelist( $users ) {
@@ -1808,7 +1811,7 @@ class UserList {
 	 *
 	 * @param int $user_id
 	 *
-	 * @return Array of blog ids
+	 * @return array of blog ids
 	 */
 	function get_user_blogs( $user_id ) {
 		global $wpdb;
@@ -1834,10 +1837,10 @@ class UserList {
 	/**
 	 * Group the given set of users if set in field "group_by"
 	 *
-	 * @param $users Array of WP_User objects, by reference
+	 * @param $users array of WP_User objects, by reference
 	 *
 	 * @access private
-	 * @return Array of WP_User objects
+	 * @return array of WP_User objects
 	 */
 	function _group( $users ) {
 		if ( empty( $this->group_by ) ) {

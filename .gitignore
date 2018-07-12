@@ -27,3 +27,4 @@ wp-config.php
 .idea
 /translations
 /.settings
+/.vscode
