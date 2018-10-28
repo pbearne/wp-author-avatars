@@ -1365,6 +1365,11 @@ class UserList {
 			case 'last_name':
 				usort( $users, array( $this, '_users_cmp_last_name' ) );
 				break;
+			case 'last_first_name':
+				usort( $users, array( $this, '_users_cmp_first_name' ) );
+				usort( $users, array( $this, '_users_cmp_last_name' ) );
+				break;
+
 			case 'post_count':
 				usort( $users, array( $this, '_user_cmp_postcount' ) );
 				break;
