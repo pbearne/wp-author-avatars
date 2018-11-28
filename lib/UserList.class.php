@@ -768,12 +768,38 @@ class UserList {
 			$avatar = preg_replace( '@title=["\'][\w]*["\'] ?@', '', $avatar );
 			/* insert alt and title parameters */
 			if ( ! stripos( $avatar, 'title=' ) ) {
+
+				/**
+				 * filter the avatar title
+				 *
+				 * @param string $title users nicename.
+				 * @param object $user The user object
+				 */
+				$title = apply_filters( 'aa_user_avatar_alt', $title, $user );
 				$avatar = preg_replace( '@ ?\/>@', ' title="' . $title . '" />', $avatar );
 			}
 			if ( ! stripos( $avatar, 'alt=' ) ) {
+
+				/**
+				 * filter the avatar alt
+				 *
+				 * @param string $alt users nicename.
+				 * @param object $user The user object
+				 */
+				$alt = apply_filters( 'aa_user_avatar_alt', $alt, $user );
+
 				$avatar = preg_replace( '@ ?\/>@', ' alt="' . $alt . '"  />', $avatar );
 			}
 		}
+
+
+		/**
+		 * filter the avatar
+		 *
+		 * @param string $avatar The HTML returned from get_avatar() etc.
+		 * @param object $user The user object
+		 */
+		$avatar = apply_filters( 'aa_user_avatar_html', $avatar, $user );
 
 		$html = '';
 		/**
