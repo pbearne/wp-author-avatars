@@ -176,7 +176,9 @@ class AuthorAvatarsWidget extends WP_Widget {
 		$title = empty( $instance['title'] ) ? '' : apply_filters( 'widget_title', $instance['title'] );
 		// build the widget html
 		echo $before_widget;
-		echo $before_title . $title . $after_title;
+		if( ! empty( $title ) ) {
+			echo $before_title . $title . $after_title;
+		}
 
 		$userlist->output();
 

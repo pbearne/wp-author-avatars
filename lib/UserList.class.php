@@ -378,7 +378,10 @@ class UserList {
 			$divcss[] = 'with-nickname';
 		}
 
-		$alt = $title = $name;
+		$title = $name;
+		// Translators: %s is for the name of the user
+		$alt = sprintf( __( 'avatar for %s', 'author-avatars'), $name );
+
 
 		$link       = false;
 		$link_types = explode( ',', $this->user_link );
@@ -746,7 +749,7 @@ class UserList {
 					'height'  => $avatar_size,
 					'type'    => 'full',
 					'alt'     => $alt,
-					'title'   => $title,
+//					'title'   => $title,
 				) );
 			} else {
 				// call the standard avatar function
@@ -775,8 +778,8 @@ class UserList {
 				 * @param string $title users nicename.
 				 * @param object $user The user object
 				 */
-				$title = apply_filters( 'aa_user_avatar_alt', $title, $user );
-				$avatar = preg_replace( '@ ?\/>@', ' title="' . $title . '" />', $avatar );
+				$title = apply_filters( 'aa_user_avatar_title', $title, $user );
+//				$avatar = preg_replace( '@ ?\/>@', ' title="' . $title . '" />', $avatar );
 			}
 			if ( ! stripos( $avatar, 'alt=' ) ) {
 
@@ -802,15 +805,20 @@ class UserList {
 		$avatar = apply_filters( 'aa_user_avatar_html', $avatar, $user );
 
 		$html = '';
-		/**
-		 * filter the span that holds the avatar
-		 *
-		 * @param string $html The sprintf template.
-		 * @param string $title The value passed to the title attr in span.
-		 * @param string $avatar The HTML returned from get_avatar() etc.
-		 * @param object $user The user object
-		 */
-		$html .= sprintf( apply_filters( 'aa_user_avatar_template', '<span class="avatar" title="%s">%s</span>', $title, $avatar, $user ), $title, $avatar );
+
+		if ( ! $link ) {
+			/**
+			 * filter the span that holds the avatar
+			 *
+			 * @param string $html The sprintf template.
+			 * @param string $title The value passed to the title attr in span.
+			 * @param string $avatar The HTML returned from get_avatar() etc.
+			 * @param object $user The user object
+			 */
+			$html .= sprintf( apply_filters( 'aa_user_avatar_template_with_title', '<span class="avatar" title="%s">%s</span>', $title, $avatar, $user ), $title, $avatar );
+		} else {
+			$html .= sprintf( apply_filters( 'aa_user_avatar_template', '<span class="avatar">%s</span>', $avatar, $user ), $avatar );
+		}
 
 		if ( $this->show_name || $this->show_nickname ||$this->show_name || $this->show_bbpress_post_count || $this->show_postcount ) {
 			/**
@@ -1166,7 +1174,8 @@ class UserList {
 				$blogs_condition = "meta_key LIKE '" . $wpdb->base_prefix . "%capabilities'";
 			} // else filter by set blog ids
 			else {
-				$blogs           = array_map( create_function( '$v', 'global $wpdb; return "\'" . $wpdb->get_blog_prefix($v) . "capabilities\'";' ), $this->blogs );
+//				$blogs           = array_map( create_function( '$v', 'global $wpdb; return "\'" . $wpdb->get_blog_prefix($v) . "capabilities\'";' ), $this->blogs );
+				$blogs = array_map( array( $this, 'get_blogs_sql' ), $this->blogs );
 				$blogs_condition = 'meta_key IN (' . implode( ', ', $blogs ) . ')';
 			}
 		} else {
@@ -1193,6 +1202,12 @@ class UserList {
 		$users = $wpdb->get_results( $query );
 
 		return $users;
+	}
+
+	function get_blogs_sql( $blogs ){
+		global $wpdb;
+
+		return "'" . $wpdb->get_blog_prefix($blogs) . "capabilities'";
 	}
 
 	/**
