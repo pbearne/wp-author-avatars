@@ -65,6 +65,7 @@ define( 'AUTHOR_AVATARS_VERSION_HISTORY', serialize( array(
 	'1.14',
 	'1.15',
 	'1.16',
+	'1.17',
 ) ) );
 
 require_once( 'lib/AuthorAvatars.class.php' );
@@ -100,7 +101,10 @@ function AA_add_action_links( $links ) {
 
 	return array_merge( $links, $mylinks );
 }
-
+/**
+ * Block Initializer.
+ */
+//require_once plugin_dir_path( __FILE__ ) . 'blocks/src/init.php';
 
 //function edit_contactmethods( $contactmethods ) {
 //	$contactmethods['facebook'] = 'Facebook';

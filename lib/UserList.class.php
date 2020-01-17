@@ -1174,7 +1174,6 @@ class UserList {
 				$blogs_condition = "meta_key LIKE '" . $wpdb->base_prefix . "%capabilities'";
 			} // else filter by set blog ids
 			else {
-//				$blogs           = array_map( create_function( '$v', 'global $wpdb; return "\'" . $wpdb->get_blog_prefix($v) . "capabilities\'";' ), $this->blogs );
 				$blogs = array_map( array( $this, 'get_blogs_sql' ), $this->blogs );
 				$blogs_condition = 'meta_key IN (' . implode( ', ', $blogs ) . ')';
 			}
@@ -1204,10 +1203,10 @@ class UserList {
 		return $users;
 	}
 
-	function get_blogs_sql( $blogs ){
+	function get_blogs_sql( $blog ){
 		global $wpdb;
 
-		return "'" . $wpdb->get_blog_prefix($blogs) . "capabilities'";
+		return "'" . $wpdb->get_blog_prefix( $blog ) . "capabilities'";
 	}
 
 	/**

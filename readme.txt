@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=MZTZ5
 Tags: Avatar, Author, BuddyPress, xprofile, Comment, Editor, Image, Multisite, Photo, Picture, Profile, Shortcode, Random, Sidebar, Thumbnail, User, Widget, Wpmu, BBPress, co-authors
 Requires at least: 3.0
 Tested up to: 4.9.9
-Stable tag: 1.16
+Stable tag: 1.18
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -66,6 +66,14 @@ If you have added CSS to your theme you may have to update it for this upgrade (
 5. List of users with name and biography
 
 == Changelog ==
+
+= 1.18 =
+PHP 7.3 errors
+https://wordpress.org/support/topic/php-7-3-17/
+
+= 1.17 =
+bumped WP version
+
 = 1.16 =
 fixed name not loading in ajax paging calls
 
