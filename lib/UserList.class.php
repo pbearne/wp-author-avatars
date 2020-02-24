@@ -723,7 +723,7 @@ class UserList {
 					'height'  => $avatar_size,
 					'type'    => 'full',
 					'alt'     => $alt,
-					'title'   => $title,
+//					'title'   => $title,
 				) );
 			} else {
 				// call the standard avatar function
@@ -761,8 +761,8 @@ class UserList {
 		 * @param string $avatar The HTML returned from get_avatar() etc.
 		 * @param object $user The user object
 		 */
-		$html .= sprintf( apply_filters( 'aa_user_avatar_template', '<span class="avatar" title="%s">%s</span>', $title, $avatar, $user ), $title, $avatar );
-
+//		$html .= sprintf( apply_filters( 'aa_user_avatar_template', '<span class="avatar" title="%s">%s</span>', $title, $avatar, $user ), $title, $avatar );
+		$html .= sprintf( apply_filters( 'aa_user_avatar_template', '<span class="avatar">%s</span>', $title, $avatar, $user ), $title, $avatar );
 		if ( $this->show_name || $this->show_bbpress_post_count || $this->show_postcount ) {
 			/**
 			 * filter the span that contains the users name
