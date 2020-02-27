@@ -2,8 +2,11 @@
 
 /**
  * Author Avatars Shortcode: provides a shortcode for displaying avatars of blog users
+ *
  */
 class AuthorAvatarsShortcode {
+
+	var $userlist;
 
 	/**
 	 * Constructor
@@ -29,6 +32,11 @@ class AuthorAvatarsShortcode {
 
 	/**
 	 * The shortcode handler for the [authoravatars] shortcode.
+	 *
+	 * @param $atts
+	 * @param null $content
+	 *
+	 * @return string
 	 */
 	function shortcode_handler( $atts, $content = null ) {
 		require_once( 'UserList.class.php' );
@@ -64,10 +72,19 @@ class AuthorAvatarsShortcode {
 		}
 		$this->userlist->blogs = $blogs;
 
+		// perform a switch to another MU blog_id (to set avatar/path relations)
+		$switch_back_to_blog_id = false;
+		if ( $settings->blog_selection_allowed() && ! empty( $atts['switchblog'] ) ) {
+			if ( $GLOBALS['blog_id'] != (int)$atts['switchblog'] ) {
+				$switch_back_to_blog_id = $GLOBALS['blog_id'];
+				switch_to_blog((int)$atts['switchblog']);
+			}
+		}
+
 		// grouping
 		$group_by = '';
 		if ( isset( $atts['group_by'] ) ) {
-			if ( AA_is_wpmu() && $atts['group_by'] == 'blog' ) {
+			if ( AA_is_wpmu() && 'blog' === $atts['group_by'] ) {
 				$group_by = 'blog';
 			}
 		}
@@ -131,7 +148,7 @@ class AuthorAvatarsShortcode {
 		$display = apply_filters('aa_shortcode_display_list', $display );
 
 		// support for all style shortcode
-		$default_display_options = array('show_name','show_postcount','show_email','show_biography','show_last_post','show_bbpress_post_count');
+		$default_display_options = array('show_name','show_postcount','show_email', 'show_nickname','show_biography','show_last_post','show_bbpress_post_count');
 		// loop the old name=true settings and add them to the new array format
 		foreach( $default_display_options as $default_display_option ){
 			if ( isset( $atts[$default_display_option] ) && ( strlen( $atts[$default_display_option] ) > 0 ) ) {
@@ -233,6 +250,11 @@ class AuthorAvatarsShortcode {
 			}
 		}
 
-		return '<div class="shortcode-author-avatars">' . $this->userlist->get_output() . $content . $this->userlist->pagingHTML . '</div>';
+		$return = '<div class="shortcode-author-avatars">' . $this->userlist->get_output() . $content . $this->userlist->pagingHTML . '</div>';
+		if ( $switch_back_to_blog_id ) {
+			switch_to_blog($switch_back_to_blog_id);
+		}
+
+		return $return;
 	}
 }

@@ -359,6 +359,7 @@ class AuthorAvatarsForm {
 		$display_options = Array(
 			'show_name'      => __( 'Show name', 'author-avatars' ),
 			'show_email'     => __( 'Show email', 'author-avatars' ),
+			'show_nickname'     => __( 'Show Nickname', 'author-avatars' ),
 			'show_biography' => __( 'Show biography', 'author-avatars' ),
 			'show_postcount' => __( 'Show number of posts', 'author-avatars' ),
 			'show_last_post' => __( 'Show link to authors last post', 'author-avatars' ),
@@ -394,6 +395,7 @@ class AuthorAvatarsForm {
 		$order_options = Array(
 			'date_registered'      => __( 'Date of Registration', 'author-avatars' ),
 			'display_name'         => __( 'Display Name', 'author-avatars' ),
+			'nickname'             => __( 'Nickname', 'author-avatars' ),
 			'first_name'           => __( 'First Name', 'author-avatars' ),
 			'last_name'            => __( 'Last Name', 'author-avatars' ),
 			'user_login'           => __( 'Login Name', 'author-avatars' ),
@@ -577,7 +579,7 @@ class AuthorAvatarsForm {
 		$html       = '<p>' . AAFormHelper::input( 'text', $name, $value, $attributes ) . '</p>';
 		if ( $preview == true ) {
 			global $user_email;
-			get_currentuserinfo();
+			wp_get_current_user();
 			$html .= '<div class="avatar_size_preview" style="background-color: #666; border: 1px solid #eee; width: 200px; height: 200px; padding: 10px;">' . get_avatar( $user_email, $value ) . '</div>';
 		}
 
@@ -732,7 +734,7 @@ class AuthorAvatarsForm {
 
 			return;
 		}
-		$html = "\n" . '<ul>';
+		$html = "\n" . '<ul class="ui-tabs-nav">';
 		foreach ( $this->tabs as $id => $title ) {
 			$html .= "\n\t" . '<li><a href="#' . $id . '">' . $title . '</a></li>';
 		}

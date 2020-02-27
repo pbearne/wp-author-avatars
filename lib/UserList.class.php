@@ -48,6 +48,11 @@ class UserList {
 	var $show_name = false;
 
 	/**
+	 * Flag whether to show the username underneith their avatar.
+	 */
+	var $show_nickname = false;
+
+	/**
 	 * Flag wether to show the post count for each user after the username.
 	 */
 	var $show_postcount = false;
@@ -148,6 +153,11 @@ class UserList {
 	 */
 	var $user_template = '<div class="{class}">{user}</div>';
 
+
+	function __construct() {
+		add_filter( 'aa_show_name_css', array( $this, 'group_name' ), 10, 2 );
+	}
+
 	/**
 	 * Changes the template strings so the user is rendered in a html list.
 	 *
@@ -207,7 +217,7 @@ class UserList {
 	/**
 	 * Formats a grouped list of users
 	 *
-	 * @param Array $groups Array of an array of users. The array keys are used to retrieve the group name (see _group_name())
+	 * @param array $groups Array of an array of users. The array keys are used to retrieve the group name (see _group_name())
 	 *
 	 * @uses apply_filters() Calls 'aa_userlist_group_wrapper_template' hook
 	 * @uses apply_filters() Calls 'aa_userlist_group_template' hook
@@ -230,7 +240,7 @@ class UserList {
 	/**
 	 * Formats a list of users
 	 *
-	 * @param $users Array An array of users.
+	 * @param $users array An array of users.
 	 *
 	 * @uses apply_filters() Calls 'aa_userlist_template' hook
 	 * @return  mixed | String the html formatted list of users
@@ -247,9 +257,9 @@ class UserList {
 	/**
 	 * pages the list of users
 	 *
-	 * @param $users Array $groups An array of users.
+	 * @param $users array $groups An array of users.
 	 *
-	 * @return Array list of users
+	 * @return array list of users
 	 */
 	function page_users( $users ) {
 		if ( empty( $this->page_size ) ) {
@@ -303,6 +313,7 @@ class UserList {
 			'group_by'                => $this->group_by,
 			'user_link'               => $this->user_link,
 			'show_name'               => $this->show_name,
+			'show_nickname'           => $this->show_nickname,
 			'show_postcount'          => $this->show_postcount,
 			'show_bbpress_post_count' => $this->show_bbpress_post_count,
 			'show_biography'          => $this->show_biography,
@@ -354,8 +365,28 @@ class UserList {
 
 		$divcss = array( 'user' );
 		if ( $this->show_name ) {
+			$name = $user->display_name;
 			$divcss[] = 'with-name';
+			$divcss = apply_filters( 'aa_show_name_css', $divcss, $user->display_name );
 		}
+
+
+		if ( $this->show_nickname ) {
+			$nickname = get_the_author_meta( 'nickname', $user->user_id );
+			$divcss[] = 'nickname-group-' . strtolower( substr( $nickname, 0, 1 ) );
+
+			if( $this->show_name ) {
+				$nickname = sprintf( apply_filters( 'AA_nickname_with_name_wrap', ' (%s)' ),  $nickname );
+			}
+
+			$name .= $nickname;
+			$divcss[] = 'with-nickname';
+		}
+
+		$title = $name;
+		// Translators: %s is for the name of the user
+		$alt = sprintf( __( 'avatar for %s', 'author-avatars'), $name );
+
 
 		$link       = false;
 		$link_types = explode( ',', $this->user_link );
@@ -379,7 +410,7 @@ class UserList {
 
 				case 'website':
 					if ( 'guest-author' === $type ) {
-						$link = get_the_author_meta( 'url', $user->ID );
+						$link = get_the_author_meta( 'url', $user->user_id );
 					} else {
 						$link = $user->user_url;
 						if ( empty( $link ) || 'http://' === $link ) {
@@ -479,7 +510,7 @@ class UserList {
 
 				$title .= ' (' . sprintf( _n( '%d post', '%d posts', $postcount, 'author-avatars' ), $postcount ) . ')';
 			}
-			$name .= sprintf( apply_filters( 'aa_post_count', ' (%d)', $postcount, $user ), $postcount );
+			$name .= sprintf( apply_filters( 'aa_post_count', ' <span class="aa-post-count-wrap-start">(</span>%d<span class="aa-post-count-wrap-end">)</span>', $postcount, $user ), $postcount );
 		}
 
 		if ( $this->show_bbpress_post_count && AA_is_bbpress() ) {
@@ -745,25 +776,56 @@ class UserList {
 			$avatar = preg_replace( '@title=["\'][\w]*["\'] ?@', '', $avatar );
 			/* insert alt and title parameters */
 			if ( ! stripos( $avatar, 'title=' ) ) {
-				$avatar = preg_replace( '@ ?\/>@', ' title="' . $title . '" />', $avatar );
+
+				/**
+				 * filter the avatar title
+				 *
+				 * @param string $title users nicename.
+				 * @param object $user The user object
+				 */
+				$title = apply_filters( 'aa_user_avatar_title', $title, $user );
+//				$avatar = preg_replace( '@ ?\/>@', ' title="' . $title . '" />', $avatar );
 			}
 			if ( ! stripos( $avatar, 'alt=' ) ) {
+
+				/**
+				 * filter the avatar alt
+				 *
+				 * @param string $alt users nicename.
+				 * @param object $user The user object
+				 */
+				$alt = apply_filters( 'aa_user_avatar_alt', $alt, $user );
+
 				$avatar = preg_replace( '@ ?\/>@', ' alt="' . $alt . '"  />', $avatar );
 			}
 		}
 
-		$html = '';
+
 		/**
-		 * filter the span that holds the avatar
+		 * filter the avatar
 		 *
-		 * @param string $html The sprintf template.
-		 * @param string $title The value passed to the title attr in span.
 		 * @param string $avatar The HTML returned from get_avatar() etc.
 		 * @param object $user The user object
 		 */
-//		$html .= sprintf( apply_filters( 'aa_user_avatar_template', '<span class="avatar" title="%s">%s</span>', $title, $avatar, $user ), $title, $avatar );
-		$html .= sprintf( apply_filters( 'aa_user_avatar_template', '<span class="avatar">%s</span>', $title, $avatar, $user ), $title, $avatar );
-		if ( $this->show_name || $this->show_bbpress_post_count || $this->show_postcount ) {
+		$avatar = apply_filters( 'aa_user_avatar_html', $avatar, $user );
+
+		$html = '';
+
+		if ( ! $link ) {
+			/**
+			 * filter the span that holds the avatar
+			 *
+			 * @param string $html The sprintf template.
+			 * @param string $title The value passed to the title attr in span.
+			 * @param string $avatar The HTML returned from get_avatar() etc.
+			 * @param object $user The user object
+			 */
+			$html .= sprintf( apply_filters( 'aa_user_avatar_template_with_title', '<span class="avatar" title="%s">%s</span>', $title, $avatar, $user ), $title, $avatar );
+		} else {
+			$html .= sprintf( apply_filters( 'aa_user_avatar_template', '<span class="avatar">%s</span>', $avatar, $user ), $avatar );
+		}
+
+		if ( $this->show_name || $this->show_nickname ||$this->show_name || $this->show_bbpress_post_count || $this->show_postcount ) {
 			/**
 			 * filter the span that contains the users name
 			 *
@@ -840,8 +902,13 @@ class UserList {
 			 */
 			$html .= apply_filters( 'aa_user_display_extra', $this->display_extra, $user );
 		}
-
-		$tpl_vars['{class}'] = implode( $divcss, ' ' );
+		/**
+		 * filter the array used to create the css for the user
+		 *
+		 * @param array $CSS The array of string used to create classes on user DIV.
+		 * @param object $user the user object
+		 */
+		$tpl_vars['{class}'] = implode( apply_filters( 'aa_user_final_css', $divcss, $user ), ' ' );
 		/**
 		 * filter on the complete HTML for the user
 		 *
@@ -860,10 +927,26 @@ class UserList {
 		return str_replace( array_keys( $tpl_vars ), $tpl_vars, apply_filters( 'aa_user_template', $this->user_template, $user ) );
 	}
 
+
+	function group_name( $divcss, $name_string ){
+
+		$names = explode( ' ', $name_string );
+		foreach ( $names as $key => $name ){
+
+			$keys = array_keys( $names );
+			if( $key === end( $keys ) ){
+				$key = 'last';
+			}
+			$divcss[] = 'name-group-' . $key . '-' . strtolower( substr( $name, 0, 1 ) );
+		}
+
+	    return $divcss;
+	}
+
 	/**
 	 * Returns a filtered and sorted list of users
 	 *
-	 * @return Array of users (WP_User objects), filtered, sorted and limited to the maximum number.
+	 * @return array of users (WP_User objects), filtered, sorted and limited to the maximum number.
 	 */
 	function get_users() {
 
@@ -1096,7 +1179,8 @@ class UserList {
 				$blogs_condition = "meta_key LIKE '" . $wpdb->base_prefix . "%capabilities'";
 			} // else filter by set blog ids
 			else {
-				$blogs           = array_map( create_function( '$v', 'global $wpdb; return "\'" . $wpdb->get_blog_prefix($v) . "capabilities\'";' ), $this->blogs );
+//				$blogs           = array_map( create_function( '$v', 'global $wpdb; return "\'" . $wpdb->get_blog_prefix($v) . "capabilities\'";' ), $this->blogs );
+				$blogs = array_map( array( $this, 'get_blogs_sql' ), $this->blogs );
 				$blogs_condition = 'meta_key IN (' . implode( ', ', $blogs ) . ')';
 			}
 		} else {
@@ -1116,13 +1200,19 @@ class UserList {
 			$roleQuery = ' AND(' . $roleQuery . ')';
 		}
 
-		// can't wape into pepare as thease are all table names
-		$query = "SELECT user_id, user_login, display_name, user_email, user_url, user_registered, meta_key, meta_value FROM $wpdb->users, $wpdb->usermeta" .
+		// can't wrap into prepare as these are all table names
+		$query = "SELECT user_id, user_login, display_name, user_email, user_url, user_registered, meta_key, meta_value FROM $wpdb->users, $wpdb->usermeta " .
 		         " WHERE " . $wpdb->users . ".ID = " . $wpdb->usermeta . ".user_id AND " . $blogs_condition . " AND user_status = 0" . $roleQuery;
 
 		$users = $wpdb->get_results( $query );
 
 		return $users;
+	}
+
+	function get_blogs_sql( $blogs ){
+		global $wpdb;
+
+		return "'" . $wpdb->get_blog_prefix($blogs) . "capabilities'";
 	}
 
 	/**
@@ -1155,7 +1245,7 @@ class UserList {
 	 *
 	 * @access private
 	 *
-	 * @param $users Array of users (WP_User objects).
+	 * @param $users array of users (WP_User objects).
 	 *
 	 * @return mixed $users Array of users
 	 */
@@ -1286,10 +1376,10 @@ class UserList {
 	 *
 	 * @access private
 	 *
-	 * @param Array $users Array of users (WP_User objects).
+	 * @param array $users Array of users (WP_User objects).
 	 * @param       $order String|bool The key to sort by. Can be one of the following: random, user_id, user_login, display_name.
 	 *
-	 * @return Array $users Array of users (WP_User objects)
+	 * @return array $users Array of users (WP_User objects)
 	 */
 	function _sort( $users, $order = false ) {
 		if ( ! $order ) {
@@ -1312,11 +1402,22 @@ class UserList {
 			case 'display_name':
 				usort( $users, array( $this, '_users_cmp_name' ) );
 				break;
+			case 'nickname':
+				usort( $users, array( $this, '_users_cmp_nickname' ) );
+				break;
 			case 'first_name':
 				usort( $users, array( $this, '_users_cmp_first_name' ) );
 				break;
 			case 'last_name':
 				usort( $users, array( $this, '_users_cmp_last_name' ) );
+				break;
+			case 'last_first_name':
+				usort( $users, array( $this, '_users_cmp_first_name' ) );
+				usort( $users, array( $this, '_users_cmp_last_name' ) );
+				break;
+			case 'first_last_name':
+				usort( $users, array( $this, '_users_cmp_last_name' ) );
+				usort( $users, array( $this, '_users_cmp_first_name' ) );
 				break;
 			case 'post_count':
 				usort( $users, array( $this, '_user_cmp_postcount' ) );
@@ -1346,6 +1447,9 @@ class UserList {
 	 * Returns a sorted users array by the white list order
 	 *
 	 * @access private
+	 *
+	 * @param $users
+	 *
 	 * @return array $users WP_user
 	 */
 	function _users_whitelist( $users ) {
@@ -1410,6 +1514,35 @@ class UserList {
 	 */
 	function _users_cmp_name( $a, $b ) {
 		return $this->_sort_direction() * strcasecmp( remove_accents( $a->display_name ), remove_accents( $b->display_name ) );
+	}
+
+
+	/**
+	 * Given two users, this function compares the user's display names.
+	 *
+	 * @access private
+	 *
+	 * @param $a object WP_User
+	 * @param $b object WP_User
+	 *
+	 * @return int result of a string compare of the user first names.
+	 */
+	function _users_cmp_nickname( $a, $b ) {
+		$an = remove_accents( $this->get_user_nickname( $a->user_id ) );
+		$bn = remove_accents( $this->get_user_nickname( $b->user_id ) );
+
+		return $this->_sort_direction() * strcasecmp( $an, $bn );
+	}
+
+	/**
+	 * Given a user id returns the first name of the respective user.
+	 *
+	 * @param int $user_id
+	 *
+	 * @return string first name of user
+	 */
+	function get_user_nickname( $user_id ) {
+		return get_user_meta( $user_id, 'nickname', true );
 	}
 
 	/**
@@ -1731,7 +1864,7 @@ class UserList {
 	 *
 	 * @param int $user_id
 	 *
-	 * @return Array of blog ids
+	 * @return array of blog ids
 	 */
 	function get_user_blogs( $user_id ) {
 		global $wpdb;
@@ -1757,10 +1890,10 @@ class UserList {
 	/**
 	 * Group the given set of users if set in field "group_by"
 	 *
-	 * @param $users Array of WP_User objects, by reference
+	 * @param $users array of WP_User objects, by reference
 	 *
 	 * @access private
-	 * @return Array of WP_User objects
+	 * @return array of WP_User objects
 	 */
 	function _group( $users ) {
 		if ( empty( $this->group_by ) ) {
