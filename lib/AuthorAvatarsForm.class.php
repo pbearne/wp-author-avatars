@@ -113,8 +113,8 @@ class AuthorAvatarsForm {
 	/**
 	 * Renders the blog filter select field.
 	 *
-	 * @param mixed  $values the field values
-	 * @param string $name   the field name
+	 * @param mixed $values the field values
+	 * @param string $name the field name
 	 *
 	 * @return string
 	 */
@@ -123,7 +123,7 @@ class AuthorAvatarsForm {
 		if ( $this->settings->blog_selection_allowed() ) {
 			$id   = $this->_getFieldId( $name );
 			$name = $this->_getFieldName( $name );
-			$html .= '<p>' . AAFormHelper::choice( $name, Array( - 1 => "All" ) + $this->_getAllBlogs(), $values, array(
+			$html .= '<p>' . AAFormHelper::choice( $name, array( - 1 => "All" ) + $this->_getAllBlogs(), $values, array(
 					'id'       => $id,
 					'multiple' => true,
 					'label'    => '<strong>' . __( 'Show users from blogs', 'author-avatars' ) . ':</strong><br />',
@@ -161,7 +161,7 @@ class AuthorAvatarsForm {
 			if ( ! array_key_exists( $key, $where_options ) ) {
 				continue;
 			}
-			$bool = ( 1 == $where ) ? 1 : 0;
+			$bool         = ( 1 == $where ) ? 1 : 0;
 			$where_string .= " AND $key = '$bool'";
 		}
 		$blogs = $wpdb->get_results( $wpdb->prepare( "SELECT blog_id, path FROM $wpdb->blogs WHERE 1 = 1 AND site_id = %d  $where_string", $wpdb->siteid ), ARRAY_A );
@@ -178,13 +178,13 @@ class AuthorAvatarsForm {
 	/**
 	 * Renders the group by field, which is either a dropdown field or a single checkbox if only one option is available.
 	 *
-	 * @param mixed  $values the field values
-	 * @param string $name   the field name
+	 * @param mixed $values the field values
+	 * @param string $name the field name
 	 *
 	 * @return string
 	 */
 	function renderFieldGroupBy( $values = array(), $name = 'group_by' ) {
-		$group_by_options = Array();
+		$group_by_options = array();
 		if ( $this->settings->blog_selection_allowed() ) {
 			$group_by_options['blog'] = __( 'Group by blogs', 'author-avatars' );
 		}
@@ -208,8 +208,8 @@ class AuthorAvatarsForm {
 	/**
 	 * Renders the roles field
 	 *
-	 * @param mixed  $values the field values
-	 * @param string $name   the field name
+	 * @param mixed $values the field values
+	 * @param string $name the field name
 	 *
 	 * @return string
 	 */
@@ -282,7 +282,7 @@ class AuthorAvatarsForm {
 	 * Renders the hiddenusers input text field.
 	 *
 	 * @param string $value the field value
-	 * @param string $name  the field name
+	 * @param string $name the field name
 	 *
 	 * @return string
 	 */
@@ -303,7 +303,7 @@ class AuthorAvatarsForm {
 	 * Renders the hiddenusers input text field.
 	 *
 	 * @param string $value the field value
-	 * @param string $name  the field name
+	 * @param string $name the field name
 	 *
 	 * @return string
 	 */
@@ -350,25 +350,13 @@ class AuthorAvatarsForm {
 	/**
 	 * Renders the display options checkbox matrix (show name?)
 	 *
-	 * @param mixed  $values the field values
-	 * @param string $name   the field name
+	 * @param mixed $values the field values
+	 * @param string $name the field name
 	 *
 	 * @return string
 	 */
 	function renderFieldDisplayOptions( $values = array(), $name = 'display' ) {
-		$display_options = Array(
-			'show_name'      => __( 'Show name', 'author-avatars' ),
-			'show_email'     => __( 'Show email', 'author-avatars' ),
-			'show_nickname'     => __( 'Show Nickname', 'author-avatars' ),
-			'show_biography' => __( 'Show biography', 'author-avatars' ),
-			'show_postcount' => __( 'Show number of posts', 'author-avatars' ),
-			'show_last_post' => __( 'Show link to authors last post', 'author-avatars' ),
-		);
-		if ( AA_is_bbpress() ) {
-			$display_options['show_bbpress_post_count'] = __( 'Show BBPress Post Count', 'author-avatars' );
-		}
-
-		$display_options = apply_filters( 'aa_render_field_display_options', $display_options );
+		$display_options = $this->display_options();
 
 		$attributes = array(
 			'id'          => $this->_getFieldId( $name ),
@@ -386,32 +374,13 @@ class AuthorAvatarsForm {
 	/**
 	 * Renders the "order by" dropdown
 	 *
-	 * @param mixed  $values the field values
-	 * @param string $name   the field name
+	 * @param mixed $values the field values
+	 * @param string $name the field name
 	 *
 	 * @return string
 	 */
 	function renderFieldOrder( $values = array(), $name = 'order' ) {
-		$order_options = Array(
-			'date_registered'      => __( 'Date of Registration', 'author-avatars' ),
-			'display_name'         => __( 'Display Name', 'author-avatars' ),
-			'nickname'             => __( 'Nickname', 'author-avatars' ),
-			'first_name'           => __( 'First Name', 'author-avatars' ),
-			'last_name'            => __( 'Last Name', 'author-avatars' ),
-			'user_login'           => __( 'Login Name', 'author-avatars' ),
-			'post_count'           => __( 'Number of Posts', 'author-avatars' ),
-			'random'               => __( 'Random', 'author-avatars' ),
-			'whitelist'            => __( 'White List', 'author-avatars' ),
-			'user_id'              => __( 'User Id', 'author-avatars' ),
-			'recent_post_activity' => __( 'Recent Posts Activity', 'author-avatars' ),
-			'recent_site_activity' => __( 'Recent Sitewide Activity', 'author-avatars' ),
-		);
-		if ( AA_is_bbpress() ) {
-			$order_options['bbpress_post_count'] = __( 'BBPress Post Count', 'author-avatars' );
-		}
-		if ( AA_is_bp() ) {
-			$order_options['budy_press_recent_activity'] = __( 'BudyPress last activity', 'author-avatars' );
-		}
+		$order_options = $this->get_sort_by();
 		$attributes = array(
 			'id'    => $this->_getFieldId( $name ),
 			'label' => __( 'Sorting order', 'author-avatars' ) . ': ',
@@ -424,37 +393,18 @@ class AuthorAvatarsForm {
 	/**
 	 * Renders the "user_link" dropdown
 	 *
-	 * @param mixed  $values the field values
-	 * @param string $name   the field name
+	 * @param mixed $values the field values
+	 * @param string $name the field name
 	 *
 	 * @return string
 	 */
 	function renderFieldUserLink( $values = array(), $name = 'user_link' ) {
-		$user_link_options = Array(
-			''                   => '-',
-			'authorpage'         => __( 'Author Page', 'author-avatars' ),
-			'website'            => __( 'Website', 'author-avatars' ),
-			'last_post'          => __( 'Users Last Post this blog', 'author-avatars' ),
-			'last_post_filtered' => __( 'Filtered Last Post', 'author-avatars' ),
-		);
-		if ( AA_is_bp() ) {
-			$user_link_options['bp_memberpage'] = __( 'BP Member Page', 'author-avatars' );
-		}
-		if ( class_exists( 'UM_API' ) ) {
-			$user_link_options['um_profile'] = __( 'UM Profile Page', 'author-avatars' );
-		}
-		if ( AA_is_wpmu() ) {
-			$user_link_options['last_post_all'] = __( 'Users Last Post ALL blogs', 'author-avatars' );
-			$user_link_options['blog']          = __( 'Blog', 'author-avatars' );
-		}
-		if ( AA_is_bbpress() ) {
-			$user_link_options['bbpress_memberpage'] = __( 'BBpress Member Page', 'author-avatars' );
-		}
-		$attributes = array(
+		$user_link_options = $this->get_user_links();
+		$attributes        = array(
 			'id'    => $this->_getFieldId( $name ),
 			'label' => __( 'Link users to', 'author-avatars' ) . ': ',
 		);
-		$name       = $this->_getFieldName( $name );
+		$name              = $this->_getFieldName( $name );
 
 		return '<p>' . AAFormHelper::choice( $name, $user_link_options, $values, $attributes ) . '</p>';
 	}
@@ -462,13 +412,13 @@ class AuthorAvatarsForm {
 	/**
 	 * Renders the "order by" dropdown
 	 *
-	 * @param mixed  $values the field values
-	 * @param string $name   the field name
+	 * @param mixed $values the field values
+	 * @param string $name the field name
 	 *
 	 * @return string
 	 */
 	function renderFieldSortDirection( $values = array(), $name = 'sort_direction' ) {
-		$order_options = Array(
+		$order_options = array(
 			'asc'  => __( 'Ascending', 'author-avatars' ),
 			'desc' => __( 'Descending', 'author-avatars' )
 		);
@@ -485,7 +435,7 @@ class AuthorAvatarsForm {
 	 * Renders the "limit" input field
 	 *
 	 * @param string $value the field value
-	 * @param string $name  the field name
+	 * @param string $name the field name
 	 *
 	 * @return string
 	 */
@@ -504,7 +454,7 @@ class AuthorAvatarsForm {
 	 * Renders the "limit" input field
 	 *
 	 * @param string $value the field value
-	 * @param string $name  the field name
+	 * @param string $name the field name
 	 *
 	 * @return string
 	 */
@@ -524,7 +474,7 @@ class AuthorAvatarsForm {
 	 * Renders the "max bio length" input field
 	 *
 	 * @param string $value the field value
-	 * @param string $name  the field name
+	 * @param string $name the field name
 	 *
 	 * @return string
 	 */
@@ -545,7 +495,7 @@ class AuthorAvatarsForm {
 	 * Renders the "min_post_count" input field
 	 *
 	 * @param string $value the field value
-	 * @param string $name  the field name
+	 * @param string $name the field name
 	 *
 	 * @return string
 	 */
@@ -563,9 +513,9 @@ class AuthorAvatarsForm {
 	/**
 	 * Renders the avatar size input field.
 	 *
-	 * @param string $value   the field value
-	 * @param string $name    the field name
-	 * @param bool   $preview If set to true (default) the "avatar_size_preview" div is rendered. jQuery UI and "js/widget.admin.js" needs to included in order for this to work.
+	 * @param string $value the field value
+	 * @param string $name the field name
+	 * @param bool $preview If set to true (default) the "avatar_size_preview" div is rendered. jQuery UI and "js/widget.admin.js" needs to included in order for this to work.
 	 */
 	function renderFieldAvatarSize( $value = '', $name = 'avatar_size', $preview = true ) {
 		$attributes = array(
@@ -589,8 +539,8 @@ class AuthorAvatarsForm {
 	/**
 	 * Renders the shortcode type selection field
 	 *
-	 * @param mixed  $values the field values
-	 * @param string $name   the field name
+	 * @param mixed $values the field values
+	 * @param string $name the field name
 	 *
 	 * @return string
 	 */
@@ -614,7 +564,7 @@ class AuthorAvatarsForm {
 	 * Renders the email/userid input field for the show_avatar wizard
 	 *
 	 * @param string $value the field value
-	 * @param string $name  the field name
+	 * @param string $name the field name
 	 *
 	 * @return string
 	 */
@@ -632,7 +582,7 @@ class AuthorAvatarsForm {
 	 * Renders the User pick input field for the show_avatar wizard
 	 *
 	 * @param string $value the field value
-	 * @param string $name  the field name
+	 * @param string $name the field name
 	 *
 	 * @return string
 	 */
@@ -668,8 +618,8 @@ class AuthorAvatarsForm {
 	/**
 	 * Renders the alignment radio fields for the show_avatar wizard
 	 *
-	 * @param mixed  $values the field values
-	 * @param string $name   the field name
+	 * @param mixed $values the field values
+	 * @param string $name the field name
 	 *
 	 * @return string
 	 */
@@ -696,7 +646,7 @@ class AuthorAvatarsForm {
 	 * Renders an opening tab div
 	 *
 	 * @param string $title The tab title
-	 * @param string $id    tab id (optional). Generated from $title if empty.
+	 * @param string $id tab id (optional). Generated from $title if empty.
 	 *
 	 * @return string
 	 */
@@ -746,9 +696,9 @@ class AuthorAvatarsForm {
 	/**
 	 * Renders the two given bits of html in columns next to each other.
 	 *
-	 * @param string $left  Contents of the left column
+	 * @param string $left Contents of the left column
 	 * @param string $right Contents of the right column
-	 * @param        string html
+	 * @param string html
 	 */
 	function renderColumns( $left = '', $right = '' ) {
 		if ( empty( $left ) || empty( $right ) ) {
@@ -760,6 +710,83 @@ class AuthorAvatarsForm {
 		$html .= '</div>';
 
 		return $html;
+	}
+
+	/**
+	 * @return mixed|void
+	 */
+	public function display_options() {
+		$display_options = array(
+			'show_name'      => __( 'Show name', 'author-avatars' ),
+			'show_email'     => __( 'Show email', 'author-avatars' ),
+			'show_nickname'  => __( 'Show Nickname', 'author-avatars' ),
+			'show_biography' => __( 'Show biography', 'author-avatars' ),
+			'show_postcount' => __( 'Show number of posts', 'author-avatars' ),
+			'show_last_post' => __( 'Show link to authors last post', 'author-avatars' ),
+		);
+		if ( AA_is_bbpress() ) {
+			$display_options['show_bbpress_post_count'] = __( 'Show BBPress Post Count', 'author-avatars' );
+		}
+
+		$display_options = apply_filters( 'aa_render_field_display_options', $display_options );
+
+		return $display_options;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function get_user_links(): array {
+		$user_link_options = array(
+			'none'               => 'No Link',
+			'authorpage'         => __( 'Author Page', 'author-avatars' ),
+			'website'            => __( 'Website', 'author-avatars' ),
+			'last_post'          => __( 'Users Last Post this blog', 'author-avatars' ),
+			'last_post_filtered' => __( 'Filtered Last Post', 'author-avatars' ),
+		);
+		if ( AA_is_bp() ) {
+			$user_link_options['bp_memberpage'] = __( 'BP Member Page', 'author-avatars' );
+		}
+		if ( class_exists( 'UM_API' ) ) {
+			$user_link_options['um_profile'] = __( 'UM Profile Page', 'author-avatars' );
+		}
+		if ( AA_is_wpmu() ) {
+			$user_link_options['last_post_all'] = __( 'Users Last Post ALL blogs', 'author-avatars' );
+			$user_link_options['blog']          = __( 'Blog', 'author-avatars' );
+		}
+		if ( AA_is_bbpress() ) {
+			$user_link_options['bbpress_memberpage'] = __( 'BBpress Member Page', 'author-avatars' );
+		}
+
+		return $user_link_options;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function get_sort_by(): array {
+		$order_options = array(
+			'date_registered'      => __( 'Date of Registration', 'author-avatars' ),
+			'display_name'         => __( 'Display Name', 'author-avatars' ),
+			'nickname'             => __( 'Nickname', 'author-avatars' ),
+			'first_name'           => __( 'First Name', 'author-avatars' ),
+			'last_name'            => __( 'Last Name', 'author-avatars' ),
+			'user_login'           => __( 'Login Name', 'author-avatars' ),
+			'post_count'           => __( 'Number of Posts', 'author-avatars' ),
+			'random'               => __( 'Random', 'author-avatars' ),
+			'whitelist'            => __( 'White List', 'author-avatars' ),
+			'user_id'              => __( 'User Id', 'author-avatars' ),
+			'recent_post_activity' => __( 'Recent Posts Activity', 'author-avatars' ),
+			'recent_site_activity' => __( 'Recent Sitewide Activity', 'author-avatars' ),
+		);
+		if ( AA_is_bbpress() ) {
+			$order_options['bbpress_post_count'] = __( 'BBPress Post Count', 'author-avatars' );
+		}
+		if ( AA_is_bp() ) {
+			$order_options['budy_press_recent_activity'] = __( 'BudyPress last activity', 'author-avatars' );
+		}
+
+		return $order_options;
 	}
 
 }

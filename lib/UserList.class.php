@@ -87,10 +87,14 @@ class UserList {
 	var $contact_links = false;
 
 	/**
-	 * Size of avatars.
+	 * Extra Class names.
 	 */
 	var $display_extra = array();
 
+	/**
+	 * Size of avatar border_radius.
+	 */
+	var $border_radius = 0;
 	/**
 	 * Size of avatars.
 	 */
@@ -151,7 +155,7 @@ class UserList {
 	 * - {class} is replaced by user specific classes
 	 * - {user} is replaced by the user avatar (and possibly name)
 	 */
-	var $user_template = '<div class="{class}">{user}</div>';
+	var $user_template = '<div class="{class}" style="{style}">{user}</div>';
 
 
 	function __construct() {
@@ -349,7 +353,7 @@ class UserList {
 	 * @return String html
 	 */
 	function format_user( $user ) {
-		$tpl_vars = array( '{class}' => '', '{user}' => '' );
+		$tpl_vars = array( '{class}' => '', '{user}' => '', '{style}' => '' );
 
 		$avatar_size = intval( $this->avatar_size );
 		if ( ! $avatar_size ) {
@@ -793,6 +797,24 @@ class UserList {
 
 				$avatar = preg_replace( '@ ?\/>@', ' alt="' . $alt . '"  />', $avatar );
 			}
+
+			if ( ! stripos( $avatar, 'style=' ) ) {
+				$avatar_style = '';
+				if ( ! empty( $atts['border_radius'] ) ) {
+					$avatar_style .= ' border-radius:' . absint( $this->border_radius ) . '%;';
+				}
+				/**
+				 * filter the avatar alt
+				 *
+				 * @param string $alt users nicename.
+				 * @param object $user The user object
+				 */
+				$avatar_style = apply_filters( 'aa_user_avatar_style', $avatar_style, $user );
+
+				$avatar = preg_replace( '@ ?\/>@', ' style="' . $avatar_style . '"  />', $avatar );
+			}
+
+
 		}
 
 
@@ -897,6 +919,30 @@ class UserList {
 			 */
 			$html .= apply_filters( 'aa_user_display_extra', $this->display_extra, $user );
 		}
+		$style = '';
+		if ( ! empty( $this->align ) ) {
+			switch ( $this->align ) {
+				case 'left':
+					$style = "float: left; margin-right: 10px;";
+					break;
+				case 'right':
+					$style = "float: right; margin-left: 10px;";
+					break;
+				case 'center':
+					$style = "text-align: center; margin-left:auto;  margin-right:auto;  width: fit-content; float: none";
+					break;
+			}
+		}
+
+		/**
+		 * filter the array used to create the style for the user
+		 *
+		 * @param array $CSS The array of string used to create classes on user DIV.
+		 * @param object $user the user object
+		 */
+		$tpl_vars['{style}'] = apply_filters( 'aa_user_final_style', $style, $user );
+
+
 		/**
 		 * filter the array used to create the css for the user
 		 *

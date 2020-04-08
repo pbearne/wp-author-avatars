@@ -11,6 +11,9 @@ require_once( dirname( __FILE__ ) . '/helper.functions.php' );
 require_once( dirname( __FILE__ ) . '/AuthorAvatarsSettings.class.php' );
 require_once( dirname( __FILE__ ) . '/AuthorAvatarsWidget.class.php' );
 
+require_once( dirname( __FILE__ ) . '/class-api.php' );
+
+
 
 function aa_register_widgets() {
 	register_widget( 'AuthorAvatarsWidget' );

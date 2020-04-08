@@ -80,6 +80,22 @@ class ShowAvatarShortcode {
 		}
 		// is there an user link request
 
+		if ( ! stripos( $avatar, 'style=' ) ) {
+			$avatar_style = '';
+			if ( ! empty( $atts['border_radius'] ) ) {
+				$avatar_style .= ' border-radius:' . absint( $this->border_radius ) . '%;';
+			}
+			/**
+			 * filter the avatar alt
+			 *
+			 * @param string $alt users nicename.
+			 * @param object $user The user object
+			 */
+			$avatar_style = apply_filters( 'aa_user_avatar_style', $avatar_style, $atts );
+
+			$avatar = preg_replace( '@ ?\/>@', ' style="' . $avatar_style . '"  />', $avatar );
+		}
+
 
 		if ( ! empty( $atts['user_link'] )
 		     || ! empty( $atts['show_biography'] )
@@ -200,7 +216,15 @@ class ShowAvatarShortcode {
 				$display = apply_filters( 'aa_shortcode_display_list', $display );
 
 				// support for all style shortcode
-				$default_display_options = array( 'show_name', 'show_postcount', 'show_email', 'show_nickname', 'show_biography', 'show_last_post', 'show_bbpress_post_count' );
+				$default_display_options = array(
+					'show_name',
+					'show_postcount',
+					'show_email',
+					'show_nickname',
+					'show_biography',
+					'show_last_post',
+					'show_bbpress_post_count'
+				);
 				// loop the old name=true settings and add them to the new array format
 				foreach ( $default_display_options as $default_display_option ) {
 					if ( isset( $atts[ $default_display_option ] ) && ( strlen( $atts[ $default_display_option ] ) > 0 ) ) {

@@ -13,8 +13,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-require_once plugin_dir_path( __FILE__ ) . 'show-avatar/class-show-avatar.php';
-new author_avatar\Show_Avatar_Block();
+require_once plugin_dir_path( __FILE__ ) . 'show-avatar/class-render.php';
+new author_avatar\Show_Avatar\Render();
+
+
 
 /**
  * Enqueue Gutenberg block assets for both frontend + backend.
@@ -22,7 +24,7 @@ new author_avatar\Show_Avatar_Block();
  * @uses {wp-editor} for WP editor styles.
  * @since 1.0.0
  */
-function my_block_cgb_block_assets() { // phpcs:ignore
+function author_avatar_block_assets() { // phpcs:ignore
 	// Styles.
 	wp_enqueue_style(
 		'author-avatars-style-css', // Handle.
@@ -33,7 +35,7 @@ function my_block_cgb_block_assets() { // phpcs:ignore
 }
 
 // Hook: Frontend assets.
-add_action( 'enqueue_block_assets', 'my_block_cgb_block_assets' );
+add_action( 'enqueue_block_assets', 'author_avatar_block_assets' );
 
 /**
  * Enqueue Gutenberg block assets for backend editor.
@@ -44,7 +46,7 @@ add_action( 'enqueue_block_assets', 'my_block_cgb_block_assets' );
  * @uses {wp-editor} for WP editor styles.
  * @since 1.0.0
  */
-function my_block_cgb_editor_assets() { // phpcs:ignore
+function author_avatar_editor_assets() { // phpcs:ignore
 	// Scripts.
 	wp_enqueue_script(
 		'author-avatars-block-js', // Handle.
@@ -54,11 +56,9 @@ function my_block_cgb_editor_assets() { // phpcs:ignore
 		true // Enqueue the script in the footer.
 	);
 
-	wp_localize_script( 'author-avatars-block-js', 'author-avatars', array(
-
-		'users' => get_users(),
-
-	))
+//	wp_localize_script( 'author-avatars-block-js', 'author-avatars', array(
+//		'users' => get_users(),
+//	));
 
 	// Styles.
 	wp_enqueue_style(
@@ -73,4 +73,4 @@ function my_block_cgb_editor_assets() { // phpcs:ignore
 
 
 // Hook: Editor assets.
-add_action( 'enqueue_block_editor_assets', 'my_block_cgb_editor_assets' );
+add_action( 'enqueue_block_editor_assets', 'author_avatar_editor_assets' );

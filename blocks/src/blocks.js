@@ -10,4 +10,3 @@
  */
 
 import './show-avatar/block.js';
-import './authoravatars/block.js';

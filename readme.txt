@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=MZTZ5
 Tags: Avatar, Author, BuddyPress, xprofile, Comment, Editor, Image, Multisite, Photo, Picture, Profile, Shortcode, Random, Sidebar, Thumbnail, User, Widget, Wpmu, BBPress, co-authors
 Requires at least: 3.0
 Tested up to: 4.9.9
-Stable tag: 1.18
+Stable tag: 2.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -66,6 +66,9 @@ If you have added CSS to your theme you may have to update it for this upgrade (
 5. List of users with name and biography
 
 == Changelog ==
+
+2.0.0
+Gunterburg blocks
 
 = 1.18 =
 PHP 7.3 errors
