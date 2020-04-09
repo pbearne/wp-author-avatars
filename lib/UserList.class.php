@@ -798,9 +798,10 @@ class UserList {
 				$avatar = preg_replace( '@ ?\/>@', ' alt="' . $alt . '"  />', $avatar );
 			}
 
+
 			if ( ! stripos( $avatar, 'style=' ) ) {
 				$avatar_style = '';
-				if ( ! empty( $atts['border_radius'] ) ) {
+				if ( ! empty( $this->border_radius ) ) {
 					$avatar_style .= ' border-radius:' . absint( $this->border_radius ) . '%;';
 				}
 				/**
