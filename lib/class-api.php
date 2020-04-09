@@ -166,19 +166,24 @@ class api {
 	}
 
 	public function get_data() {
-		$data = array(
-			'users'           => $this->get_users(),
-			'display_options' => $this->get_display_options(),
-			'roles'           => $this->get_user_roles(),
-			'links'           => $this->get_user_links(),
-			'sort_avatars_by' => $this->get_sort_by(),
-			'donate'          => AA_donateButton('link'),
+		$tran_key = 'AA_gutenberg_data';
+		$data = get_transient( $tran_key );
+		if( false === $data ){
+			$data = array(
+				'users'           => $this->get_users(),
+				'display_options' => $this->get_display_options(),
+				'roles'           => $this->get_user_roles(),
+				'links'           => $this->get_user_links(),
+				'sort_avatars_by' => $this->get_sort_by(),
+				'donate'          => AA_donateButton('link'),
 
-		);
+			);
 
-		$data['blogs'] = array();
-		if ( AA_is_wpmu() ) {
-			$data['blogs'] = $this->get_blogs();
+			$data['blogs'] = array();
+			if ( AA_is_wpmu() ) {
+				$data['blogs'] = $this->get_blogs();
+			}
+			set_transient( $tran_key, $data, HOUR_IN_SECONDS );
 		}
 
 		return $data;
