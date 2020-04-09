@@ -179,6 +179,16 @@ class AuthorAvatarsShortcode {
 			}
 		}
 
+		if ( ! empty( $atts['border_radius'] ) ) {
+			$border_radius = intval( $atts['border_radius'] );
+			if ( $border_radius > 0 ) {
+				$this->userlist->border_radius = $border_radius;
+			}
+		}
+		if ( ! empty( $atts['align'] ) ) {
+				$this->userlist->align = $atts['align'];
+		}
+
 		// max. number of avatars
 		if ( ! empty( $atts['limit'] ) ) {
 			$limit = intval( $atts['limit'] );
@@ -211,7 +221,7 @@ class AuthorAvatarsShortcode {
 			}
 		}
 
-		// get page size
+		// get paging page
 		if ( ! empty( $atts['aa_page'] ) ) {
 
 			$page_size = intval( $atts['aa_page'] );

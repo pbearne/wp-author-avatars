@@ -59,19 +59,24 @@ class ShowAvatarShortcode {
 
 
 		// get alignment
+		$aligin_class = 'alignleft';
 		if ( ! empty( $atts['align'] ) ) {
 			switch ( $atts['align'] ) {
 				case 'left':
-					$style = "float: left; margin-right: 10px;";
+//					$style = "float: left; margin-right: 10px; width: auto; text-align: center;";
+					$aligin_class = 'alignleft';
 					break;
 				case 'right':
-					$style = "float: right; margin-left: 10px;";
+//					$style = "float: right; margin-left: 10px; width: auto; text-align: center;";
+					$aligin_class = 'alignright';
 					break;
 				case 'center':
 					$style = "text-align: center; width: 100%;";
+					$aligin_class = 'aligncenter';
 					break;
 			}
 		}
+		$extraClass .= ' ' .  $aligin_class;
 
 		if ( ! empty( $id ) ) {
 			$avatar = get_avatar( $id, $avatar_size );
@@ -79,6 +84,22 @@ class ShowAvatarShortcode {
 			$avatar = __( "[show_author shortcode: please set id/email attribute]" );
 		}
 		// is there an user link request
+
+		if ( ! stripos( $avatar, 'style=' ) ) {
+			$avatar_style = '';
+			if ( ! empty( $atts['border_radius'] ) ) {
+				$avatar_style .= ' border-radius:' . absint( $atts['border_radius'] ) . '%;';
+			}
+			/**
+			 * filter the avatar alt
+			 *
+			 * @param string $alt users nicename.
+			 * @param object $user The user object
+			 */
+			$avatar_style = apply_filters( 'aa_user_avatar_style', $avatar_style, $atts );
+
+			$avatar = preg_replace( '@ ?\/>@', ' style="' . $avatar_style . '"  />', $avatar );
+		}
 
 
 		if ( ! empty( $atts['user_link'] )
@@ -200,7 +221,15 @@ class ShowAvatarShortcode {
 				$display = apply_filters( 'aa_shortcode_display_list', $display );
 
 				// support for all style shortcode
-				$default_display_options = array( 'show_name', 'show_postcount', 'show_email', 'show_nickname', 'show_biography', 'show_last_post', 'show_bbpress_post_count' );
+				$default_display_options = array(
+					'show_name',
+					'show_postcount',
+					'show_email',
+					'show_nickname',
+					'show_biography',
+					'show_last_post',
+					'show_bbpress_post_count'
+				);
 				// loop the old name=true settings and add them to the new array format
 				foreach ( $default_display_options as $default_display_option ) {
 					if ( isset( $atts[ $default_display_option ] ) && ( strlen( $atts[ $default_display_option ] ) > 0 ) ) {
@@ -286,10 +315,21 @@ class ShowAvatarShortcode {
 		}
 
 		if ( ! empty( $style ) ) {
-			$style = ' style="' . $style . '"';
+			$style .= $style;
+		}
+		if ( ! empty( $atts['background_color'] ) ) {
+			$style .= ' background-color:' . $atts['background_color'] . ';';
 		}
 
-		return '<div class="shortcode-show-avatar ' . $extraClass . '"' . $style . '>' . $hrefStart . $avatar . $name . $last_post . $hrefend . $bio . $email . '</div>' . $content;
+		if ( ! empty( $atts['font_color'] ) ) {
+			$style .= ' color:' . $atts['font_color'] . ';';
+			$hrefStart =  preg_replace( '@<a @', '<a style="color:' . $atts['font_color']  . ';"', $hrefStart );
+			$last_post =  preg_replace( '@<a @', '<a style="color:' . $atts['font_color']  . ';"', $last_post );
+			$email =  preg_replace( '@<a @', '<a style="color:' . $atts['font_color']  . ';"', $email );
+		}
+
+
+		return '<div class="shortcode-show-avatar ' . $extraClass . '"style="' . $style . '" >' . $hrefStart . $avatar . $name . $last_post . $hrefend . $bio . $email . '</div>' . $content;
 	}
 
 }
