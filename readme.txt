@@ -59,16 +59,18 @@ If you have added CSS to your theme you may have to update it for this upgrade (
 
 == Screenshots ==
 
-1. Very simple set up of the widget on an empty blog.
-2. The Widget configuration panel.
+1. Very simple set up Gutenberg block in a empty blog.
+2. Gutenberg block.
 3. Examples of what the <code>[authoravatars]</code> shortcode can do.
 4. Shortcode helper available from the WYSIWYG editor on the edit post page.
 5. List of users with name and biography
+6. The Widget configuration panel.
+7. Advance Gutenberg blocks options
 
 == Changelog ==
 
 2.0.0
-Gunterburg blocks
+Gutenberg support added :-)
 
 = 1.18 =
 PHP 7.3 errors

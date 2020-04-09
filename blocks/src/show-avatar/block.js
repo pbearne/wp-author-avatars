@@ -269,6 +269,7 @@ registerBlockType('author-avatars/show-avatar', {
 			function onChangeAlignment(updatedAlignment) {
 				props.setAttributes({alignment: updatedAlignment});
 			}
+
 			function onChangeBorderRadius(content) {
 				props.setAttributes({border_radius: content});
 			}
@@ -446,10 +447,14 @@ registerBlockType('author-avatars/show-avatar', {
 					<Fragment>
 						<a href={'https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=MZTZ5S8MGF75C&lc=CA&item_name=Author%20Avatars%20Plugin%20Support&item_number=authoravatars&currency_code=CAD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted'}
 						   target={'_donante'}>
-							<img alt={'Donate to support Plugin'} src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif"/>
+							<img alt={'Donate to support Plugin'}
+								 src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif"/>
 						</a>
 					</Fragment>
-
+					<div>
+						<label
+							className="blocks-base-control__label">{__('More options in Adavanced:', 'author-avatar')}</label>
+					</div>
 				</InspectorControls>,
 
 				<InspectorAdvancedControls key={'111'}>
@@ -507,7 +512,7 @@ registerBlockType('author-avatars/show-avatar', {
 						</Fragment>
 					)}
 
-					 </InspectorAdvancedControls>,
+				</InspectorAdvancedControls>,
 
 
 				<div className={className} style={block_style} key={'222'}>
