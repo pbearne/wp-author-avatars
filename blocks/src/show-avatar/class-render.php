@@ -101,6 +101,9 @@ class Render {
 
 
 	public function callback( $attributes, $content ) {
+		wp_register_style( 'author-avatars-shortcode', plugins_url( 'css/shortcode.css',dirname(  dirname( __FILE__ ) ) ) );
+
+
 		$html = '';
 //		$html .= '<pre>';
 //
@@ -114,7 +117,7 @@ class Render {
 				$attributes['user_id'] = 0;
 			} elseif ( isset( $attributes['email'] ) ) {
 
-				$attributes['user_id'] = -1;
+				$attributes['user_id'] = - 1;
 			} else {
 
 				return 'ERROR: user_id missing';
@@ -123,11 +126,13 @@ class Render {
 
 
 		$atts = array(
-			'avatar_size'    => ( isset( $attributes['size'] ) ) ? $attributes['size'] : false,
-			'max_bio_length' => ( isset( $attributes['bio_length'] ) ) ? $attributes['bio_length'] : - 1,
-			'align'          => ( isset( $attributes['alignment'] ) ) ? $attributes['alignment'] : '',
-			'user_link'      => ( isset( $attributes['link'] ) ) ? $attributes['link'] : '',
-			'border_radius'  => ( isset( $attributes['border_radius'] ) ) ? $attributes['border_radius'] : '',
+			'avatar_size'      => ( isset( $attributes['size'] ) ) ? $attributes['size'] : false,
+			'max_bio_length'   => ( isset( $attributes['bio_length'] ) ) ? $attributes['bio_length'] : - 1,
+			'align'            => ( isset( $attributes['alignment'] ) ) ? $attributes['alignment'] : '',
+			'user_link'        => ( isset( $attributes['link'] ) ) ? $attributes['link'] : '',
+			'border_radius'    => ( isset( $attributes['border_radius'] ) ) ? $attributes['border_radius'] : '',
+			'background_color' => ( isset( $attributes['background_color'] ) ) ? $attributes['background_color'] : '',
+			'font_color'       => ( isset( $attributes['font_color'] ) ) ? $attributes['font_color'] : '',
 		);
 		if ( isset( $attributes['display'] ) ) {
 			foreach ( $attributes['display'] as $key => $value ) {
@@ -190,7 +195,6 @@ class Render {
 			} else {
 				$atts['id'] = $attributes['user_id'];
 			}
-
 
 			$html .= $render->shortcode_handler( $atts );
 		}

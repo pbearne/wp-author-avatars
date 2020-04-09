@@ -166,7 +166,7 @@ registerBlockType('author-avatars/show-avatar', {
 						blogs_list = data.blogs;
 						DonateButton = data.donate;
 
-						return data;
+						// return data;
 					}
 				)
 			};
@@ -192,13 +192,6 @@ registerBlockType('author-avatars/show-avatar', {
 
 			var limit = props.attributes.limit;
 			const {alignment} = attributes;
-
-
-			// let user_options = [];
-			// if ( null !== users ) {
-			// 	user_options = JSON.parse( users );
-			// }
-			// console.log(user_options);
 
 			// Style object for the button
 			// I created a style in JSX syntax to keep it here for
@@ -364,7 +357,7 @@ registerBlockType('author-avatars/show-avatar', {
 			// the server side block with the tax object getting passed
 			return [
 
-				<InspectorControls>
+				<InspectorControls key={'000'}>
 					<label className="blocks-base-control__label">{__('Background color', 'author-avatar')}</label>
 					<ColorPalette  // Element Tag for Gutenberg standard colour selector
 						label={__('Background color', 'author-avatar')}
@@ -459,7 +452,7 @@ registerBlockType('author-avatars/show-avatar', {
 
 				</InspectorControls>,
 
-				<InspectorAdvancedControls>
+				<InspectorAdvancedControls key={'111'}>
 					{true === display.show_biography && (
 						<RangeControl
 							label="bio_length"
@@ -514,10 +507,10 @@ registerBlockType('author-avatars/show-avatar', {
 						</Fragment>
 					)}
 
-				</InspectorAdvancedControls>
+					 </InspectorAdvancedControls>,
 
-				,
-				<div className={className} style={block_style} key={222}>
+
+				<div className={className} style={block_style} key={'222'}>
 					{
 						!!focus && (
 							<BlockControls>

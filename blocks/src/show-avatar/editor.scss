@@ -43,9 +43,12 @@
 //  padding: 0.2em;
 //  text-align: center;
 //}
-.shortcode-author-avatars div.author-list .user .name {
-  display: block;
-  font-size: .85em;
+.shortcode-author-avatars div.author-list .user {
+ 	text-align: center;
+  .name {
+	display: block;
+	font-size: .85em;
+  }
 }
 
 .shortcode-author-avatars ul.author-list {
@@ -88,7 +91,24 @@
 
 }
 
+.shortcode-show-avatar.right  {
+  float: right;
+  margin-left: 10px;
+  width: auto;
+  text-align: center;
+}
+.shortcode-show-avatar.left  {
+  float: left;
+  margin-right: 10px;
+  width: auto;
+  text-align: center;
+}
 
+.shortcode-show-avatar.center img {
+  margin-left: auto;
+  margin-right: auto;
+
+}
 .contact-links ul {
   list-style:none;
   margin-left: 0;

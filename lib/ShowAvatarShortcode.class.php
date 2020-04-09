@@ -59,19 +59,24 @@ class ShowAvatarShortcode {
 
 
 		// get alignment
+		$aligin_class = 'alignleft';
 		if ( ! empty( $atts['align'] ) ) {
 			switch ( $atts['align'] ) {
 				case 'left':
-					$style = "float: left; margin-right: 10px;";
+//					$style = "float: left; margin-right: 10px; width: auto; text-align: center;";
+					$aligin_class = 'alignleft';
 					break;
 				case 'right':
-					$style = "float: right; margin-left: 10px;";
+//					$style = "float: right; margin-left: 10px; width: auto; text-align: center;";
+					$aligin_class = 'alignright';
 					break;
 				case 'center':
 					$style = "text-align: center; width: 100%;";
+					$aligin_class = 'aligncenter';
 					break;
 			}
 		}
+		$extraClass .= ' ' .  $aligin_class;
 
 		if ( ! empty( $id ) ) {
 			$avatar = get_avatar( $id, $avatar_size );
@@ -83,7 +88,7 @@ class ShowAvatarShortcode {
 		if ( ! stripos( $avatar, 'style=' ) ) {
 			$avatar_style = '';
 			if ( ! empty( $atts['border_radius'] ) ) {
-				$avatar_style .= ' border-radius:' . absint( $this->border_radius ) . '%;';
+				$avatar_style .= ' border-radius:' . absint( $atts['border_radius'] ) . '%;';
 			}
 			/**
 			 * filter the avatar alt
@@ -310,10 +315,21 @@ class ShowAvatarShortcode {
 		}
 
 		if ( ! empty( $style ) ) {
-			$style = ' style="' . $style . '"';
+			$style .= $style;
+		}
+		if ( ! empty( $atts['background_color'] ) ) {
+			$style .= ' background-color:' . $atts['background_color'] . ';';
 		}
 
-		return '<div class="shortcode-show-avatar ' . $extraClass . '"' . $style . '>' . $hrefStart . $avatar . $name . $last_post . $hrefend . $bio . $email . '</div>' . $content;
+		if ( ! empty( $atts['font_color'] ) ) {
+			$style .= ' color:' . $atts['font_color'] . ';';
+			$hrefStart =  preg_replace( '@<a @', '<a style="color:' . $atts['font_color']  . ';"', $hrefStart );
+			$last_post =  preg_replace( '@<a @', '<a style="color:' . $atts['font_color']  . ';"', $last_post );
+			$email =  preg_replace( '@<a @', '<a style="color:' . $atts['font_color']  . ';"', $email );
+		}
+
+
+		return '<div class="shortcode-show-avatar ' . $extraClass . '"style="' . $style . '" >' . $hrefStart . $avatar . $name . $last_post . $hrefend . $bio . $email . '</div>' . $content;
 	}
 
 }
