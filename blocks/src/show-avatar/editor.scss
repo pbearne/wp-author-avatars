@@ -4,23 +4,33 @@
  * CSS for just Backend enqueued after style.scss
  * which makes it higher in priority.
  */
+.author-avatar-components-panel {
+  padding: 16px;
 
+  .donate {
+	display: block;
+	text-align: center;
+	//img {
+	//  margin-right: auto;
+	//  margin-left: auto;
+	//}
 
-.wp-block-author-avatars-show-avatar{
+  }
+}
+
+.wp-block-author-avatars-show-avatar {
   display: flow-root;
 
-  .shortcode-author-avatars{
-	a{
-	font-size: 1rem;
+  .shortcode-author-avatars {
+	a {
+	  font-size: 1rem;
 
 	}
 
   }
 
 
-
 }
-
 
 
 //.wp-block-author-avatars  {
@@ -44,7 +54,8 @@
 //  text-align: center;
 //}
 .shortcode-author-avatars div.author-list .user {
- 	text-align: center;
+  text-align: center;
+
   .name {
 	display: block;
 	font-size: .85em;
@@ -62,42 +73,47 @@
   clear: left;
   margin-right: .25em;
 }
-.shortcode-author-avatars div.aa_pageList{
-  width:100%;
+
+.shortcode-author-avatars div.aa_pageList {
+  width: 100%;
   clear: left;
-  text-align:center;
+  text-align: center;
 }
+
 .shortcode-author-avatars div.aa_pageList div {
-  width:auto;
-  margin-left:auto;
-  margin-right:auto;
-  display:block;
+  width: auto;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
 }
 
-.shortcode-author-avatars div.aa_pageList  a{
+.shortcode-author-avatars div.aa_pageList a {
   padding: 2px 4px;
-  border:1px #BFBFBF solid;
-  margin:0 2px;
+  border: 1px #BFBFBF solid;
+  margin: 0 2px;
 }
 
-.shortcode-author-avatars div.aa_pageList a.current, .shortcode-author-avatars div.aa_pageList  a:hover{
+.shortcode-author-avatars div.aa_pageList a.current, .shortcode-author-avatars div.aa_pageList a:hover {
   border-color: black;
 }
-.shortcode-author-avatars div.aa_pageList a.current{
+
+.shortcode-author-avatars div.aa_pageList a.current {
   font-weight: bold;
 }
-.shortcode-show-avatar{
+
+.shortcode-show-avatar {
   display: block;
 
 }
 
-.shortcode-show-avatar.right  {
+.shortcode-show-avatar.right {
   float: right;
   margin-left: 10px;
   width: auto;
   text-align: center;
 }
-.shortcode-show-avatar.left  {
+
+.shortcode-show-avatar.left {
   float: left;
   margin-right: 10px;
   width: auto;
@@ -109,7 +125,8 @@
   margin-right: auto;
 
 }
+
 .contact-links ul {
-  list-style:none;
+  list-style: none;
   margin-left: 0;
 }

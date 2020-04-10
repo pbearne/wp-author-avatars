@@ -359,6 +359,9 @@ registerBlockType('author-avatars/show-avatar', {
 			return [
 
 				<InspectorControls key={'000'}>
+					<div className="author-avatar-components-panel">
+
+
 					<label className="blocks-base-control__label">{__('Background color', 'author-avatar')}</label>
 					<ColorPalette  // Element Tag for Gutenberg standard colour selector
 						label={__('Background color', 'author-avatar')}
@@ -445,7 +448,7 @@ registerBlockType('author-avatars/show-avatar', {
 						beforeIcon={'buddicons-buddypress-logo'}
 					/>
 					<Fragment>
-						<a href={'https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=MZTZ5S8MGF75C&lc=CA&item_name=Author%20Avatars%20Plugin%20Support&item_number=authoravatars&currency_code=CAD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted'}
+						<a className={'donate'} href={'https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=MZTZ5S8MGF75C&lc=CA&item_name=Author%20Avatars%20Plugin%20Support&item_number=authoravatars&currency_code=CAD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted'}
 						   target={'_donante'}>
 							<img alt={'Donate to support Plugin'}
 								 src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif"/>
@@ -454,6 +457,7 @@ registerBlockType('author-avatars/show-avatar', {
 					<div>
 						<label
 							className="blocks-base-control__label">{__('More options in Adavanced:', 'author-avatar')}</label>
+					</div>
 					</div>
 				</InspectorControls>,
 
