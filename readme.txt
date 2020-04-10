@@ -1,14 +1,14 @@
-﻿=== Author Avatars List ===
+﻿=== Author Avatars List/Block ===
 Contributors: pbearne, bforchhammer
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=MZTZ5S8MGF75C&lc=CA&item_name=Wordpress%20Development%20%2f%20Paul%20Bearne&item_number=AuthorAvatarsList%20Plugin&currency_code=CAD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted
 Tags: Avatar, Author, Gutenberg, BuddyPress, xprofile, Comment, Editor, Image, Multisite, Photo, Picture, Profile, Shortcode, Random, Sidebar, Thumbnail, User, Widget, Wpmu, BBPress, co-authors
 Requires at least: 3.0
-Tested up to: 4.9.9
-Stable tag: 2.0.0
+Tested up to:5.4
+Stable tag: 2.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Display lists of user avatars using widgets or shortcodes.
+Display lists of user avatars using widgets or shortcodes. With Gutenberg support.
 
 == Description ==
 
@@ -18,9 +18,10 @@ It makes use of built in WordPress (core) functions to retrieve user information
 
 Avatar lists can be inserted into your sidebar by adding a widget or into posts/pages by using a [shortcode](http://authoravatars.wordpress.com/documentation/authoravatars-shortcode/). The plugin comes with a tinymce editor plugin which makes inserting shortcodes very easy.
 
+This also provides Gutenberg Block for use with the Gutenberg editor.
 Please help with the plugin Translations at https://translate.wordpress.org/projects/wp-plugins/author-avatars.
 
-Both the shortcode and widget can be configured to:
+Both the shortcode and widget and Gutenberg Block can be configured to:
 
 *   Show a custom title (widget only)
 *   Only show specific user groups and/or hide certain users
@@ -37,6 +38,7 @@ Additionally, single user avatars can be inserted using the [show_avatar shortco
 
 *   Adjust the size of the user avatar.
 *   Align the avatar left, centered or right.
+The Gutenberg Block support both single user avatars and role based selections of avatars
 
 Please report bugs and provide feedback in the [wordpress support forum](http://wordpress.org/tags/author-avatars?forum_id=10#postform).
 
