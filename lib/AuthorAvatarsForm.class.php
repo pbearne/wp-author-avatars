@@ -142,7 +142,7 @@ class AuthorAvatarsForm {
 	 *
 	 * @see    http://codex.wordpress.org/WPMU_Functions/get_blog_list
 	 * @access private
-	 * @return Array of blog names
+	 * @return array of blog names
 	 */
 	function _getAllBlogs() {
 		global $wpdb;
@@ -246,7 +246,7 @@ class AuthorAvatarsForm {
 	 * Retrieves all roles, and returns them as an associative array (key -> role name)
 	 *
 	 * @access private
-	 * @return Array of role names.
+	 * @return array of role names.
 	 */
 	function _getAllRoles() {
 		global $wpdb;
@@ -602,7 +602,7 @@ class AuthorAvatarsForm {
 	 * Retrieves all roles, and returns them as an associative array (key -> role name)
 	 *
 	 * @access private
-	 * @return Array of role names.
+	 * @return array of role names.
 	 */
 	function _get_all_users( $users = array() ) {
 		global $wpdb;
@@ -736,7 +736,7 @@ class AuthorAvatarsForm {
 	/**
 	 * @return array
 	 */
-	public function get_user_links(): array {
+	public function get_user_links() {
 		$user_link_options = array(
 			'none'               => 'No Link',
 			'authorpage'         => __( 'Author Page', 'author-avatars' ),
@@ -764,7 +764,7 @@ class AuthorAvatarsForm {
 	/**
 	 * @return array
 	 */
-	public function get_sort_by(): array {
+	public function get_sort_by() {
 		$order_options = array(
 			'date_registered'      => __( 'Date of Registration', 'author-avatars' ),
 			'display_name'         => __( 'Display Name', 'author-avatars' ),
@@ -788,7 +788,6 @@ class AuthorAvatarsForm {
 
 		return $order_options;
 	}
-
 }
 
 ?>

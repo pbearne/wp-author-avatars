@@ -3,6 +3,8 @@
 namespace author_avatar\blocks_for_gutenberg;
 
 // Abort if this file is called directly.
+use AuthorAvatarsForm;
+
 if ( ! defined( 'WPINC' ) ) {
 	die;
 }
@@ -11,7 +13,7 @@ class api {
 
 	private $version;
 	private $namespace;
-	private $form;
+	protected $form;
 
 	/**
 	 * Constructor.
@@ -20,7 +22,7 @@ class api {
 	 */
 	public function __construct() {
 		include_once 'AuthorAvatarsForm.class.php';
-		$this->form = new \AuthorAvatarsForm();
+		$this->form = new AuthorAvatarsForm();
 
 		$this->version   = '1';
 		$this->namespace = 'author_avatar/blocks/v' . $this->version;
@@ -59,7 +61,7 @@ class api {
 	/**
 	 * Get the user roles
 	 *
-	 * @return $roles JSON feed of returned objects
+	 * @return array $roles JSON feed of returned objects
 	 */
 	public function get_user_roles() {
 		global $wp_roles;
@@ -80,13 +82,12 @@ class api {
 	/**
 	 * Get the user roles
 	 *
-	 * @return $roles JSON feed of returned objects
+	 * @return array $roles JSON feed of returned objects
 	 */
 	public function get_users() {
 
 		$users = get_users();
 
-//		return $user;
 		$return = [
 			[
 				'label' => 'Custom id or Email',
@@ -108,8 +109,13 @@ class api {
 		return $return;
 	}
 
+	/**
+	 *
+	 *
+	 * @return array of display options
+	 */
 	public function get_display_options() {
-
+		$return = array();
 
 		foreach ( $this->form->display_options() as $name => $label ) {
 
@@ -123,7 +129,13 @@ class api {
 
 	}
 
+	/**
+	 *
+	 *
+	 * @return array of user links  options
+	 */
 	public function get_user_links() {
+		$return = array();
 
 		foreach ( $this->form->get_user_links() as $name => $label ) {
 
@@ -137,7 +149,13 @@ class api {
 
 	}
 
+	/**
+	 *
+	 *
+	 * @return array of sort by options
+	 */
 	public function get_sort_by() {
+		$return = array();
 
 		foreach ( $this->form->get_sort_by() as $name => $label ) {
 
@@ -152,7 +170,13 @@ class api {
 	}
 
 
+	/**
+	 *
+	 *
+	 * @return array list of blogs options
+	 */
 	private function get_blogs() {
+		$return = array();
 
 		foreach ( $this->form->_getAllBlogs() as $name => $label ) {
 
@@ -165,6 +189,11 @@ class api {
 		return $return;
 	}
 
+	/**
+	 * creates a singke return object used by the Block to display option in sidebar
+	 *
+	 * @return array $data
+	 */
 	public function get_data() {
 		$tran_key = 'AA_gutenberg_data';
 		$data = get_transient( $tran_key );

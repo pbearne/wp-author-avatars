@@ -1722,7 +1722,7 @@ class UserList {
 			// reset to current blog done out side to save lot of switching
 			restore_current_blog();
 		} else {
-			$total += count_user_posts( $user_id );
+			$total = count_user_posts( $user_id );
 		}
 
 		/*

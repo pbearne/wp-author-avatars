@@ -15,6 +15,7 @@ class AuthorAvatarsSitewideAdminPanel {
 	 * Constructor
 	 */
 	function __construct() {
+		$this->settings = AA_settings();
 		// only init on wpmu sites...
 		if ( AA_is_wpmu() ) {
 			$this->init();
@@ -25,9 +26,7 @@ class AuthorAvatarsSitewideAdminPanel {
 	 * Initialise the sitewide admin panel: register actions and filters
 	 */
 	function init() {
-		if ( is_null( $this->settings ) ) {
-			$this->settings = AA_settings();
-		}
+
 		if ( function_exists( 'is_network_admin' ) ) { // Wordpress 3.1
 			add_action( 'network_admin_menu', array( &$this, 'add_submenu' ) );
 		} else {
@@ -54,6 +53,8 @@ class AuthorAvatarsSitewideAdminPanel {
 					'config_page'
 				) );
 		}
+
+		return true;
 	}
 
 	/**
@@ -107,15 +108,17 @@ class AuthorAvatarsSitewideAdminPanel {
 	function _render_blogfilter_active_setting() {
 		require_once( 'AuthorAvatarsForm.class.php' );
 
-		echo '<tr valign="top">';
+		echo '<tr>';
 		echo '<th scope="row">' . __( 'Enable blog filter', 'author-avatars' ) . '</th><td>';
+		$form = new AuthorAvatarsForm();
+
 		echo AAFormHelper::choice(
 			'settings_sitewide[blog_filters_enabled]',
-			AuthorAvatarsForm::_getAllBlogs(),
+			$form->_getAllBlogs(),
 			$this->settings->get_sitewide( 'blog_filters_enabled' ),
 			array(
 				'multiple' => true,
-				'label'    => __( 'Select the blogs which you would like the blog filter to be enabled. Only blogs selected here can display users from other blogs.', 'author-avatars' ),
+				'label'    => esc_html__( 'Set the blogs which you would like the blog filter to be enabled. Only blogs selected here can display users from other blogs.', 'author-avatars' ),
 			)
 		);
 		echo '</td>';
