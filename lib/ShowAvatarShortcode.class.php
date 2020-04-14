@@ -38,6 +38,10 @@ class ShowAvatarShortcode {
 		$link           = '';
 		$id             = ''; // get id or email
 
+
+		$atts = array_map( 'aa_clean_commas', $atts );
+
+
 		if ( ! empty( $atts['id'] ) ) {
 			$id = preg_replace( '[^\w\.\@\-]', '', $atts['id'] );
 		}
@@ -56,7 +60,6 @@ class ShowAvatarShortcode {
 		if ( ! empty( $atts['avatar_size'] ) ) {
 			$avatar_size = intval( $atts['avatar_size'] );
 		}
-
 
 		// get alignment
 		$aligin_class = 'alignleft';
@@ -209,16 +212,7 @@ class ShowAvatarShortcode {
 				}
 
 
-				$display = array();
-				if ( ! empty( $atts['display'] ) ) {
-					if ( ! is_array( $atts['display'] ) ) {
-						$display = explode( ',', $atts['display'] );
-					} else {
-						$display = $atts['display'];
-					}
-				}
-
-				$display = apply_filters( 'aa_shortcode_display_list', $display );
+				$display= AAFormHelper::get_display_list( $atts );
 
 				// support for all style shortcode
 				$default_display_options = array(
@@ -331,5 +325,7 @@ class ShowAvatarShortcode {
 
 		return '<div class="shortcode-show-avatar ' . $extraClass . '"style="' . $style . '" >' . $hrefStart . $avatar . $name . $last_post . $hrefend . $bio . $email . '</div>' . $content;
 	}
+
+
 
 }

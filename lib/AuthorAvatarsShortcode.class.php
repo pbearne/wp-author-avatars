@@ -43,6 +43,8 @@ class AuthorAvatarsShortcode {
 		$this->userlist = new UserList();
 		$settings       = AA_settings();
 
+		$atts = array_map( 'aa_clean_commas', $atts );
+
 
 		// roles
 		$roles = array(); // default value: no restriction -> all users
@@ -136,16 +138,7 @@ class AuthorAvatarsShortcode {
 			$this->userlist->contact_links = $atts['contact_links'];
 		}
 
-		$display = array();
-		if ( ! empty( $atts['display'] ) ) {
-			if ( ! is_array( $atts['display'] ) ) {
-				$display = explode( ',', $atts['display'] );
-			}else{
-				$display = $atts['display'];
-			}
-		}
-
-		$display = apply_filters('aa_shortcode_display_list', $display );
+		$display = AAFormHelper::get_display_list( $atts );
 
 		// support for all style shortcode
 		$default_display_options = array('show_name','show_postcount','show_email', 'show_nickname','show_biography','show_last_post','show_bbpress_post_count');

@@ -288,5 +288,29 @@
 		static function cleanHtmlId( $id ) {
 			return strtolower( trim( str_replace( '--', '-', preg_replace( '/[\W]/', '-', $id ) ), "- \t\n\r\0\x0B" ) );
 		}
+
+		/**
+		 *
+		 *
+		 * @param $atts
+		 *
+		 * @return array
+		 */
+		public static function get_display_list( $atts ) {
+			$display = array();
+			if ( ! empty( $atts['display'] ) ) {
+				if ( ! is_array( $atts['display'] ) ) {
+					$display = explode( ',', $atts['display'] );
+				} else {
+					$display = $atts['display'];
+				}
+			}
+
+			$display = apply_filters( 'aa_shortcode_display_list', $display );
+
+			return $display;
+		}
 	}
 endif;
+
+

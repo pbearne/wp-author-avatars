@@ -164,7 +164,7 @@ if ( ! function_exists( 'is_valid_url' ) ) :
 	 */
 
 	function is_valid_url( $maybe_url ) {
-		
+
 		return filter_var( $maybe_url, FILTER_VALIDATE_URL );
 	}
 endif;
@@ -226,4 +226,20 @@ if ( ! function_exists( 'AA_donateButton' ) ):
 		}
 	}
 endif;
-?>
+
+
+if ( ! function_exists( 'aa_clean_commas' ) ) :
+	/**
+	 * Is this a valid url
+	 *
+	 * @param $url
+	 * @return bool
+	 */
+
+	function aa_clean_commas( $string ) {
+
+		return trim( $string, ',:;`.' );
+	}
+endif;
+
+
