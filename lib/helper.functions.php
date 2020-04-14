@@ -230,10 +230,10 @@ endif;
 
 if ( ! function_exists( 'aa_clean_commas' ) ) :
 	/**
-	 * Is this a valid url
+	 * remove extra chartors deom string to get clean values
 	 *
-	 * @param $url
-	 * @return bool
+	 * @param string $string
+	 * @return string
 	 */
 
 	function aa_clean_commas( $string ) {
