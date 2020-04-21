@@ -1,5 +1,5 @@
 tinyMCE.addI18n({
-	"de":{
+	"fr":{
 		"authoravatars": {
 			"desc" : "Add Author Avatars Shortcodes"
 		}

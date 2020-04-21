@@ -3,7 +3,7 @@
 Plugin Name: Author Avatars List/Block
 Plugin URI: http://authoravatars.wordpress.com/
 Description: Display lists of user avatars using <a href="widgets.php">widgets</a> ,<a href="https://authoravatars.wordpress.com/documentation/">shortcodes</a> and Gutenberg blocks.
-Version: 2.0.3
+Version: 2.0.5
 Author: Paul Bearne
 Text Domain: author-avatars
 Domain Path: /translations
