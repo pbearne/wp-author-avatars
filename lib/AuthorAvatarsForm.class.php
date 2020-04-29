@@ -300,7 +300,7 @@ class AuthorAvatarsForm {
 	}
 
 	/**
-	 * Renders the hiddenusers input text field.
+	 * Renders the whitelistusers input text field.
 	 *
 	 * @param string $value the field value
 	 * @param string $name the field name

@@ -38,7 +38,6 @@ class ShowAvatarShortcode {
 		$link           = '';
 		$id             = ''; // get id or email
 
-
 		$atts = array_map( 'aa_clean_commas', $atts );
 
 

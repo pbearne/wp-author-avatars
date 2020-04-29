@@ -238,7 +238,12 @@ if ( ! function_exists( 'aa_clean_commas' ) ) :
 
 	function aa_clean_commas( $string ) {
 
-		return trim( $string, ',:;`.' );
+	 if( is_string($string) ) {
+
+		 return trim( $string, ',:;`.' );
+     }
+
+		return $string;
 	}
 endif;
 
