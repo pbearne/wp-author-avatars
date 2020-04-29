@@ -104,7 +104,7 @@ registerBlockType('author-avatars/show-avatar', {
 			default: 50,
 		},
 		user_id: {
-			type: 'number',
+			type: 'init',
 			default: 0,
 		},
 		limit: {
@@ -188,7 +188,7 @@ registerBlockType('author-avatars/show-avatar', {
 			var page_size = props.attributes.page_size;
 			var min_post_count = props.attributes.min_post_count;
 			var whitelist_users = props.attributes.whitelist_users;
-			var hidden_users = props.attributes.hidden_users;
+            var hidden_users = props.attributes.hidden_users;
 
 			var limit = props.attributes.limit;
 			const {alignment} = attributes;
@@ -378,6 +378,7 @@ registerBlockType('author-avatars/show-avatar', {
 					<SelectControl
 						label={__('User or Email addrerss/user_id or Roles', 'author-avatar')}
 						name='user_id'
+                        value={user_id}
 						options={user_options}
 						onChange={onChangeUser}
 					/>

@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=MZTZ5
 Tags: Avatar, Author, Gutenberg, BuddyPress, xprofile, Comment, Editor, Image, Multisite, Photo, Picture, Profile, Shortcode, Random, Sidebar, Thumbnail, User, Widget, Wpmu, BBPress, co-authors
 Requires at least: 3.0
 Tested up to:5.4
-Stable tag: 2.0.6
+Stable tag: 2.0.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -71,10 +71,13 @@ If you have added CSS to your theme you may have to update it for this upgrade (
 
 == Changelog ==
 
-2.0.4
+2.0.7
+Fixed block not setting the user_id dropdown on page reload
+
+2.0.6
 Fixed trim function
 
-2.0.4
+2.0.5
 added more lang for TinyMCE plugin
 
 2.0.4
