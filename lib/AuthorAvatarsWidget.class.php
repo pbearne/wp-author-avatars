@@ -162,9 +162,6 @@ class AuthorAvatarsWidget extends WP_Widget {
 
 		}
 
-
-		//var_dump($userlist->display_extra);
-
 		// extract widget arguments
 		$before_widget = isset( $args['before_widget'] ) ? $args['before_widget'] : '';
 		$before_title  = isset( $args['before_title'] ) ? $args['before_title'] : '';

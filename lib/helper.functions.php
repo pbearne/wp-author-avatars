@@ -56,11 +56,15 @@ if ( ! function_exists( 'AA_is_bbpress' ) ) :
 	 * @return bool true if we are on a system running buddypress, false otherwise.
 	 */
 	function AA_is_bbpress() {
+
+        if ( class_exists( 'bbPress' )  ) {
+            return true;
+        }
+        if ( is_admin() && is_plugin_active( 'bbpress/bbpress.php' ) ) {
+            return true;
+        }
 		if ( function_exists( 'is_bbpress' ) ) {
 			return is_bbpress();
-		}
-		if ( is_admin() && is_plugin_active( 'bbpress/bbpress.php' ) ) {
-			return true;
 		}
 
 		return false;
