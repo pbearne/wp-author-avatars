@@ -1,0 +1,85 @@
+{
+  "name": "author-avatars/show-avatar",
+  "title": "Author Avatars - Show Avatar",
+  "category": "common",
+  "icon": "businessman",
+  "description": "This plugin makes it easy to *display lists of user avatars*, grouped by user roles, on your (multiuser) site. It also allows you to *insert single avatars* for blog users or any email address into a post or page - great for displaying an image of someone you're talking about.",
+  "keywords": [ "avatar", "author image", "user image", "image", "user photo", "user picture", "Profile", "Thumbnail", "picture", "photo"],
+  "textdomain": "author-avatars",
+  "attributes": {
+    "size": {
+      "type": "init",
+      "default": 50
+    },
+    "email": {
+      "type": "string"
+    },
+    "alignment": {
+      "type": "string",
+      "default": "left"
+    },
+    "Options": {
+      "type": "array"
+    },
+    "link": {
+      "type": "string"
+    },
+    "display": {
+      "type": "bool"
+    },
+    "role": {
+      "type": "bool"
+    },
+    "sort_avatars_by": {
+      "type": "string",
+      "default": "display_name"
+    },
+    "sort_order": {
+      "type": "string"
+    },
+    "bio_length": {
+      "type": "init",
+      "default": 50
+    },
+    "user_id": {
+      "type": "init",
+      "default": 0
+    },
+    "limit": {
+      "type": "number"
+    },
+    "page_size": {
+      "type": "number"
+    },
+    "min_post_count": {
+      "type": "number"
+    },
+    "hidden_users": {
+      "type": "string"
+    },
+    "whitelist_users": {
+      "type": "string"
+    },
+    "background_color": {
+      "type": "string",
+      "default": "#fff"
+    },
+    "font_color": {
+      "type": "string",
+      "default": "#000"
+    },
+    "border_radius": {
+      "type": "number",
+      "default": "0"
+    },
+
+    "block_style": {
+      "selector": "div",
+      "source": "attribute",
+      "attribute": "style"
+    }
+  },
+  "editorScript": "file:./blocks/dist/blocks.build.js",
+  "editorStyle": "file:./blocks/dist/blocks.editor.build.css",
+  "style": "file:./blocks/dist/blocks.style.build.css"
+}
