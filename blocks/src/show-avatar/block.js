@@ -92,10 +92,10 @@ registerBlockType('author-avatars/show-avatar', {
 			type: 'string',
 		},
 		display: {
-			type: 'bool',
+			type: 'boolean',
 		},
 		role: {
-			type: 'bool',
+			type: 'boolean',
 		},
 		sort_avatars_by: {
 			type: 'string',
@@ -146,10 +146,6 @@ registerBlockType('author-avatars/show-avatar', {
 			source: 'attribute', // binds an attribute of the tag
 			attribute: 'style', // binds style of a: the dynamic colours
 		},
-        preview : {
-            type: 'boolean',
-            default: false,
-        },
 
 	},
 	/**
