@@ -6,6 +6,13 @@
   "description": "This plugin makes it easy to *display lists of user avatars*, grouped by user roles, on your (multiuser) site. It also allows you to *insert single avatars* for blog users or any email address into a post or page - great for displaying an image of someone you're talking about.",
   "keywords": [ "avatar", "author image", "user image", "image", "user photo", "user picture", "Profile", "Thumbnail", "picture", "photo"],
   "textdomain": "author-avatars",
+  "example": {
+    "attributes": {
+      "title": "Author Avatars List Block",
+      "mediaID": 1,
+      "mediaURL": "https://ps.w.org/author-avatars/assets/icon-128x128.png"
+    }
+  },
   "attributes": {
     "size": {
       "type": "init",

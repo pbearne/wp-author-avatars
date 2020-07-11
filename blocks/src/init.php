@@ -25,6 +25,7 @@ new author_avatar\Show_Avatar\Render();
  * @since 1.0.0
  */
 function author_avatar_block_assets() { // phpcs:ignore
+
 	// Styles.
 	wp_enqueue_style(
 		'author-avatars-style-css', // Handle.
@@ -32,6 +33,7 @@ function author_avatar_block_assets() { // phpcs:ignore
 		array( 'wp-editor' ) // Dependency to include the CSS after it.
 		// filemtime( plugin_dir_path( __DIR__ ) . 'dist/blocks.style.build.css' ) // Version: File modification time.
 	);
+
 }
 
 // Hook: Frontend assets.
@@ -56,9 +58,10 @@ function author_avatar_editor_assets() { // phpcs:ignore
 		true // Enqueue the script in the footer.
 	);
 
-//	wp_localize_script( 'author-avatars-block-js', 'author-avatars', array(
-//		'users' => get_users(),
-//	));
+	wp_localize_script( 'author-avatars-block-js', 'authorAvatars', array(
+		    'query_preview' => plugins_url( 'icon128x128.png', __FILE__ ),
+            'wppic_preview' => plugins_url( 'icon128x128.png', __FILE__ ),
+	));
 
 	// Styles.
 	wp_enqueue_style(
@@ -67,9 +70,7 @@ function author_avatar_editor_assets() { // phpcs:ignore
 		array( 'wp-edit-blocks' ) // Dependency to include the CSS after it.
 		// filemtime( plugin_dir_path( __DIR__ ) . 'dist/blocks.editor.build.css' ) // Version: File modification time.
 	);
-
 }
-
 
 
 // Hook: Editor assets.

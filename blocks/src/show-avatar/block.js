@@ -60,14 +60,19 @@ let DonateButton = '';
  */
 registerBlockType('author-avatars/show-avatar', {
 	// Block name. Block names must be string that contains a namespace prefix. Example: my-plugin/my-custom-block.
-	title: __('Author Avatars - Show Avatar', 'author-avatars'), // Block title.
+	title: __('Avatar Lists', 'author-avatars'), // Block title.
 	icon: 'businessman', // Block icon from Dashicons → https://developer.wordpress.org/resource/dashicons/.
 	category: 'common', // Block category — Group blocks together based on common traits E.g. common, formatting, layout widgets, embed.
 	keywords: [
-		__('author-avatars — show_avatar', 'author-avatars'),
+		__('avatar', 'author-avatars'),
 		__('Author Avatars', 'author-avatars'),
 		__('profile pictures', 'author-avatars'),
 	],
+    example: {
+        attributes: {
+            'preview' : true,
+        },
+    },
 	attributes: {
 		size: {
 			type: 'init',
@@ -140,7 +145,10 @@ registerBlockType('author-avatars/show-avatar', {
 			source: 'attribute', // binds an attribute of the tag
 			attribute: 'style', // binds style of a: the dynamic colours
 		},
-
+        preview : {
+            type: 'boolean',
+            default: false,
+        },
 
 	},
 	/**
@@ -173,8 +181,8 @@ registerBlockType('author-avatars/show-avatar', {
 		})
 		((props) => {
 			const {
-				className, user, data, isSelected, attributes, setAttributes,
-			} = props;
+				className, user, data, isSelected, attributes, setAttributes
+            } = props;
 			var background_color = props.attributes.background_color;
 			var font_color = props.attributes.font_color;
 			var user_id = props.attributes.user_id;
@@ -189,6 +197,7 @@ registerBlockType('author-avatars/show-avatar', {
 			var min_post_count = props.attributes.min_post_count;
 			var whitelist_users = props.attributes.whitelist_users;
             var hidden_users = props.attributes.hidden_users;
+            var preview = props.attributes.preview;
 
 			var limit = props.attributes.limit;
 			const {alignment} = attributes;
@@ -349,7 +358,13 @@ registerBlockType('author-avatars/show-avatar', {
 			// 		options.push({value:user.value, label:user.label});
 			// 	});
 			// }
-
+            if ( preview ) {
+                return(
+                    <Fragment>
+                        <img className="author-avatars-preview" src={authorAvatars.wppic_preview} />
+                    </Fragment>
+                );
+            }
 
 			// if we have no tax set for the page then just show a messege to save a call to server side
 			// if (0 === users.length) {
