@@ -28,6 +28,7 @@ class AuthorAvatarsWidget extends WP_Widget {
 				'sort_direction' => 'asc',
 				'user_link'      => 'authorpage',
 				'bio_length'     => '',
+//                'show_name'     => true,
 			),
 		);
 
@@ -79,13 +80,13 @@ class AuthorAvatarsWidget extends WP_Widget {
 		}
 		$userlist = new UserList();
 
-		$userlist->roles          = $instance['roles'];
-		$userlist->blogs          = $instance['blogs'];
-		$userlist->group_by       = $instance['group_by'];
+		$userlist->roles          = ( isset( $instance['roles'] ) ) ? $instance['roles'] : array();
+		$userlist->blogs          = ( isset( $instance['blogs'] ) ) ? $instance['blogs'] : array();
+		$userlist->group_by       = ( isset( $instance['group_by'] ) ) ? $instance['group_by'] : array();
 		$userlist->hiddenusers    = $hiddenusers;
 		$userlist->whitelistusers = $whitelistusers;
 
-		if ( is_array( $instance['display'] ) ) {
+		if ( isset( $instance['display'] ) && is_array( $instance['display'] ) ) {
 
 //			$userlist->show_name               = in_array( 'show_name', $instance['display'] );
 //			$userlist->show_email              = in_array( 'show_email', $instance['display'] );
@@ -118,7 +119,7 @@ class AuthorAvatarsWidget extends WP_Widget {
 			'order',
 			'sort_direction',
 		);
-		if ( is_array( $instance['display'] ) ) {
+		if ( isset( $instance['display'] ) && is_array( $instance['display'] ) ) {
 
 			$instance['display'] = apply_filters( 'aa_widget_display_list', $instance['display'] );
 

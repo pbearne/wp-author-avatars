@@ -92,10 +92,13 @@ registerBlockType('author-avatars/show-avatar', {
 			type: 'string',
 		},
 		display: {
-			type: 'boolean',
+			type: 'object',
 		},
 		role: {
-			type: 'boolean',
+			type: 'object',
+		},
+		blogs: {
+			type: 'object',
 		},
 		sort_avatars_by: {
 			type: 'string',
@@ -566,3 +569,4 @@ registerBlockType('author-avatars/show-avatar', {
 			return null;
 		},
 });
+

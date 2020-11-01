@@ -42,7 +42,7 @@ class Render {
 					'type' => 'string',
 				),
 				'display'          => array(
-					'type' => 'bool',
+					'type' => 'object',
 				),
 				'sort_avatars_by'  => array(
 					'type' => 'string',
@@ -90,10 +90,10 @@ class Render {
 					'type' => 'string',
 				),
 				'role'             => array(
-					'type' => 'bool',
+					'type' => 'object',
 				),
 				'blogs'            => array(
-					'type' => 'bool',
+					'type' => 'object',
 				),
 			)
 		) );
@@ -129,7 +129,7 @@ class Render {
 			'avatar_size'      => ( isset( $attributes['size'] ) ) ? $attributes['size'] : false,
 			'max_bio_length'   => ( isset( $attributes['bio_length'] ) ) ? $attributes['bio_length'] : - 1,
 			'align'            => ( isset( $attributes['alignment'] ) ) ? $attributes['alignment'] : '',
-			'user_link'        => ( isset( $attributes['link'] ) ) ? $attributes['link'] : '',
+			'user_link'        => ( isset( $attributes['link'] ) ) ? $attributes['link'] : 'none',
 			'border_radius'    => ( isset( $attributes['border_radius'] ) ) ? $attributes['border_radius'] : '',
 			'background_color' => ( isset( $attributes['background_color'] ) ) ? $attributes['background_color'] : '',
 			'font_color'       => ( isset( $attributes['font_color'] ) ) ? $attributes['font_color'] : '',
@@ -143,7 +143,7 @@ class Render {
 			require_once( dirname( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/lib/AuthorAvatarsShortcode.class.php' );
 			$render = new \AuthorAvatarsShortcode();
 
-			$atts['roles'] = array_keys( $attributes['role'] );
+			$atts['roles'] = ( isset( $attributes['role'] ) )? array_keys( $attributes['role'] ) : array();
 
 			if ( isset( $attributes['blogs'] ) ) {
 

@@ -139,9 +139,11 @@
 				$row = '';
 				if ( $expanded ) {
 					$row = '<label><input';
-					if ( in_array( $value, $values ) ) {
+					if ( in_array( $value, $values, true ) ) {
 						$row .= ' checked="checked"';
 					}
+//                    $row .= ' data-v="'.$value.'"';
+//                    $row .= ' data-a="'.print_r($values, true ).'"';
 					$row .= $attr;
 					$row .= '/> ';
 					$row .= $label;

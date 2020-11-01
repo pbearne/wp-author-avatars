@@ -126,7 +126,7 @@ class AuthorAvatarsShortcode {
 			// by default always true, has to be set explicitly to not link the users
 			$set_to_false = ( $atts['link_to_authorpage'] == 'false' || (bool) $atts['link_to_authorpage'] == false );
 			if ( $set_to_false ) {
-				$this->userlist->user_link = false;
+				$this->userlist->user_link = 'none';
 			}
 		}
 

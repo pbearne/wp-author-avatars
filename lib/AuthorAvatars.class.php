@@ -57,6 +57,8 @@ class AuthorAvatars {
 			$this->init_shortcodes();
 			$this->init_controlpanels();
 
+            add_action( 'customize_preview_init', array( $this, 'customizer_enqueue_resources' ) );
+
 
 			$this->init_widgets();
 			//	add_action( 'widgets_init', array( &$this, 'init_widgets') );
@@ -139,7 +141,15 @@ class AuthorAvatars {
 		add_action( 'admin_enqueue_scripts', array( &$this, 'admin_enqueue_resources' ) );
 
 	}
+    /**
+     * Enqueues scripts and stylesheets
+     *
+     * @return void
+     */
 
+    function customizer_enqueue_resources() {
+       wp_enqueue_script( 'author-avatars-widget-admin' );
+    }
 	/**
 	 * Enqueues scripts and stylesheets
 	 *
