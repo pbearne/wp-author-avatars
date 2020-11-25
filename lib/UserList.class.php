@@ -1191,7 +1191,16 @@ class UserList {
 						'<a href="%s" rel="bookmark" title="Permanent Link to %s">%s</a>',
 						get_the_permalink( $id ),
 						the_title_attribute( array( 'echo' => false, 'post' => $id ) ),
-						get_the_title( $id ),
+                        /**
+                         * Filter the users last post link text.
+                         *
+                         * @since 2.1.3
+                         *
+                         * @param string get_the_title().
+                         * @param int $id The last post ID.
+                         * @param int $user_id The Current user ID.
+                         */
+                        apply_filters( 'aa_user_show_last_post_link_text', get_the_title( $id ), $id, $user_id ),
 						$id,
 						$user_id
 					),
