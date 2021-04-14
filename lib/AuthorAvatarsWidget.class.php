@@ -62,6 +62,7 @@ class AuthorAvatarsWidget extends WP_Widget {
 	 */
 	function widget( $args, $instance ) {
 		require_once( 'UserList.class.php' );
+        wp_enqueue_style( 'author-avatars-widget' );
 
 		// parse hidden users string
 		if ( ! empty( $instance['hiddenusers'] ) ) {

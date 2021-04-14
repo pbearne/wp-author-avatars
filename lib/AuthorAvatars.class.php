@@ -137,7 +137,7 @@ class AuthorAvatars {
 		// include necessary file(s).
 		add_action( 'widgets_init', array( $this, 'author_avatars_widget_init' ) );
 
-		add_action( 'wp_enqueue_scripts', array( &$this, 'wp_enqueue_resources' ) );
+//		add_action( 'wp_enqueue_scripts', array( &$this, 'wp_enqueue_resources' ) );
 		add_action( 'admin_enqueue_scripts', array( &$this, 'admin_enqueue_resources' ) );
 
 	}
@@ -169,11 +169,11 @@ class AuthorAvatars {
 	 * @return void
 	 */
 
-	function wp_enqueue_resources() {
-		if ( ! is_admin() ) {
-			wp_enqueue_style( 'author-avatars-widget' );
-		}
-	}
+//	function wp_enqueue_resources() {
+//		if ( ! is_admin() ) {
+////			wp_enqueue_style( 'author-avatars-widget' );
+//		}
+//	}
 
 	public function author_avatars_widget_init() {
 		register_widget( 'AuthorAvatarsWidget' );

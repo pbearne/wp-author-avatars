@@ -20,15 +20,15 @@ class AuthorAvatarsShortcode {
 	 */
 	function register() {
 		add_shortcode( 'authoravatars', array( &$this, 'shortcode_handler' ) );
-		add_action( 'wp_enqueue_scripts', array( &$this, 'enqueue_resources' ), 20 );
+//		add_action( 'wp_enqueue_scripts', array( &$this, 'enqueue_resources' ), 20 );
 	}
 
 	/**
 	 * Add css stylesheets (using wp_enqueue_style()).
 	 */
-	function enqueue_resources() {
-		wp_enqueue_style( 'author-avatars-shortcode' );
-	}
+//	function enqueue_resources() {
+//	//	wp_enqueue_style( 'author-avatars-shortcode' );
+//	}
 
 	/**
 	 * The shortcode handler for the [authoravatars] shortcode.
@@ -40,6 +40,7 @@ class AuthorAvatarsShortcode {
 	 */
 	function shortcode_handler( $atts, $content = null ) {
 		require_once( 'UserList.class.php' );
+        wp_enqueue_style( 'author-avatars-shortcode' );
 		$this->userlist = new UserList();
 		$settings       = AA_settings();
 

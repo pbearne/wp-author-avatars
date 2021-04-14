@@ -25,14 +25,15 @@ new author_avatar\Show_Avatar\Render();
  * @since 1.0.0
  */
 function author_avatar_block_assets() { // phpcs:ignore
-
-	// Styles.
-	wp_enqueue_style(
-		'author-avatars-style-css', // Handle.
-		plugins_url( 'dist/blocks.style.build.css', dirname( __FILE__ ) ), // Block style CSS.
-		array( 'wp-editor' ) // Dependency to include the CSS after it.
+	if ( has_block( 'author-avatars/show-avatar' ) ) {
+		// Styles.
+		wp_enqueue_style(
+			'author-avatars-style-css', // Handle.
+			plugins_url('dist/blocks.style.build.css', dirname(__FILE__)), // Block style CSS.
+			array('wp-editor') // Dependency to include the CSS after it.
 		// filemtime( plugin_dir_path( __DIR__ ) . 'dist/blocks.style.build.css' ) // Version: File modification time.
-	);
+		);
+	}
 
 }
 
