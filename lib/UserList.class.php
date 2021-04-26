@@ -955,7 +955,11 @@ class UserList {
 		 * @param array $CSS The array of string used to create classes on user DIV.
 		 * @param object $user the user object
 		 */
-		$tpl_vars['{class}'] = implode( apply_filters( 'aa_user_final_css', $divcss, $user ), ' ' );
+		$divcss = apply_filters( 'aa_user_final_css', $divcss, $user );
+		if( is_array( $divcss ) ) {
+            $divcss =  implode( ' ', $divcss  );
+        }
+		$tpl_vars['{class}'] = $divcss;
 		/**
 		 * filter on the complete HTML for the user
 		 *
