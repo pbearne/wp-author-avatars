@@ -1,0 +1,17 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "author-avatars/show-avatar",
+  "version": "0.1.0",
+  "title": "Author Avatar List Block",
+  "category": "widgets",
+  "icon": "businessman",
+  "description": "Author Avatar List Block.",
+  "supports": {
+    "html": false
+  },
+  "textdomain": "author-avatars-list-block",
+  "editorScript": "file:./block.js",
+  "editorStyle": "file:./block.css",
+  "style": "file:./style.css"
+}

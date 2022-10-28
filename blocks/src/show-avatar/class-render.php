@@ -95,6 +95,12 @@ class Render {
 				'blogs'            => array(
 					'type' => 'object',
 				),
+				'border_size'            => array(
+					'type' => 'number',
+				),
+				'border_color'            => array(
+					'type' => 'string',
+				),
 			)
 		) );
 	}
@@ -133,7 +139,10 @@ class Render {
 			'border_radius'    => ( isset( $attributes['border_radius'] ) ) ? $attributes['border_radius'] : '',
 			'background_color' => ( isset( $attributes['background_color'] ) ) ? $attributes['background_color'] : '',
 			'font_color'       => ( isset( $attributes['font_color'] ) ) ? $attributes['font_color'] : '',
+			'border_color'       => ( isset( $attributes['border_color'] ) ) ? $attributes['border_color'] : '',
+			'border_size'       => ( isset( $attributes['border_size'] ) ) ? $attributes['border_size'] : 0,
 		);
+
 		if ( isset( $attributes['display'] ) ) {
 			foreach ( $attributes['display'] as $key => $value ) {
 				$atts[ $key ] = $value;
@@ -198,19 +207,6 @@ class Render {
 
 			$html .= $render->shortcode_handler( $atts );
 		}
-
-
-//		$html .= ob_get_clean() ;
-
-
-//		require_once( dirname( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/lib/AuthorAvatarsEditorButton.class.php' );
-//		$editor_button = new \AuthorAvatarsEditorButton();
-//
-//		ob_start();
-//
-//		$editor_button->render_tinymce_popup_body();
-//
-//		$html .= str_replace( 'body>', 'div/>', ob_get_clean() );
 
 		return $html;
 	}

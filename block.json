@@ -72,6 +72,14 @@
       "type": "number",
       "default": "0"
     },
+    "border_color": {
+      "type": "string",
+      "default": "#000"
+    },
+    "border_size": {
+      "type": "number",
+      "default": "0"
+    },
 
     "block_style": {
       "type": "string",

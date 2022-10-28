@@ -22,7 +22,7 @@ const {
 	Spinner,
 	TextControl,
 	RangeControl,
-	ColorPalette,
+	ColorPicker,
 	PanelColorSettings,
 	CheckboxControl,
 	TextareaControl
@@ -68,11 +68,11 @@ registerBlockType('author-avatars/show-avatar', {
 		__('Author Avatars', 'author-avatars'),
 		__('profile pictures', 'author-avatars'),
 	],
-    example: {
-        attributes: {
-            'preview' : true,
-        },
-    },
+	example: {
+		attributes: {
+			'preview': true,
+		},
+	},
 	attributes: {
 		size: {
 			type: 'init',
@@ -138,13 +138,21 @@ registerBlockType('author-avatars/show-avatar', {
 			type: 'string',
 			default: '#000', // Default value for newly added block
 		},
+		border_size: {
+			type: 'number',
+			default: '0', // Default value for newly added block
+		},
+		border_color: {
+			type: 'string',
+			default: '#000', // Default value for newly added block
+		},
 		border_radius: {
 			type: 'number',
 			default: '0', // Default value for newly added block
 		},
 		// To storage the complete style of the div that will be 'merged' with the selected colours
 		block_style: {
-            type: 'string',
+			type: 'string',
 			selector: 'div', // From tag a
 			source: 'attribute', // binds an attribute of the tag
 			attribute: 'style', // binds style of a: the dynamic colours
@@ -182,9 +190,11 @@ registerBlockType('author-avatars/show-avatar', {
 		((props) => {
 			const {
 				className, user, data, isSelected, attributes, setAttributes
-            } = props;
+			} = props;
 			var background_color = props.attributes.background_color;
 			var font_color = props.attributes.font_color;
+			var border_size = props.attributes.border_size;
+			var border_color = props.attributes.border_color;
 			var user_id = props.attributes.user_id;
 			var email = props.attributes.email;
 			var link = props.attributes.link;
@@ -196,8 +206,8 @@ registerBlockType('author-avatars/show-avatar', {
 			var page_size = props.attributes.page_size;
 			var min_post_count = props.attributes.min_post_count;
 			var whitelist_users = props.attributes.whitelist_users;
-            var hidden_users = props.attributes.hidden_users;
-            var preview = props.attributes.preview;
+			var hidden_users = props.attributes.hidden_users;
+			var preview = props.attributes.preview;
 
 			var limit = props.attributes.limit;
 			const {alignment} = attributes;
@@ -209,6 +219,8 @@ registerBlockType('author-avatars/show-avatar', {
 			block_style = {
 				backgroundColor: background_color,
 				color: font_color,
+				borderColor: border_color,
+				borderWidth: border_size +'px',
 				padding: '14px 25px',
 				fontSize: '16px',
 			};
@@ -225,6 +237,14 @@ registerBlockType('author-avatars/show-avatar', {
 
 			function onChangeFontColor(content) {
 				props.setAttributes({font_color: content})
+			}
+
+			function onChangeBorderColor(content) {
+				props.setAttributes({border_color: content})
+			}
+
+			function onChangeBorderSize(content) {
+				props.setAttributes({border_size: content})
 			}
 
 			function onChangelink(content) {
@@ -290,7 +310,7 @@ registerBlockType('author-avatars/show-avatar', {
 			})(({checked_obj, setState}) => (
 				<ul>
 					{
-						display_options.map((v) => (
+						display_options?.map((v) => (
 							<li key={v.value}><CheckboxControl
 								className="check_items"
 								label={v.label}
@@ -312,7 +332,7 @@ registerBlockType('author-avatars/show-avatar', {
 			})(({checked_obj, setState}) => (
 				<ul>
 					{
-						user_roles.map((v) => (
+						user_roles?.map((v) => (
 							<li key={v.value}><CheckboxControl
 								className="check_items"
 								label={v.label}
@@ -334,7 +354,7 @@ registerBlockType('author-avatars/show-avatar', {
 			})(({checked_obj, setState}) => (
 				<ul>
 					{
-						blogs_list.map((v) => (
+						blogs_list?.map((v) => (
 							<li key={v.value}><CheckboxControl
 								className="check_items"
 								label={v.label}
@@ -358,13 +378,13 @@ registerBlockType('author-avatars/show-avatar', {
 			// 		options.push({value:user.value, label:user.label});
 			// 	});
 			// }
-            if ( preview ) {
-                return(
-                    <Fragment>
-                        <img className="author-avatars-preview" src={authorAvatars.wppic_preview} />
-                    </Fragment>
-                );
-            }
+			if (preview) {
+				return (
+					<Fragment>
+						<img className="author-avatars-preview" src={authorAvatars.wppic_preview}/>
+					</Fragment>
+				);
+			}
 
 			// if we have no tax set for the page then just show a messege to save a call to server side
 			// if (0 === users.length) {
@@ -376,104 +396,126 @@ registerBlockType('author-avatars/show-avatar', {
 				<InspectorControls key={'000'}>
 					<div className="author-avatar-components-panel">
 
+						<SelectControl
+							label={__('User or Email addrerss/user_id or Roles', 'author-avatar')}
+							name='user_id'
+							value={user_id}
+							options={user_options}
+							onChange={onChangeUser}
+						/>
+						{-1 == user_id && (
 
-					<label className="blocks-base-control__label">{__('Background color', 'author-avatar')}</label>
-					<ColorPalette  // Element Tag for Gutenberg standard colour selector
-						label={__('Background color', 'author-avatar')}
-						onChange={onChangeBgColor} // onChange event callback
-					/>
-					<label className="blocks-base-control__label">{__('Font color', 'author-avatar')}</label>
-					<ColorPalette  // Element Tag for Gutenberg standard colour selector
-						label={__('Font color', 'author-avatar')}
-						title={__('Font color', 'author-avatar')}
-						onChange={onChangeFontColor} // onChange event callback
-					/>
+							<TextControl
+								label='Custom email / id'
+								type={'text'}
+								value={email}
+								onChange={onChangeEmail}
+							/>
+
+						)}
+						{0 == user_id && (
+							<Fragment>
+								<label
+									className="blocks-base-control__label">{__('Which Roles to display:', 'author-avatar')}</label>
+
+								<RolesCheckBoxes/>
+							</Fragment>
+						)}
+						<label
+							className="blocks-base-control__label">{__('Info to show with avatar:', 'author-avatar')}</label>
+						<DisplayCheckBoxes/>
 
 
-					<SelectControl
-						label={__('User or Email addrerss/user_id or Roles', 'author-avatar')}
-						name='user_id'
-                        value={user_id}
-						options={user_options}
-						onChange={onChangeUser}
-					/>
-					{-1 == user_id && (
-
-						<TextControl
-							label='Custom email / id'
-							type={'text'}
-							value={email}
-							onChange={onChangeEmail}
+						<SelectControl
+							label={__('Link avatars to', 'author-avatar')}
+							value={link}
+							options={user_links}
+							onChange={onChangelink}
 						/>
 
-					)}
-					{0 == user_id && (
+						<SelectControl
+							label={__('Sort by', 'author-avatar')}
+							value={sort_avatars_by}
+							options={sort_list}
+							onChange={onChangeSortBy}
+						/>
+
+						<SelectControl
+							label={__('Sort order', 'author-avatar')}
+							value={sort_order}
+							options={[
+								{label: 'Ascending', value: 'asc'},
+								{label: 'Descending', value: 'desc'},
+							]}
+							onChange={onChangeSortOrder}
+						/>
+
+						<RangeControl
+							label="Avatar Size"
+							value={size}
+							onChange={onChangeSize}
+							min={10}
+							max={500}
+							initialPosition={50}
+							beforeIcon={'businessman'}
+						/>
+
+						<RangeControl
+							label="Avatar Corner size"
+							value={border_radius}
+							onChange={onChangeBorderRadius}
+							min={0}
+							max={50}
+							initialPosition={0}
+							beforeIcon={'buddicons-buddypress-logo'}
+						/>
+
+						<label className="blocks-base-control__label">{__('Background color', 'author-avatar')}</label>
+						<ColorPicker  // Element Tag for Gutenberg standard colour selector
+							color={background_color}
+							enableAlpha
+							label={__('Background color', 'author-avatar')}
+							defaultValue="#000"
+							onChange={onChangeBgColor} // onChange event callback
+						/>
+						<label className="blocks-base-control__label">{__('Font color', 'author-avatar')}</label>
+						<ColorPicker  // Element Tag for Gutenberg standard colour selector
+							color={font_color}
+							label={__('Font color', 'author-avatar')}
+							title={__('Font color', 'author-avatar')}
+							defaultValue="#fff"
+							onChange={onChangeFontColor} // onChange event callback
+						/>
+						<RangeControl
+							label="Border size"
+							value={border_size}
+							onChange={onChangeBorderSize}
+							min={0}
+							max={50}
+							initialPosition={0}
+							beforeIcon={'buddicons-buddypress-logo'}
+						/>
+						<label className="blocks-base-control__label">{__('Border color', 'author-avatar')}</label>
+						<ColorPicker  // Element Tag for Gutenberg standard colour selector
+							color={border_color}
+							label={__('Font color', 'author-avatar')}
+							title={__('Font color', 'author-avatar')}
+							defaultValue="#fff"
+							onChange={onChangeBorderColor} // onChange event callback
+						/>
+
 						<Fragment>
-							<label
-								className="blocks-base-control__label">{__('Which Roles to display:', 'author-avatar')}</label>
-
-							<RolesCheckBoxes/>
+							<a className={'donate'}
+							   href={'https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=MZTZ5S8MGF75C&lc=CA&item_name=Author%20Avatars%20Plugin%20Support&item_number=authoravatars&currency_code=CAD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted'}
+							   target={'_donante'}>
+								<img alt={'Donate to support Plugin'}
+									 src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif"/>
+							</a>
 						</Fragment>
-					)}
-					<label
-						className="blocks-base-control__label">{__('Info to show with avatar:', 'author-avatar')}</label>
-					<DisplayCheckBoxes/>
-
-
-					<SelectControl
-						label={__('Link avatars to', 'author-avatar')}
-						value={link}
-						options={user_links}
-						onChange={onChangelink}
-					/>
-
-					<SelectControl
-						label={__('Sort by', 'author-avatar')}
-						value={sort_avatars_by}
-						options={sort_list}
-						onChange={onChangeSortBy}
-					/>
-
-					<SelectControl
-						label={__('Sort order', 'author-avatar')}
-						value={sort_order}
-						options={[
-							{label: 'Ascending', value: 'asc'},
-							{label: 'Descending', value: 'desc'},
-						]}
-						onChange={onChangeSortOrder}
-					/>
-
-					<RangeControl
-						label="Size"
-						value={size}
-						onChange={onChangeSize}
-						min={10}
-						max={500}
-						initialPosition={50}
-						beforeIcon={'businessman'}
-					/>
-
-					<RangeControl
-						label="Corner size"
-						value={border_radius}
-						onChange={onChangeBorderRadius}
-						min={0}
-						max={50}
-						initialPosition={0}
-						beforeIcon={'buddicons-buddypress-logo'}
-					/>
-					<Fragment>
-						<a className={'donate'} href={'https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=MZTZ5S8MGF75C&lc=CA&item_name=Author%20Avatars%20Plugin%20Support&item_number=authoravatars&currency_code=CAD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted'}
-						   target={'_donante'}>
-							<img alt={'Donate to support Plugin'}
-								 src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif"/>
-						</a>
-					</Fragment>
-					<div>
-						<label
-							className="blocks-base-control__label">{__('More options in Adavanced:', 'author-avatar')}</label>
-					</div>
+						<div>
+							<label
+								className="blocks-base-control__label">{__('More options in Adavanced:', 'author-avatar')}</label>
+						</div>
 					</div>
 				</InspectorControls>,
 
