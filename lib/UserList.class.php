@@ -90,11 +90,15 @@ class UserList {
 	 * Extra Class names.
 	 */
 	var $display_extra = array();
+    /**
+     * Size of avatar border_radius.
+     */
+    var $border_radius = 0;
 
 	/**
 	 * Size of avatar border_radius.
 	 */
-	var $border_radius = 0;
+	var $align = '';
 	/**
 	 * Size of avatars.
 	 */

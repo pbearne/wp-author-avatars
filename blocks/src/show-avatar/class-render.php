@@ -107,7 +107,7 @@ class Render {
 
 
 	public function callback( $attributes, $content ) {
-		wp_register_style( 'author-avatars-shortcode', plugins_url( 'css/shortcode.css',dirname(  dirname( __FILE__ ) ) ) );
+		wp_register_style( 'author-avatars-shortcode', plugins_url( 'css/shortcode.css',dirname(__DIR__) ) );
 
 
 		$html = '';
@@ -149,7 +149,7 @@ class Render {
 			}
 		}
 		if ( 0 === (int) $attributes['user_id'] ) {
-			require_once( dirname( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/lib/AuthorAvatarsShortcode.class.php' );
+			require_once( dirname( dirname( dirname(__DIR__ ) ) ) . '/lib/AuthorAvatarsShortcode.class.php' );
 			$render = new \AuthorAvatarsShortcode();
 
 			$atts['roles'] = ( isset( $attributes['role'] ) )? array_keys( $attributes['role'] ) : array();
@@ -173,6 +173,9 @@ class Render {
 			if ( isset( $attributes['limit'] ) ) {
 
 				$atts['limit'] = $attributes['limit'];
+			} else if ( ! isset( $attributes['role'] ) ) {
+				$atts['limit'] = 20;
+				$atts['roles'] = array( 'administrator' );
 			}
 			$atts['min_post_count'] = 0;
 			if ( ! empty( $attributes['min_post_count'] ) && 1 <= $attributes['min_post_count'] ) {
@@ -195,11 +198,11 @@ class Render {
 
 			$html .= $render->shortcode_handler( $atts );
 		} else {
-			require_once( dirname( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/lib/ShowAvatarShortcode.class.php' );
+			require_once( dirname( dirname( dirname(__DIR__ ) ) ) . '/lib/ShowAvatarShortcode.class.php' );
 			$render = new \ShowAvatarShortcode();
 
 
-			if ( - 1 == $attributes['user_id'] ) {
+			if ( - 1 === $attributes['user_id'] ) {
 				$atts['email'] = $attributes['email'];
 			} else {
 				$atts['id'] = $attributes['user_id'];

@@ -11,24 +11,17 @@ class AuthorAvatarsShortcode {
 	/**
 	 * Constructor
 	 */
-	function __construct() {
+	public function __construct() {
 		$this->register();
 	}
 
 	/**
 	 * register shortcode
 	 */
-	function register() {
+	public function register() {
 		add_shortcode( 'authoravatars', array( &$this, 'shortcode_handler' ) );
 //		add_action( 'wp_enqueue_scripts', array( &$this, 'enqueue_resources' ), 20 );
 	}
-
-	/**
-	 * Add css stylesheets (using wp_enqueue_style()).
-	 */
-//	function enqueue_resources() {
-//	//	wp_enqueue_style( 'author-avatars-shortcode' );
-//	}
 
 	/**
 	 * The shortcode handler for the [authoravatars] shortcode.
@@ -38,7 +31,7 @@ class AuthorAvatarsShortcode {
 	 *
 	 * @return string
 	 */
-	function shortcode_handler( $atts, $content = null ) {
+	public function shortcode_handler($atts, $content = null ) {
 		require_once( 'UserList.class.php' );
         wp_enqueue_style( 'author-avatars-shortcode' );
 		$this->userlist = new UserList();
@@ -62,7 +55,7 @@ class AuthorAvatarsShortcode {
 		// blogs
 		$blogs = array(); // default value: empty -> only current blog
 		if ( $settings->blog_selection_allowed() && ! empty( $atts['blogs'] ) ) {
-			if ( strtolower( $atts['blogs'] ) == 'all' ) {
+			if ( strtolower( $atts['blogs'] ) === 'all' ) {
 				$blogs = array( - 1 );
 			} else {
 				if ( ! is_array( $atts['blogs'] ) ) {
@@ -78,7 +71,7 @@ class AuthorAvatarsShortcode {
 		// perform a switch to another MU blog_id (to set avatar/path relations)
 		$switch_back_to_blog_id = false;
 		if ( $settings->blog_selection_allowed() && ! empty( $atts['switchblog'] ) ) {
-			if ( $GLOBALS['blog_id'] != (int)$atts['switchblog'] ) {
+			if ( $GLOBALS['blog_id'] !== (int)$atts['switchblog'] ) {
 				$switch_back_to_blog_id = $GLOBALS['blog_id'];
 				switch_to_blog((int)$atts['switchblog']);
 			}
@@ -145,8 +138,8 @@ class AuthorAvatarsShortcode {
 		$default_display_options = array('show_name','show_postcount','show_email', 'show_nickname','show_biography','show_last_post','show_bbpress_post_count');
 		// loop the old name=true settings and add them to the new array format
 		foreach( $default_display_options as $default_display_option ){
-			if ( isset( $atts[$default_display_option] ) && ( strlen( $atts[$default_display_option] ) > 0 ) ) {
-				if( true == $atts[$default_display_option] && !in_array( $default_display_option, $display ) ){
+			if ( isset( $atts[$default_display_option] ) && ($atts[$default_display_option] !== '') ) {
+				if( $atts[$default_display_option] && ! in_array( $default_display_option, $display, true ) ){
 					$display[] = $default_display_option;
 				}
 			}
@@ -167,14 +160,14 @@ class AuthorAvatarsShortcode {
 
 		// avatar size
 		if ( ! empty( $atts['avatar_size'] ) ) {
-			$size = intval( $atts['avatar_size'] );
+			$size = (int)$atts['avatar_size'];
 			if ( $size > 0 ) {
 				$this->userlist->avatar_size = $size;
 			}
 		}
 
 		if ( ! empty( $atts['border_radius'] ) ) {
-			$border_radius = intval( $atts['border_radius'] );
+			$border_radius = (int)$atts['border_radius'];
 			if ( $border_radius > 0 ) {
 				$this->userlist->border_radius = $border_radius;
 			}
@@ -185,7 +178,7 @@ class AuthorAvatarsShortcode {
 
 		// max. number of avatars
 		if ( ! empty( $atts['limit'] ) ) {
-			$limit = intval( $atts['limit'] );
+			$limit = (int)$atts['limit'];
 			if ( $limit > 0 ) {
 				$this->userlist->limit = $limit;
 			}
@@ -194,7 +187,7 @@ class AuthorAvatarsShortcode {
 		// max. number of avatars
 		$this->userlist->bio_length = -1;
 		if ( ! empty( $atts['max_bio_length'] ) ) {
-			$bio_length = intval( $atts['max_bio_length'] );
+			$bio_length = (int)$atts['max_bio_length'];
 			if (  0 < $bio_length ) {
 				$this->userlist->bio_length = $bio_length;
 			}
@@ -202,14 +195,14 @@ class AuthorAvatarsShortcode {
 
 		// min. number of posts
 		if ( ! empty( $atts['min_post_count'] ) ) {
-			$min_post_count = intval( $atts['min_post_count'] );
+			$min_post_count = (int)$atts['min_post_count'];
 			if ( 0 < $min_post_count ) {
 				$this->userlist->min_post_count = $min_post_count;
 			}
 		}
 		// get page size
 		if ( ! empty( $atts['page_size'] ) ) {
-			$page_size = intval( $atts['page_size'] );
+			$page_size = (int)$atts['page_size'];
 			if ( 0 < $page_size ) {
 				$this->userlist->page_size = $page_size;
 			}
@@ -218,12 +211,12 @@ class AuthorAvatarsShortcode {
 		// get paging page
 		if ( ! empty( $atts['aa_page'] ) ) {
 
-			$page_size = intval( $atts['aa_page'] );
+			$page_size = (int)$atts['aa_page'];
 			if ( 0 < $page_size ) {
 				$this->userlist->aa_page = $page_size;
 			}
 		} elseif ( isSet( $_REQUEST['aa_page'] ) && is_numeric( $_REQUEST['aa_page'] ) ) {
-			$page_size = intval( $_REQUEST['aa_page'] );
+			$page_size = (int)$_REQUEST['aa_page'];
 			if ( 0 < $page_size ) {
 				$this->userlist->aa_page = $page_size;
 			}
@@ -242,13 +235,13 @@ class AuthorAvatarsShortcode {
 			$sort_direction = $atts['sort_direction'];
 		}
 		$valid_directions = array( 'asc', 'ascending', 'desc', 'descending' );
-		if ( in_array( $sort_direction, $valid_directions ) ) {
+		if ( in_array( $sort_direction, $valid_directions, true ) ) {
 			$this->userlist->sort_direction = $sort_direction;
 		}
 
 		// render as a list?
 		if ( isset( $atts['render_as_list'] ) ) {
-			$set_to_false = ( $atts['render_as_list'] == 'false' );
+			$set_to_false = ( $atts['render_as_list'] === 'false' );
 			if ( ! $set_to_false ) {
 				$this->userlist->use_list_template();
 			}

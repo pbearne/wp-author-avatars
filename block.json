@@ -1,10 +1,10 @@
 {
   "name": "author-avatars/show-avatar",
-  "title": "Avatar Lists",
+  "title": "Author Avatar Lists",
   "category": "common",
   "icon": "businessman",
   "description": "This plugin makes it easy to *display lists of user avatars*, grouped by user roles, on your (multiuser) site. It also allows you to *insert single avatars* for blog users or any email address into a post or page - great for displaying an image of someone you're talking about.",
-  "keywords": [ "avatar", "author image", "user image", "image", "user photo", "user picture", "Profile", "Thumbnail", "picture", "photo"],
+  "keywords": ["author", "avatar", "author image", "user image", "image", "user photo", "user picture", "Profile", "Thumbnail", "picture", "photo"],
   "textdomain": "author-avatars",
   "attributes": {
     "size": {
