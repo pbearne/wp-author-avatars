@@ -90,11 +90,11 @@ class UserList {
 	 * Extra Class names.
 	 */
 	var $display_extra = array();
-    /**
-     * Size of avatar border_radius.
-     */
-    var $border_radius = 0;
 
+	/**
+	 * Size of avatar border_radius.
+	 */
+	var $border_radius = 0;
 	/**
 	 * Size of avatar border_radius.
 	 */
@@ -961,8 +961,8 @@ class UserList {
 		 */
 		$divcss = apply_filters( 'aa_user_final_css', $divcss, $user );
 		if( is_array( $divcss ) ) {
-            $divcss =  implode( ' ', $divcss  );
-        }
+	            $divcss =  implode( ' ', $divcss  );
+	        }
 		$tpl_vars['{class}'] = $divcss;
 		/**
 		 * filter on the complete HTML for the user
@@ -1696,6 +1696,9 @@ class UserList {
 	 * @return int result of a string compare of the user display names.
 	 */
 	function _user_cmp_BBPRESS_post_count( $a, $b ) {
+        if ( ! function_exists( 'bbp_get_user_topic_count_raw' ) || ! function_exists( 'bbp_get_user_reply_count_raw' ) ) {
+            return 1;
+        }
 		$ac = bbp_get_user_topic_count_raw( $a->user_id ) + bbp_get_user_reply_count_raw( $a->user_id );
 		$bc = bbp_get_user_topic_count_raw( $b->user_id ) + bbp_get_user_reply_count_raw( $b->user_id );
 

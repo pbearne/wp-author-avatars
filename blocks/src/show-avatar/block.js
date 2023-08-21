@@ -152,7 +152,7 @@ registerBlockType('author-avatars/show-avatar', {
 		},
 		// To storage the complete style of the div that will be 'merged' with the selected colours
 		block_style: {
-			type: 'string',
+            type: 'string',
 			selector: 'div', // From tag a
 			source: 'attribute', // binds an attribute of the tag
 			attribute: 'style', // binds style of a: the dynamic colours
