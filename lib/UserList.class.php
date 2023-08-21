@@ -213,7 +213,9 @@ class UserList {
 
 		if ( empty( $users ) ) {
 			return apply_filters( 'aa_userlist_empty', '<p class="no_users">' . __( 'No users found.', 'author-avatars' ) . '</p>' );
-		} elseif ( ! empty( $this->group_by ) ) {
+		}
+
+		if ( ! empty( $this->group_by ) ) {
 			return $this->format_groups( $this->page_users( $users ) );
 		} else {
 			return $this->format_users( $this->page_users( $users ) );
@@ -359,7 +361,7 @@ class UserList {
 	function format_user( $user ) {
 		$tpl_vars = array( '{class}' => '', '{user}' => '', '{style}' => '' );
 
-		$avatar_size = intval( $this->avatar_size );
+		$avatar_size = (int) $this->avatar_size;
 		if ( ! $avatar_size ) {
 			$avatar_size = false;
 		}
