@@ -403,7 +403,7 @@ class UserList {
 			// always use 'website' for commentators
 			$type = ( isset( $user->type ) ) ? $user->type : null;
 
-			if ( - 1 === $user->user_id && 'guest-author' != $type ) {
+			if ( - 1 === $user->user_id && 'guest-author' !== $type ) {
 				$link_type = 'website';
 				$divcss[]  = 'user-0';
 			} else {
@@ -502,13 +502,13 @@ class UserList {
 
 		if ( $this->show_postcount ) {
 
-			if ( - 1 == $user->user_id && 'guest-author' != $type ) {
+			if ( - 1 == $user->user_id && 'guest-author' !== $type ) {
 				$postcount = $this->get_comment_count( $user->user_email );
 				$title .= ' (' . sprintf( _n( '%d comment', '%d comments', $postcount, 'author-avatars' ), $postcount ) . ')';
 			} else {
 				// this is passing 1 for coauthors
 
-				if ( 'guest-author' == $type && $user->linked_account ) {
+				if ( 'guest-author' === $type && $user->linked_account ) {
 					$linked_user = get_user_by( 'login', $user->linked_account );
 					// fetch the linked account and show thats count
 					$postcount = $this->get_user_postcount( $linked_user->ID );
@@ -533,7 +533,7 @@ class UserList {
 		$biography = false;
 
 		if ( $this->show_biography ) {
-			if ( 'guest-author' != $type && $user->user_id > 0 ) {
+			if ( 'guest-author' !== $type && $user->user_id > 0 ) {
 				$biography = get_the_author_meta( 'description', $user->user_id );
 			} else {
 				$biography = ( isset( $user->description ) ) ? $user->description : '';
@@ -774,7 +774,7 @@ class UserList {
 		* remove e.g. the link which is added by the add-local-avatar plugin
 		* @see http://wordpress.org/support/topic/309878 */
 		if ( ! empty( $link ) ) {
-			$avatar = preg_replace( '@<\s*\/?\s*[aA]\s*.*?>@', '', $avatar );
+			$avatar = preg_replace( '@<\s*/?\s*[aA]\s*.*?>@', '', $avatar );
 		}
 
 		// the buddypress code
@@ -804,7 +804,7 @@ class UserList {
 				 */
 				$alt = apply_filters( 'aa_user_avatar_alt', $alt, $user );
 
-				$avatar = preg_replace( '@ ?\/>@', ' alt="' . $alt . '"  />', $avatar );
+				$avatar = preg_replace( '@ ?/>@', ' alt="' . $alt . '"  />', $avatar );
 			}
 
 
@@ -821,7 +821,7 @@ class UserList {
 				 */
 				$avatar_style = apply_filters( 'aa_user_avatar_style', $avatar_style, $user );
 
-				$avatar = preg_replace( '@ ?\/>@', ' style="' . $avatar_style . '"  />', $avatar );
+				$avatar = preg_replace( '@ ?/>@', ' style="' . $avatar_style . '"  />', $avatar );
 			}
 
 
@@ -1009,13 +1009,13 @@ class UserList {
 		$random_order     = false;
 		$white_list_order = false;
 
-		$cache_id = join( '_', $this->roles ) . '_' . $blog_id;
+		$cache_id = implode( '_', $this->roles ) . '_' . $blog_id;
 		if ( ! empty( $this->blogs ) ) {
-			$cache_id .= '_' . join( '_', $this->blogs );
+			$cache_id .= '_' . implode( '_', $this->blogs );
 		}
 		// if onlyusers then add
 		if ( ! empty( $this->onlyusers ) ) {
-			$cache_id .= '_' . join( '_', $this->onlyusers );
+			$cache_id .= '_' . implode( '_', $this->onlyusers );
 		}
 		// if limit set then add
 		if ( ! empty( $this->limit ) ) {
@@ -1024,16 +1024,16 @@ class UserList {
 		// if order set then add
 		if ( ! empty( $this->order ) ) {
 			$cache_id .= '_' . $this->order;
-			$random_order     = ( 'random' == $this->order ) ? true : false;
-			$white_list_order = ( 'whitelist' == $this->order ) ? true : false;
+			$random_order     = ( 'random' === $this->order ) ? true : false;
+			$white_list_order = ( 'whitelist' === $this->order ) ? true : false;
 		}
 		// if hidden user set then add
 		if ( ! empty( $this->hiddenusers ) ) {
-			$cache_id .= '_' . join( '_', $this->hiddenusers );
+			$cache_id .= '_' . implode( '_', $this->hiddenusers );
 		}
 		// if whitelist users set then add
 		if ( ! empty( $this->whitelistusers ) ) {
-			$cache_id .= '_' . join( '_', $this->whitelistusers );
+			$cache_id .= '_' . implode( '_', $this->whitelistusers );
 		}
 
 		// if the use is loged in wipe any cache
@@ -1097,7 +1097,7 @@ class UserList {
 						if ( is_array( $coauthor_terms ) && ! empty( $coauthor_terms ) ) {
 
 							foreach ( $coauthor_terms as $coauthor ) {
-								$coauthor_slug = preg_replace( '#^cap\-#', '', $coauthor->slug );
+								$coauthor_slug = preg_replace( '#^cap-#', '', $coauthor->slug );
 
 								$post_author = $coauthors_plus->get_coauthor_by( 'user_nicename', $coauthor_slug );
 
@@ -1267,9 +1267,7 @@ class UserList {
 		$query = "SELECT user_id, user_login, display_name, user_email, user_url, user_registered, meta_key, meta_value FROM $wpdb->users, $wpdb->usermeta " .
 		         " WHERE " . $wpdb->users . ".ID = " . $wpdb->usermeta . ".user_id AND " . $blogs_condition . " AND user_status = 0" . $roleQuery;
 
-		$users = $wpdb->get_results( $query );
-
-		return $users;
+		return $wpdb->get_results( $query );
 	}
 
 	function get_blogs_sql( $blog ){
@@ -1298,9 +1296,7 @@ class UserList {
 			FROM " . $wpdb->comments . "
 			WHERE comment_author_email <> '' AND comment_approved = 1 AND comment_type NOT IN( 'trackback', 'pingback' )";
 
-		$commentators = $wpdb->get_results( $query );
-
-		return $commentators;
+		return $wpdb->get_results( $query );
 	}
 
 	/**
@@ -1331,7 +1327,7 @@ class UserList {
 					if ( is_array( $this->roles ) && ! empty( $this->roles ) ) {
 						if ( ! isset( $user->user_roles ) ) {
 							if ( isset( $user->meta_value ) ) {
-								$user->user_roles = array_keys( unserialize( $user->meta_value ) );
+								$user->user_roles = array_keys( unserialize( $user->meta_value, false ) );
 							} else {
 								$wpuser           = get_user_by( 'id', $user->ID );
 								$user->user_roles = array_merge( $wpuser->roles, array( 'coauthors_plus' ) );
@@ -1427,11 +1423,11 @@ class UserList {
 	 * @return int '-1' if field $sort_direction is 'desc', '1' otherwise.
 	 */
 	function _sort_direction() {
-		if ( $this->sort_direction == 'desc' || $this->sort_direction == 'descending' ) {
+		if ( $this->sort_direction === 'desc' || $this->sort_direction === 'descending' ) {
 			return - 1;
-		} else {
-			return 1;
 		}
+
+		return 1;
 	}
 
 	/**
@@ -1562,7 +1558,7 @@ class UserList {
 	 * @return int result of a string compare of the user_logins.
 	 */
 	function _users_cmp_login( $a, $b ) {
-		return $this->_sort_direction() * strcasecmp( remove_accents( $a->user_login ), remove_accents( $b->user_login ) );
+		return $this->_sort_direction() * $this->strcasecmp( remove_accents( $a->user_login ), remove_accents( $b->user_login ) );
 	}
 
 	/**
@@ -1576,7 +1572,7 @@ class UserList {
 	 * @return int result of a string compare of the user display names.
 	 */
 	function _users_cmp_name( $a, $b ) {
-		return $this->_sort_direction() * strcasecmp( remove_accents( $a->display_name ), remove_accents( $b->display_name ) );
+		return $this->_sort_direction() * $this->strcasecmp( remove_accents( $a->display_name ), remove_accents( $b->display_name ) );
 	}
 
 
@@ -1594,7 +1590,7 @@ class UserList {
 		$an = remove_accents( $this->get_user_nickname( $a->user_id ) );
 		$bn = remove_accents( $this->get_user_nickname( $b->user_id ) );
 
-		return $this->_sort_direction() * strcasecmp( $an, $bn );
+		return $this->_sort_direction() * $this->strcasecmp( $an, $bn );
 	}
 
 	/**
@@ -1622,7 +1618,7 @@ class UserList {
 		$an = remove_accents( $this->get_user_firstname( $a->user_id ) );
 		$bn = remove_accents( $this->get_user_firstname( $b->user_id ) );
 
-		return $this->_sort_direction() * strcasecmp( $an, $bn );
+		return $this->_sort_direction() * $this->strcasecmp( $an, $bn );
 	}
 
 	/**
@@ -1650,7 +1646,7 @@ class UserList {
 		$an = remove_accents( $this->get_user_lastname( $a->user_id ) );
 		$bn = remove_accents( $this->get_user_lastname( $b->user_id ) );
 
-		return $this->_sort_direction() * strcasecmp( $an, $bn );
+		return $this->_sort_direction() * $this->strcasecmp( $an, $bn );
 	}
 
 	/**
@@ -1793,7 +1789,7 @@ class UserList {
 	 * @return int result of a string compare of the user's register date.
 	 */
 	function _user_cmp_regdate( $a, $b ) {
-		return $this->_sort_direction() * strcasecmp( $a->user_registered, $b->user_registered );
+		return $this->_sort_direction() * $this->strcasecmp( $a->user_registered, $b->user_registered );
 	}
 
 	/**
@@ -1810,7 +1806,7 @@ class UserList {
 		$a_activity = $this->get_user_last_site_activity( $a->user_id );
 		$b_activity = $this->get_user_last_site_activity( $b->user_id );
 
-		return $this->_sort_direction() * strcasecmp( $a_activity, $b_activity );
+		return $this->_sort_direction() * $this->strcasecmp( $a_activity, $b_activity );
 	}
 
 	/**
@@ -1857,7 +1853,7 @@ class UserList {
 		$a_activity = $this->get_user_last_post_activity( $a->user_id );
 		$b_activity = $this->get_user_last_post_activity( $b->user_id );
 
-		return $this->_sort_direction() * strcasecmp( $a_activity, $b_activity );
+		return $this->_sort_direction() * $this->strcasecmp( $a_activity, $b_activity );
 	}
 
 	/**
@@ -1906,7 +1902,7 @@ class UserList {
 		$a_activity = $this->get_user_last_buddypress_activity( $a->user_id );
 		$b_activity = $this->get_user_last_buddypress_activity( $b->user_id );
 
-		return $this->_sort_direction() * strcasecmp( $a_activity, $b_activity );
+		return $this->_sort_direction() * $this->strcasecmp( $a_activity, $b_activity );
 	}
 
 	/**
@@ -2085,10 +2081,10 @@ class UserList {
 					$truncate .= substr( $line_matchings[2], 0, $left + $entities_length );
 					// maximum lenght is reached, so get off the loop
 					break;
-				} else {
-					$truncate .= $line_matchings[2];
-					$total_length += $content_length;
 				}
+
+				$truncate     .= $line_matchings[2];
+				$total_length += $content_length;
 				// if the maximum length is reached, get off the loop
 				if ( $total_length >= $length ) {
 					break;
@@ -2097,9 +2093,9 @@ class UserList {
 		} else {
 			if ( strlen( $text ) <= $length ) {
 				return $text;
-			} else {
-				$truncate = substr( $text, 0, $length - strlen( $ending ) );
 			}
+
+			$truncate = substr( $text, 0, $length - strlen( $ending ) );
 		}
 		// if the words shouldn't be cut in the middle...
 		if ( ! $exact ) {
@@ -2127,5 +2123,23 @@ class UserList {
 		}
 
 		return $truncate;
+	}
+
+
+	/**
+	 * @param $a
+	 * @param $b
+	 *
+	 * @return int
+	 */
+	private function strcasecmp( $a, $b ): int {
+		if (empty( $a) ) {
+			$a = '';
+		}
+		if (empty( $b) ) {
+            $b = '';
+        }   
+		
+		return strcasecmp( $a, $b );
 	}
 }
