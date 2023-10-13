@@ -6,12 +6,12 @@
  */
 
 // include global helper functions file.
-require_once( dirname( __FILE__ ) . '/helper.functions.php' );
+require_once( __DIR__ . '/helper.functions.php' );
 // include settings file
-require_once( dirname( __FILE__ ) . '/AuthorAvatarsSettings.class.php' );
-require_once( dirname( __FILE__ ) . '/AuthorAvatarsWidget.class.php' );
+require_once( __DIR__ . '/AuthorAvatarsSettings.class.php' );
+require_once( __DIR__ . '/AuthorAvatarsWidget.class.php' );
 
-require_once( dirname( __FILE__ ) . '/class-api.php' );
+require_once( __DIR__ . '/class-api.php' );
 
 
 
@@ -22,12 +22,16 @@ add_action( 'widgets_init', 'aa_register_widgets' );
 
 // only add is bb is loaded
 function buddy_press_support_init() {
-	require( dirname( __FILE__ ) . '/BuddyPressSupport.class.php' );
+	require( __DIR__ . '/BuddyPressSupport.class.php' );
 }
 add_action( 'bp_include', 'buddy_press_support_init' );
 
 
 class AuthorAvatars {
+	public AuthorAvatarsShortcode $author_avatars_shortcode;
+	private ShowAvatarShortcode $show_avatar;
+	private AuthorAvatarsEditorButton $editor_button;
+	private AuthorAvatarsSitewideAdminPanel $wpmu_settings;
 
 	/**
 	 * Constructor
@@ -88,9 +92,9 @@ class AuthorAvatars {
 	 */
 	function init_settings() {
 		// include global helper functions file.
-		require_once( dirname( __FILE__ ) . '/helper.functions.php' );
+		require_once( __DIR__ . '/helper.functions.php' );
 		// include settings file
-		require_once( dirname( __FILE__ ) . '/AuthorAvatarsSettings.class.php' );
+		require_once( __DIR__ . '/AuthorAvatarsSettings.class.php' );
 		// load translation domain on init action
 		add_action( 'init', array( $this, 'load_translation_domain' ), 20 );
 
@@ -104,7 +108,7 @@ class AuthorAvatars {
 	 */
 	function load_translation_domain() {
 		// load translation file
-		$plugin_dir = basename( dirname( dirname( __FILE__ ) ) );
+		$plugin_dir = basename( dirname( __FILE__, 2 ) );
 		load_plugin_textdomain( 'author-avatars', false, $plugin_dir . '/translations' );
 	}
 
@@ -115,16 +119,16 @@ class AuthorAvatars {
 		$aa_ver = AUTHOR_AVATARS_VERSION;
 
 		// styles
-		wp_register_style( 'author-avatars-widget', plugins_url( 'css/widget.css', dirname( __FILE__ ) ), array(), $aa_ver );
-		wp_register_style( 'author-avatars-shortcode', plugins_url( 'css/shortcode.css', dirname( __FILE__ ) ), array(), $aa_ver );
-		wp_register_style( 'admin-form', plugins_url( 'css/admin-form.css', dirname( __FILE__ ) ), array(), $aa_ver );
+		wp_register_style( 'author-avatars-widget', plugins_url( 'css/widget.css', __DIR__ ), array(), $aa_ver );
+		wp_register_style( 'author-avatars-shortcode', plugins_url( 'css/shortcode.css', __DIR__ ), array(), $aa_ver );
+		wp_register_style( 'admin-form', plugins_url( 'css/admin-form.css', __DIR__ ), array(), $aa_ver );
 
 		// scripts
-		wp_register_script( 'jquery-ui-resizable', plugins_url( 'js/jquery-ui.resizable.js', dirname( __FILE__ ) ), array( 'jquery-ui-core' ), '1.5.3' );
-		wp_register_script( 'author-avatars-form', plugins_url( 'js/form.js', dirname( __FILE__ ) ), array( 'jquery-ui-resizable' ), $aa_ver );
-		wp_register_script( 'author-avatars-widget-admin', plugins_url( 'js/widget.admin.js',dirname( __FILE__ ) ), array( 'author-avatars-form' ), $aa_ver );
+		wp_register_script( 'jquery-ui-resizable', plugins_url( 'js/jquery-ui.resizable.js', __DIR__ ), array( 'jquery-ui-core' ), '1.5.3' );
+		wp_register_script( 'author-avatars-form', plugins_url( 'js/form.js', __DIR__ ), array( 'jquery-ui-resizable' ), $aa_ver );
+		wp_register_script( 'author-avatars-widget-admin', plugins_url( 'js/widget.admin.js', __DIR__ ), array( 'author-avatars-form' ), $aa_ver );
 		wp_register_script( 'tinymce-popup', '/wp-includes/js/tinymce/tiny_mce_popup.js', array(), function_exists( 'mce_version' ) ? mce_version() : false );
-		wp_register_script( 'author-avatars-tinymce-popup', plugins_url( 'js/tinymce.popup.js', dirname( __FILE__ ) ), array(
+		wp_register_script( 'author-avatars-tinymce-popup', plugins_url( 'js/tinymce.popup.js', __DIR__ ), array(
 				'author-avatars-form',
 				'jquery-ui-tabs'
 			), $aa_ver );
@@ -157,7 +161,7 @@ class AuthorAvatars {
 	 */
 
 	function admin_enqueue_resources() {
-		if ( is_admin() && basename( $_SERVER['PHP_SELF'] ) == 'widgets.php' ) {
+		if ( is_admin() && basename( $_SERVER['PHP_SELF'] ) === 'widgets.php' ) {
 			wp_enqueue_script( 'author-avatars-widget-admin' );
 			wp_enqueue_style( 'admin-form' );
 		}
@@ -185,8 +189,8 @@ class AuthorAvatars {
 	 */
 	function init_shortcodes() {
 		// include necessary file(s).
-		require_once( dirname( __FILE__ ) . '/AuthorAvatarsShortcode.class.php' );
-		require_once( dirname( __FILE__ ) . '/ShowAvatarShortcode.class.php' );
+		require_once( __DIR__ . '/AuthorAvatarsShortcode.class.php' );
+		require_once( __DIR__ . '/ShowAvatarShortcode.class.php' );
 		// Create objects of the shortcode classes. Registering is done in the objects' constructors
 		$this->author_avatars_shortcode = new AuthorAvatarsShortcode();
 		$this->show_avatar              = new ShowAvatarShortcode();
@@ -197,7 +201,7 @@ class AuthorAvatars {
 	 */
 	function init_tinymce_editor() {
 		// load the Editor class for TinyMCE
-		require_once( dirname( __FILE__ ) . '/AuthorAvatarsEditorButton.class.php' );
+		require_once( __DIR__ . '/AuthorAvatarsEditorButton.class.php' );
 		$this->editor_button = new AuthorAvatarsEditorButton();
 	}
 
@@ -206,7 +210,7 @@ class AuthorAvatars {
 	 */
 	function init_controlpanels() {
 		// include necessary file(s).
-		require_once( dirname( __FILE__ ) . '/AuthorAvatarsSitewideAdminPanel.class.php' );
+		require_once( __DIR__ . '/AuthorAvatarsSitewideAdminPanel.class.php' );
 		$this->wpmu_settings = new AuthorAvatarsSitewideAdminPanel();
 	}
 
@@ -243,7 +247,7 @@ class AuthorAvatars {
 
 	/**
 	 * Check if author avatars is installed and install it if necessary
-	 * @return false if an error occured, true otherwise
+	 * @return boolean false if an error occured, true otherwise
 	 */
 	function install_check() {
 		$version = $this->get_installed_version( true );
@@ -251,24 +255,22 @@ class AuthorAvatars {
 		if ( ! empty( $version ) ) {
 			return true;
 		} // Version empty: this means we are either on version 0.1 (which didn't have this option) or on a fresh install.
-		else {
-			// check if the 0.1 version is installed
-			if ( get_option( 'widget_blogauthors' ) ) {
-				// set installed version to 0.1
-				$this->set_installed_version( '0.1' );
 
-				return true;
-			} // else it's probably a new/fresh install
-			else {
-				if ( $this->install() ) {
-					$this->set_installed_version( AUTHOR_AVATARS_VERSION );
+// check if the 0.1 version is installed
+		if ( get_option( 'widget_blogauthors' ) ) {
+			// set installed version to 0.1
+			$this->set_installed_version( '0.1' );
 
-					return true;
-				} else {
-					return false; // install failed.
-				}
-			}
+			return true;
+		} // else it's probably a new/fresh install
+
+		if ( $this->install() ) {
+			$this->set_installed_version( AUTHOR_AVATARS_VERSION );
+
+			return true;
 		}
+
+		return false; // install failed.
 	}
 
 	/**
@@ -282,7 +284,7 @@ class AuthorAvatars {
 
 	/**
 	 * Check if there's any need to do updates and start updates if necessary
-	 * @return false if an error occured, true otherwise
+	 * @return boolean false if an error occured, true otherwise
 	 */
 	function update_check() {
 		if ( $this->get_installed_version() != AUTHOR_AVATARS_VERSION ) {
@@ -301,7 +303,6 @@ class AuthorAvatars {
 		while ( $this->get_installed_version() != AUTHOR_AVATARS_VERSION ) {
 			if ( $step_count >= $max_number_updates ) {
 				break;
-				die( 'Author Avatars: more than 25 update steps.. something might be wrong...' ); // FIXME: change error handling!?
 			}
 			$this->do_update_step();
 			$step_count ++;
@@ -312,7 +313,7 @@ class AuthorAvatars {
 	 * Do one version update, for example from version 0.1 to version 0.2, and updates the version number in the end.
 	 */
 	function do_update_step() {
-		$version_history = unserialize( AUTHOR_AVATARS_VERSION_HISTORY );
+		$version_history = maybe_unserialize( AUTHOR_AVATARS_VERSION_HISTORY );
 
 		foreach ( $version_history as $i => $version ) {
 			// for the current version, if there is a next version
@@ -323,9 +324,9 @@ class AuthorAvatars {
 
 				if ( method_exists( $this, $fn ) && ! $this->{$fn}() ) {
 					die( 'Author Avatars: error trying to update version ' . $version . ' to ' . $new_version . '. ' ); // FIXME: change error handling!?
-				} else {
-					$this->set_installed_version( $new_version );
 				}
+
+				$this->set_installed_version( $new_version );
 				break;
 			}
 		}

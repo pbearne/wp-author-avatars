@@ -3,7 +3,7 @@ Contributors: pbearne, bforchhammer
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=MZTZ5S8MGF75C&lc=CA&item_name=Wordpress%20Development%20%2f%20Paul%20Bearne&item_number=AuthorAvatarsList%20Plugin&currency_code=CAD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted
 Tags: block, Avatar, Author, Gutenberg, BuddyPress, xprofile, Comment, Editor, Image, Multisite, Photo, Picture, Profile, Shortcode, Random, Sidebar, Thumbnail, User, Widget, Wpmu, BBPress, co-authors
 Requires at least: 3.0
-Tested up to: 6.3.0
+Tested up to: 6.3.1
 Stable tag: 2.1.14
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -14,7 +14,7 @@ Display lists of user avatars using widgets or shortcodes. With Gutenberg suppor
 
 This plugin makes it easy to *display lists of user avatars*, grouped by user roles, on your (multiuser) site. It also allows you to *insert single avatars* for blog users or any email address into a post or page - great for displaying an image of someone you're talking about.
 
-It makes use of built in WordPress (core) functions to retrieve user information and get avatars.
+It makes use of built-in WordPress (core) functions to retrieve user information and get avatars.
 
 Avatar lists can be inserted into your sidebar by adding a widget or into posts/pages by using a [shortcode](http://authoravatars.wordpress.com/documentation/authoravatars-shortcode/). The plugin comes with a tinymce editor plugin which makes inserting shortcodes very easy.
 
@@ -70,6 +70,8 @@ If you have added CSS to your theme you may have to update it for this upgrade (
 7. Advance Gutenberg blocks options
 
 == Changelog ==
+2.1.14
+"wp-editor" script should not be enqueued notice fixed
 2.1.14
 php 8.1 fix
 

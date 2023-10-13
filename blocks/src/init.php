@@ -29,7 +29,7 @@ function author_avatar_block_assets() { // phpcs:ignore
 		// Styles.
 		wp_enqueue_style(
 			'author-avatars-style-css', // Handle.
-			plugins_url('build/show-avatar/style-block.css', dirname(__FILE__)), // Block style CSS.
+			plugins_url('build/show-avatar/style-block.css', __DIR__ ), // Block style CSS.
 			array('wp-editor') // Dependency to include the CSS after it.
 		// filemtime( plugin_dir_path( __DIR__ ) . 'dist/blocks.style.build.css' ) // Version: File modification time.
 		);
@@ -53,8 +53,8 @@ function author_avatar_editor_assets() { // phpcs:ignore
 	// Scripts.
 	wp_enqueue_script(
 		'author-avatars-block-js', // Handle.
-		plugins_url( 'build/show-avatar/block.js', dirname( __FILE__ ) ), // Block.build.js: We register the block here. Built with Webpack.
-		array( 'wp-blocks', 'wp-i18n', 'wp-element', 'wp-editor' ), // Dependencies, defined above.
+		plugins_url( 'build/show-avatar/block.js', __DIR__ ), // Block.build.js: We register the block here. Built with Webpack.
+		array( 'wp-blocks', 'wp-i18n', 'wp-element' ), // Dependencies, defined above.
 		// filemtime( plugin_dir_path( __DIR__ ) . 'dist/blocks.build.js' ), // Version: File modification time.
 		true // Enqueue the script in the footer.
 	);
@@ -67,7 +67,7 @@ function author_avatar_editor_assets() { // phpcs:ignore
 	// Styles.
 	wp_enqueue_style(
 		'author-avatars-block-editor-css', // Handle.
-		plugins_url( 'build/show-avatar/block.css', dirname( __FILE__ ) ), // Block editor CSS.
+		plugins_url( 'build/show-avatar/block.css', __DIR__ ), // Block editor CSS.
 		array( 'wp-edit-blocks' ) // Dependency to include the CSS after it.
 		// filemtime( plugin_dir_path( __DIR__ ) . 'dist/blocks.editor.build.css' ) // Version: File modification time.
 	);
