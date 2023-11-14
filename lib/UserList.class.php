@@ -161,6 +161,15 @@ class UserList {
 	 */
 	var $user_template = '<div class="{class}" style="{style}">{user}</div>';
 
+	/**
+     *  Store of the site activity for sorting
+     */
+	var $user_last_site_activity = array();
+
+	/**
+	 *  Store of the post activity for sorting
+	 */
+	var $user_last_post_activity = array();
 
 	function __construct() {
 		add_filter( 'aa_show_name_css', array( $this, 'group_name' ), 10, 2 );
@@ -1824,7 +1833,9 @@ class UserList {
 	 * look at using bbp_get_user_last_posted to get the buddypress value
 	 */
 	function get_user_last_site_activity( $user_id ) {
-
+		if( isset( $this->user_last_site_activity[$user_id] ) ) {
+			return $this->user_last_site_activity[$user_id];
+		}
 		global $wpdb;
 		$query = $wpdb->prepare(
 			"SELECT p.post_date
@@ -1838,7 +1849,9 @@ class UserList {
 			$user_id
 		);
 
-		return $wpdb->get_var( $query );
+		$this->user_last_site_activity[$user_id] = $wpdb->get_var( $query );
+
+		return $this->user_last_site_activity[$user_id];
 	}
 
 	/**
@@ -1872,6 +1885,10 @@ class UserList {
 	 */
 	function get_user_last_post_activity( $user_id ) {
 
+		if( isset( $this->user_last_post_activity[$user_id] ) ) {
+			return $this->user_last_post_activity[$user_id];
+		}
+
 		global $wpdb;
 		$query = $wpdb->prepare(
 			"SELECT p.post_date
@@ -1887,7 +1904,9 @@ class UserList {
 			$user_id
 		);
 
-		return $wpdb->get_var( $query );
+        $this->user_last_post_activity[$user_id] = $wpdb->get_var( $query );
+
+		return $this->user_last_post_activity[$user_id];
 	}
 
 	/**

@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=MZTZ5
 Tags: block, Avatar, Author, Gutenberg, BuddyPress, xprofile, Comment, Editor, Image, Multisite, Photo, Picture, Profile, Shortcode, Random, Sidebar, Thumbnail, User, Widget, Wpmu, BBPress, co-authors
 Requires at least: 3.0
 Tested up to: 6.3.1
-Stable tag: 2.1.15
+Stable tag: 2.1.16
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -70,8 +70,12 @@ If you have added CSS to your theme you may have to update it for this upgrade (
 7. Advance Gutenberg blocks options
 
 == Changelog ==
-2.1.14
+2.1.16
+Fixed duplicate query when sorting by posts
+
+2.1.15
 "wp-editor" script should not be enqueued notice fixed
+
 2.1.14
 php 8.1 fix
 
