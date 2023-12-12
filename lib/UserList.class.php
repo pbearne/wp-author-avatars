@@ -1268,7 +1268,7 @@ class UserList {
 			if ( $roleQuery ) {
 				$or = ' or ';
 			}
-			$roleQuery .= $wpdb->prepare( '%s meta_value like %s', $or , $role );
+			$roleQuery .= $wpdb->prepare( $or . 'meta_value like %s', $role );
 		}
 		if ( $roleQuery ) {
 			$roleQuery = ' AND(' . $roleQuery . ')';
