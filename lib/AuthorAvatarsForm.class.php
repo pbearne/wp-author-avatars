@@ -164,7 +164,7 @@ class AuthorAvatarsForm {
 			$bool         = ( 1 == $where ) ? 1 : 0;
 			$where_string .= " AND $key = '$bool'";
 		}
-		$blogs = $wpdb->get_results( $wpdb->prepare( "SELECT blog_id, path FROM %s WHERE 1 = 1 AND site_id = %d  $where_string", $wpdb->blogs, $wpdb->siteid ), ARRAY_A );
+		$blogs = $wpdb->get_results( $wpdb->prepare( "SELECT blog_id, path FROM $wpdb->blogs WHERE 1 = 1 AND site_id = %d  $where_string", $wpdb->siteid ), ARRAY_A );
 
 		$blog_list = array();
 		foreach ( (array) $blogs as $details ) {
