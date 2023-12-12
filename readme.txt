@@ -72,7 +72,7 @@ If you have added CSS to your theme you may have to update it for this upgrade (
 == Changelog ==
 2.1.17
 Fixed lack of escaping on the shortcode
-reported by An CV Thiên
+reported by Ngô Thiên An (ancorn_)
 
 2.1.16
 Fixed duplicate query when sorting by posts
