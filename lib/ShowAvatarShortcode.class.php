@@ -42,22 +42,22 @@ class ShowAvatarShortcode {
 
 
 		if ( ! empty( $atts['id'] ) ) {
-			$id = preg_replace( '[^\w\.\@\-]', '', $atts['id'] );
+			$id = esc_html( preg_replace( '[^\w\.@\-]', '', $atts['id'] ) );
 		}
 		if ( empty( $id ) && ! empty( $atts['email'] ) ) {
-			$id = preg_replace( '[^\w\.\@\-]', '', $atts['email'] );
+			$id = esc_html( preg_replace( '[^\w\.@\-]', '', $atts['email'] ) );
 		}
 		// get avatar size
 		$bio_length = - 1;
 		if ( ! empty( $atts['max_bio_length'] ) ) {
-			$bio_length = intval( $atts['max_bio_length'] );
+			$bio_length = (int) $atts['max_bio_length'];
 		}
 
 
 		// get avatar size
 		$avatar_size = false;
 		if ( ! empty( $atts['avatar_size'] ) ) {
-			$avatar_size = intval( $atts['avatar_size'] );
+			$avatar_size = (int) $atts['avatar_size'];
 		}
 
 		// get alignment

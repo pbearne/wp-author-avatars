@@ -203,7 +203,7 @@ class AuthorAvatarsSettings {
 	function blog_filters_is_active( $blog ) {
 		$blog_filters_enabled = (array) $this->get_sitewide( 'blog_filters_enabled' );
 
-		return in_array( - 1, $blog_filters_enabled ) || in_array( $blog, $blog_filters_enabled );
+		return in_array( -1, $blog_filters_enabled, true ) || in_array( $blog, $blog_filters_enabled, true );
 	}
 
 	/**
@@ -211,18 +211,18 @@ class AuthorAvatarsSettings {
 	 *
 	 * @access public
 	 *
-	 * @param $blog The id of the blog to check. If empty then the current blog id is used.
+	 * @param int $blog The id of the blog to check. If empty then the current blog id is used.
 	 *
 	 * @return boolean True if we are allowed to use blog selection on the blog...
 	 */
-	function blog_selection_allowed( $blog = false ) {
+	function blog_selection_allowed( $blog = 0 ) {
 		// check that we are on a wpmu enabled blog:
 		if ( ! AA_is_wpmu() ) {
 			return false;
 		}
 
 		// if $blog is empty use current blog id
-		if ( ! $blog ) {
+		if ( $blog === 0 ) {
 			global $blog_id;
 			$blog = $blog_id;
 		}

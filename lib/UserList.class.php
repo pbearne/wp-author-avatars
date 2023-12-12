@@ -1268,7 +1268,7 @@ class UserList {
 			if ( $roleQuery ) {
 				$or = ' or ';
 			}
-			$roleQuery .= $wpdb->prepare( $or . 'meta_value like %s', $role );
+			$roleQuery .= $wpdb->prepare( '%s meta_value like %s', $or , $role );
 		}
 		if ( $roleQuery ) {
 			$roleQuery = ' AND(' . $roleQuery . ')';
@@ -1278,7 +1278,7 @@ class UserList {
 		$query = "SELECT user_id, user_login, display_name, user_email, user_url, user_registered, meta_key, meta_value FROM $wpdb->users, $wpdb->usermeta " .
 		         " WHERE " . $wpdb->users . ".ID = " . $wpdb->usermeta . ".user_id AND " . $blogs_condition . " AND user_status = 0" . $roleQuery;
 
-		return $wpdb->get_results( $query );
+		return $wpdb->get_results( $query ); //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 	}
 
 	function get_blogs_sql( $blog ){
@@ -1307,7 +1307,7 @@ class UserList {
 			FROM " . $wpdb->comments . "
 			WHERE comment_author_email <> '' AND comment_approved = 1 AND comment_type NOT IN( 'trackback', 'pingback' )";
 
-		return $wpdb->get_results( $query );
+		return $wpdb->get_results( $query ); //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 	}
 
 	/**
@@ -1776,7 +1776,7 @@ class UserList {
 		if ( empty( $comment_counts ) ) {
 			global $wpdb;
 			$query   = 'SELECT comment_author_email, COUNT(*) AS total FROM ' . $wpdb->comments . ' WHERE comment_approved = 1 GROUP BY comment_author_email';
-			$results = $wpdb->get_results( $query );
+			$results = $wpdb->get_results( $query ); //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			foreach ( $results as $result ) {
 				$comment_counts[ $result->comment_author_email ] = $result->total;
 			}
@@ -1849,7 +1849,7 @@ class UserList {
 			$user_id
 		);
 
-		$this->user_last_site_activity[$user_id] = $wpdb->get_var( $query );
+		$this->user_last_site_activity[$user_id] = $wpdb->get_var( $query ); //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
 		return $this->user_last_site_activity[$user_id];
 	}
@@ -1904,7 +1904,7 @@ class UserList {
 			$user_id
 		);
 
-        $this->user_last_post_activity[$user_id] = $wpdb->get_var( $query );
+        $this->user_last_post_activity[$user_id] = $wpdb->get_var( $query ); //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
 		return $this->user_last_post_activity[$user_id];
 	}

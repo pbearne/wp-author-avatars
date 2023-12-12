@@ -54,12 +54,12 @@ class AuthorAvatarsShortcode {
 
 		// blogs
 		$blogs = array(); // default value: empty -> only current blog
-		if ( $settings->blog_selection_allowed() && ! empty( $atts['blogs'] ) ) {
+		if ( ! empty( $atts['blogs'] ) && $settings->blog_selection_allowed() ) {
 			if ( strtolower( $atts['blogs'] ) === 'all' ) {
-				$blogs = array( - 1 );
+				$blogs = array( -1 );
 			} else {
 				if ( ! is_array( $atts['blogs'] ) ) {
-					$blogs = explode( ',', $atts['blogs'] );
+					$blogs = explode( ',', esc_attr( $atts['blogs'] ) );
 				} else {
 					$blogs = array_map( 'trim', $blogs );
 				}
@@ -71,16 +71,16 @@ class AuthorAvatarsShortcode {
 		// perform a switch to another MU blog_id (to set avatar/path relations)
 		$switch_back_to_blog_id = false;
 		if ( $settings->blog_selection_allowed() && ! empty( $atts['switchblog'] ) ) {
-			if ( $GLOBALS['blog_id'] !== (int)$atts['switchblog'] ) {
+			if ( $GLOBALS['blog_id'] !== (int) $atts['switchblog'] ) {
 				$switch_back_to_blog_id = $GLOBALS['blog_id'];
-				switch_to_blog((int)$atts['switchblog']);
+				switch_to_blog( (int) $atts['switchblog'] );
 			}
 		}
 
 		// grouping
 		$group_by = '';
 		if ( isset( $atts['group_by'] ) ) {
-			if ( AA_is_wpmu() && 'blog' === $atts['group_by'] ) {
+			if ( AA_is_wpmu() && 'blog' === esc_attr( $atts['group_by'] ) ) {
 				$group_by = 'blog';
 			}
 		}
@@ -90,9 +90,9 @@ class AuthorAvatarsShortcode {
 		$hiddenusers = array(); // default value: no restriction -> all users
 		if ( ! empty( $atts['hiddenusers'] ) ) {
 			if ( ! is_array( $atts['hiddenusers'] ) ) {
-				$hiddenusers = array_unique ( explode( ',', $atts['hiddenusers'] ) );
+				$hiddenusers = array_unique ( explode( ',', esc_attr( $atts['hiddenusers'] ) ) );
 			} else{
-				$hiddenusers = $atts['hiddenusers'];
+				$hiddenusers = array_map( 'esc_attr', $atts['hiddenusers'] );
 			}
 		}
 		$this->userlist->hiddenusers = array_map( 'trim', $hiddenusers );
@@ -101,7 +101,7 @@ class AuthorAvatarsShortcode {
 		$whitelistusers = array(); // default value: no restriction -> all users
 		if ( ! empty( $atts['whitelistusers'] ) ) {
 			if ( ! is_array( $atts['whitelistusers'] ) ) {
-				$whitelistusers = array_unique ( explode( ',', $atts['whitelistusers'] ) );
+				$whitelistusers = array_unique ( explode( ',', esc_attr( $atts['whitelistusers'] ) ) );
 			}
 		}
 		$this->userlist->whitelistusers = array_map( 'trim', $whitelistusers );
@@ -110,26 +110,26 @@ class AuthorAvatarsShortcode {
 		$onlyusers = array(); // default value: no restriction -> all users
 		if ( ! empty( $atts['onlyusers'] ) ) {
 			if ( ! is_array( $atts['onlyusers'] ) ) {
-				$onlyusers = explode( ',', $atts['onlyusers'] );
+				$onlyusers = explode( ',', esc_attr( $atts['onlyusers'] ) );
 			}
 		}
 		$this->userlist->onlyusers = array_map( 'trim', $onlyusers );
 
 		// link to author page? (deprecated)
-		if ( isset( $atts['link_to_authorpage'] ) && ( strlen( $atts['link_to_authorpage'] ) > 0 ) ) {
+		if ( isset( $atts['link_to_authorpage'] ) && ( $atts['link_to_authorpage'] !== '' ) ) {
 			// by default always true, has to be set explicitly to not link the users
-			$set_to_false = ( $atts['link_to_authorpage'] == 'false' || (bool) $atts['link_to_authorpage'] == false );
+			$set_to_false = ( $atts['link_to_authorpage'] === 'false' || (bool) $atts['link_to_authorpage'] === false );
 			if ( $set_to_false ) {
 				$this->userlist->user_link = 'none';
 			}
 		}
 
 		if ( ! empty( $atts['user_link'] ) ) {
-			$this->userlist->user_link = $atts['user_link'];
+			$this->userlist->user_link = esc_attr( $atts['user_link'] );
 		}
 
 		if ( ! empty( $atts['contact_links'] ) ) {
-			$this->userlist->contact_links = $atts['contact_links'];
+			$this->userlist->contact_links = esc_attr( $atts['contact_links'] );
 		}
 
 		$display = AAFormHelper::get_display_list( $atts );
@@ -154,31 +154,31 @@ class AuthorAvatarsShortcode {
 			}
 		}
 
-		$this->userlist->display_extra = array_diff($display, $default_display_options );
+		$this->userlist->display_extra = array_diff( $display, $default_display_options );
 
 		//var_dump($this->userlist->display_extra);
 
 		// avatar size
 		if ( ! empty( $atts['avatar_size'] ) ) {
-			$size = (int)$atts['avatar_size'];
+			$size = (int) $atts['avatar_size'];
 			if ( $size > 0 ) {
 				$this->userlist->avatar_size = $size;
 			}
 		}
 
 		if ( ! empty( $atts['border_radius'] ) ) {
-			$border_radius = (int)$atts['border_radius'];
+			$border_radius = (int) $atts['border_radius'];
 			if ( $border_radius > 0 ) {
 				$this->userlist->border_radius = $border_radius;
 			}
 		}
 		if ( ! empty( $atts['align'] ) ) {
-				$this->userlist->align = $atts['align'];
+				$this->userlist->align = esc_attr( $atts['align'] );
 		}
 
 		// max. number of avatars
 		if ( ! empty( $atts['limit'] ) ) {
-			$limit = (int)$atts['limit'];
+			$limit = (int) $atts['limit'];
 			if ( $limit > 0 ) {
 				$this->userlist->limit = $limit;
 			}
@@ -187,7 +187,7 @@ class AuthorAvatarsShortcode {
 		// max. number of avatars
 		$this->userlist->bio_length = -1;
 		if ( ! empty( $atts['max_bio_length'] ) ) {
-			$bio_length = (int)$atts['max_bio_length'];
+			$bio_length = (int) $atts['max_bio_length'];
 			if (  0 < $bio_length ) {
 				$this->userlist->bio_length = $bio_length;
 			}
@@ -195,14 +195,14 @@ class AuthorAvatarsShortcode {
 
 		// min. number of posts
 		if ( ! empty( $atts['min_post_count'] ) ) {
-			$min_post_count = (int)$atts['min_post_count'];
+			$min_post_count = (int) $atts['min_post_count'];
 			if ( 0 < $min_post_count ) {
 				$this->userlist->min_post_count = $min_post_count;
 			}
 		}
 		// get page size
 		if ( ! empty( $atts['page_size'] ) ) {
-			$page_size = (int)$atts['page_size'];
+			$page_size = (int) $atts['page_size'];
 			if ( 0 < $page_size ) {
 				$this->userlist->page_size = $page_size;
 			}
@@ -211,12 +211,12 @@ class AuthorAvatarsShortcode {
 		// get paging page
 		if ( ! empty( $atts['aa_page'] ) ) {
 
-			$page_size = (int)$atts['aa_page'];
+			$page_size = (int) $atts['aa_page'];
 			if ( 0 < $page_size ) {
 				$this->userlist->aa_page = $page_size;
 			}
 		} elseif ( isSet( $_REQUEST['aa_page'] ) && is_numeric( $_REQUEST['aa_page'] ) ) {
-			$page_size = (int)$_REQUEST['aa_page'];
+			$page_size = (int) $_REQUEST['aa_page'];
 			if ( 0 < $page_size ) {
 				$this->userlist->aa_page = $page_size;
 			}
@@ -225,14 +225,14 @@ class AuthorAvatarsShortcode {
 		// display order
 		$sort_direction = 'asc';
 		if ( ! empty( $atts['order'] ) ) {
-			$order = $atts['order'];
-			if ( strpos( $order, ',' ) !== false ) {
+			$order = esc_attr( $atts['order'] );
+			if ( str_contains( $order, ',' ) ) {
 				list( $order, $sort_direction ) = explode( ',', $order, 2 );
 			}
 			$this->userlist->order = $order;
 		}
 		if ( ! empty( $atts['sort_direction'] ) ) {
-			$sort_direction = $atts['sort_direction'];
+			$sort_direction = esc_attr( $atts['sort_direction'] );
 		}
 		$valid_directions = array( 'asc', 'ascending', 'desc', 'descending' );
 		if ( in_array( $sort_direction, $valid_directions, true ) ) {
