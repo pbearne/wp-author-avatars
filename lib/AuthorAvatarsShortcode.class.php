@@ -187,7 +187,7 @@ class AuthorAvatarsShortcode {
 		// max. number of avatars
 		$this->userlist->bio_length = -1;
 		if ( ! empty( $atts['max_bio_length'] ) ) {
-			$bio_length = (int) $atts['max_bio_length'];
+			$bio_length = (int) esc_attr( $atts['max_bio_length'] );
 			if (  0 < $bio_length ) {
 				$this->userlist->bio_length = $bio_length;
 			}
@@ -195,7 +195,7 @@ class AuthorAvatarsShortcode {
 
 		// min. number of posts
 		if ( ! empty( $atts['min_post_count'] ) ) {
-			$min_post_count = (int) $atts['min_post_count'];
+			$min_post_count = (int) esc_attr( $atts['min_post_count'] );
 			if ( 0 < $min_post_count ) {
 				$this->userlist->min_post_count = $min_post_count;
 			}

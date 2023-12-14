@@ -133,14 +133,14 @@ class Render {
 
 		$atts = array(
 			'avatar_size'      => ( isset( $attributes['size'] ) ) ? $attributes['size'] : false,
-			'max_bio_length'   => ( isset( $attributes['bio_length'] ) ) ? $attributes['bio_length'] : - 1,
+			'max_bio_length'   => (int) ( isset( $attributes['bio_length'] ) ) ? $attributes['bio_length'] : - 1,
 			'align'            => ( isset( $attributes['alignment'] ) ) ? $attributes['alignment'] : '',
 			'user_link'        => ( isset( $attributes['link'] ) ) ? $attributes['link'] : 'none',
 			'border_radius'    => ( isset( $attributes['border_radius'] ) ) ? $attributes['border_radius'] : '',
 			'background_color' => ( isset( $attributes['background_color'] ) ) ? $attributes['background_color'] : '',
 			'font_color'       => ( isset( $attributes['font_color'] ) ) ? $attributes['font_color'] : '',
-			'border_color'       => ( isset( $attributes['border_color'] ) ) ? $attributes['border_color'] : '',
-			'border_size'       => ( isset( $attributes['border_size'] ) ) ? $attributes['border_size'] : 0,
+			'border_color'     => ( isset( $attributes['border_color'] ) ) ? $attributes['border_color'] : '',
+			'border_size'      => (int) ( isset( $attributes['border_size'] ) ) ? $attributes['border_size'] : 0,
 		);
 
 		if ( isset( $attributes['display'] ) ) {

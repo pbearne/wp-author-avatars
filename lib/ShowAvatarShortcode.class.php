@@ -50,14 +50,14 @@ class ShowAvatarShortcode {
 		// get avatar size
 		$bio_length = - 1;
 		if ( ! empty( $atts['max_bio_length'] ) ) {
-			$bio_length = (int) $atts['max_bio_length'];
+			$bio_length = (int) esc_attr( $atts['max_bio_length'] );
 		}
 
 
 		// get avatar size
 		$avatar_size = false;
 		if ( ! empty( $atts['avatar_size'] ) ) {
-			$avatar_size = (int) $atts['avatar_size'];
+			$avatar_size = (int) esc_attr( $atts['avatar_size'] );
 		}
 
 		// get alignment
@@ -277,7 +277,7 @@ class ShowAvatarShortcode {
 								$biography = wpautop( $biography, true );
 							}
 
-							$max_bio_length = ( isset( $atts['max_bio_length'] ) ) ? $atts['max_bio_length'] : 0;
+							$max_bio_length = (int) ( isset( $atts['max_bio_length'] ) ) ? $atts['max_bio_length'] : 0;
 							$bio            = '<div class="bio bio-length-' . $max_bio_length . '">' . $biography . '</div>';
 
 							break;
