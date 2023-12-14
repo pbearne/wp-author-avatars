@@ -132,15 +132,15 @@ class Render {
 
 
 		$atts = array(
-			'avatar_size'      => ( isset( $attributes['size'] ) ) ? $attributes['size'] : false,
-			'max_bio_length'   => (int) ( isset( $attributes['bio_length'] ) ) ? $attributes['bio_length'] : - 1,
-			'align'            => ( isset( $attributes['alignment'] ) ) ? $attributes['alignment'] : '',
-			'user_link'        => ( isset( $attributes['link'] ) ) ? $attributes['link'] : 'none',
-			'border_radius'    => ( isset( $attributes['border_radius'] ) ) ? $attributes['border_radius'] : '',
-			'background_color' => ( isset( $attributes['background_color'] ) ) ? $attributes['background_color'] : '',
-			'font_color'       => ( isset( $attributes['font_color'] ) ) ? $attributes['font_color'] : '',
-			'border_color'     => ( isset( $attributes['border_color'] ) ) ? $attributes['border_color'] : '',
-			'border_size'      => (int) ( isset( $attributes['border_size'] ) ) ? $attributes['border_size'] : 0,
+			'avatar_size'      => ( isset( $attributes['size'] ) ) ? esc_attr( $attributes['size'] ) : false,
+			'max_bio_length'   => (int) ( isset( $attributes['bio_length'] ) ) ? esc_attr( $attributes['bio_length'] ) : - 1,
+			'align'            => ( isset( $attributes['alignment'] ) ) ? esc_attr( $attributes['alignment'] ) : '',
+			'user_link'        => ( isset( $attributes['link'] ) ) ? esc_attr( $attributes['link'] ) : 'none',
+			'border_radius'    => ( isset( $attributes['border_radius'] ) ) ? esc_attr( $attributes['border_radius'] ) : '',
+			'background_color' => ( isset( $attributes['background_color'] ) ) ? esc_attr( $attributes['background_color']) : '',
+			'font_color'       => ( isset( $attributes['font_color'] ) ) ? esc_attr( $attributes['font_color'] ) : '',
+			'border_color'     => ( isset( $attributes['border_color'] ) ) ? esc_attr( $attributes['border_color'] ) : '',
+			'border_size'      => (int) ( isset( $attributes['border_size'] ) ) ? esc_attr( $attributes['border_size'] ) : 0,
 		);
 
 		if ( isset( $attributes['display'] ) ) {
