@@ -277,7 +277,7 @@ class ShowAvatarShortcode {
 								$biography = wpautop( $biography, true );
 							}
 
-							$max_bio_length = (int) ( isset( $atts['max_bio_length'] ) ) ? $atts['max_bio_length'] : 0;
+							$max_bio_length = (int) ( isset( $atts['max_bio_length'] ) ) ? esc_attr( $atts['max_bio_length'] ) : 0;
 							$bio            = '<div class="bio bio-length-' . $max_bio_length . '">' . $biography . '</div>';
 
 							break;
