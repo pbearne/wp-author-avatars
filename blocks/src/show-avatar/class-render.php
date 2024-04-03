@@ -145,7 +145,7 @@ class Render {
 
 		if ( isset( $attributes['display'] ) ) {
 			foreach ( $attributes['display'] as $key => $value ) {
-				$atts[ $key ] = $value;
+				$atts['display'][] = $key;
 			}
 		}
 		if ( 0 === (int) $attributes['user_id'] ) {
