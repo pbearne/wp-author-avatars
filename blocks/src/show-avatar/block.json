@@ -11,9 +11,6 @@
 		"html": false
 	},
 	"textdomain": "author-avatars-list-block",
-	"editorScript": "file:./block.js",
-	"editorStyle": "file:./block.css",
-	"style": "file:./style.css",
 	"keywords": ["avatar", "Author Avatars", "profile pictures"],
 	"example": {
 		"attributes": {
@@ -103,5 +100,8 @@
 			"source": "attribute",
 			"attribute": "style"
 		}
-	}
+	},
+	"editorScript": "file:./block.js",
+	"editorStyle": "file:./block.css",
+	"style": "file:./style.css"
 }

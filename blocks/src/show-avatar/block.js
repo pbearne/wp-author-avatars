@@ -9,31 +9,33 @@
 import "./style.scss";
 import "./editor.scss";
 
-const { __ } = wp.i18n; // Import __() from wp.i18n
-const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
-const {
-	RadioControl,
-	Panel,
-	PanelBody,
-	PanelRow,
+// Import metadata from block.json
+import metadata from "./block.json";
+
+/**
+ * Use imports
+ */
+import { __ } from "@wordpress/i18n";
+import { registerBlockType } from "@wordpress/blocks";
+import {
 	SelectControl,
-	Spinner,
 	TextControl,
 	RangeControl,
 	ColorPicker,
-	PanelColorSettings,
 	CheckboxControl,
 	TextareaControl,
-} = wp.components;
-const {
+} from "@wordpress/components";
+
+import {
 	InspectorControls,
 	InspectorAdvancedControls,
 	BlockControls,
 	AlignmentToolbar,
-} = wp.blockEditor;
-const { withSelect, setState } = wp.data;
-const { serverSideRender: ServerSideRender } = wp;
-const { Fragment } = wp.element;
+} from "@wordpress/block-editor";
+
+import { withSelect, setState } from "@wordpress/data";
+import ServerSideRender from "@wordpress/server-side-render";
+import { Fragment } from "@wordpress/element";
 
 let user_options = [];
 let display_options = [];
@@ -56,7 +58,8 @@ let DonateButton = "";
  * @return {?WPBlock}          The block, if it has been successfully
  *                             registered; otherwise `undefined`.
  */
-registerBlockType("author-avatars/show-avatar", {
+
+registerBlockType(metadata.name, {
 	/**
 	 * The edit function describes the structure of your block in the context of the editor.
 	 * This represents what the editor will render when the block is used.
