@@ -54,7 +54,7 @@ function author_avatar_editor_assets() { // phpcs:ignore
 	wp_enqueue_script(
 		'author-avatars-block-js', // Handle.
 		plugins_url( 'build/show-avatar/block.js', __DIR__ ), // Block.build.js: We register the block here. Built with Webpack.
-		array( 'wp-blocks', 'wp-i18n', 'wp-element' ), // Dependencies, defined above.
+		array( 'wp-blocks', 'wp-i18n', 'wp-element', 'wp-components', 'wp-block-editor', 'wp-data', 'wp-server-side-render' ), // Dependencies, defined above.
 		// filemtime( plugin_dir_path( __DIR__ ) . 'dist/blocks.build.js' ), // Version: File modification time.
 		true // Enqueue the script in the footer.
 	);
