@@ -4,13 +4,103 @@
 	"name": "author-avatars/show-avatar",
 	"version": "0.1.0",
 	"title": "Author Avatar List Block",
-	"category": "widgets",
+	"category": "common",
 	"icon": "businessman",
 	"description": "Author Avatar List Block.",
-  "supports": {
+	"supports": {
 		"html": false
 	},
 	"textdomain": "author-avatars-list-block",
+	"keywords": ["avatar", "Author Avatars", "profile pictures"],
+	"example": {
+		"attributes": {
+			"preview": true
+		}
+	},
+	"attributes": {
+		"size": {
+			"type": "number",
+			"default": 50
+		},
+		"email": {
+			"type": "string"
+		},
+		"alignment": {
+			"type": "string",
+			"default": "left"
+		},
+		"Options": {
+			"type": "array"
+		},
+		"link": {
+			"type": "string"
+		},
+		"display": {
+			"type": "object"
+		},
+		"role": {
+			"type": "object"
+		},
+		"blogs": {
+			"type": "object"
+		},
+		"sort_avatars_by": {
+			"type": "string",
+			"default": "display_name"
+		},
+		"sort_order": {
+			"type": "string"
+		},
+		"bio_length": {
+			"type": "number",
+			"default": 50
+		},
+		"user_id": {
+			"type": "number",
+			"default": 0
+		},
+		"limit": {
+			"type": "number"
+		},
+		"page_size": {
+			"type": "number"
+		},
+		"min_post_count": {
+			"type": "number"
+		},
+		"hidden_users": {
+			"type": "string"
+		},
+		"whitelist_users": {
+			"type": "string"
+		},
+		"background_color": {
+			"type": "string",
+			"default": "#fff"
+		},
+		"font_color": {
+			"type": "string",
+			"default": "#000"
+		},
+		"border_size": {
+			"type": "number",
+			"default": "0"
+		},
+		"border_color": {
+			"type": "string",
+			"default": "#000"
+		},
+		"border_radius": {
+			"type": "number",
+			"default": "0"
+		},
+		"block_style": {
+			"type": "string",
+			"selector": "div",
+			"source": "attribute",
+			"attribute": "style"
+		}
+	},
 	"editorScript": "file:./block.js",
 	"editorStyle": "file:./block.css",
 	"style": "file:./style.css"
