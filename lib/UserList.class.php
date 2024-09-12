@@ -802,7 +802,7 @@ class UserList {
 				 * @param string $title users nicename.
 				 * @param object $user The user object
 				 */
-				$title = apply_filters( 'aa_user_avatar_title', $title, $user );
+				$title = esc_attr( apply_filters( 'aa_user_avatar_title', $title, $user ) );
 //				$avatar = preg_replace( '@ ?\/>@', ' title="' . $title . '" />', $avatar );
 			}
 			if ( ! stripos( $avatar, 'alt=' ) ) {
@@ -813,7 +813,7 @@ class UserList {
 				 * @param string $alt users nicename.
 				 * @param object $user The user object
 				 */
-				$alt = apply_filters( 'aa_user_avatar_alt', $alt, $user );
+				$alt = esc_attr( apply_filters( 'aa_user_avatar_alt', $alt, $user ) );
 
 				$avatar = preg_replace( '@ ?/>@', ' alt="' . $alt . '"  />', $avatar );
 			}
@@ -830,7 +830,7 @@ class UserList {
 				 * @param string $alt users nicename.
 				 * @param object $user The user object
 				 */
-				$avatar_style = apply_filters( 'aa_user_avatar_style', $avatar_style, $user );
+				$avatar_style = esc_attr( apply_filters( 'aa_user_avatar_style', $avatar_style, $user ) );
 
 				$avatar = preg_replace( '@ ?/>@', ' style="' . $avatar_style . '"  />', $avatar );
 			}
@@ -858,7 +858,7 @@ class UserList {
 			 * @param string $avatar The HTML returned from get_avatar() etc.
 			 * @param object $user The user object
 			 */
-			$html .= sprintf( apply_filters( 'aa_user_avatar_template_with_title', '<span class="avatar" title="%s">%s</span>', $title, $avatar, $user ), $title, $avatar );
+			$html .= sprintf( apply_filters( 'aa_user_avatar_template_with_title', '<span class="avatar" title="%s">%s</span>', esc_attr( $title ), $avatar, $user ), esc_attr( $title ), $avatar );
 		} else {
 			$html .= sprintf( apply_filters( 'aa_user_avatar_template', '<span class="avatar">%s</span>', $avatar, $user ), $avatar );
 		}
@@ -871,7 +871,7 @@ class UserList {
 			 * @param string $name The value (users name) passed into the span
 			 * @param object $user The user object
 			 */
-			$html .= sprintf( apply_filters( 'aa_user_name_template', '<span class="name">%s</span>', $name, $user ), $name );
+			$html .= sprintf( apply_filters( 'aa_user_name_template', '<span class="name">%s</span>', $name , $user ), esc_html( $name ) );
 		}
 
 		if ( $link ) {
