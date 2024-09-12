@@ -23,7 +23,7 @@ function register_author_avatars_block() {
 	register_block_type(
 		__DIR__  . '/build/show-avatar', // Path to the block.json file to load the files we need.
 		array(
-			'render_callback' => 'callback',
+//			'render_callback' => 'callback',
 			'attributes'      => array(
 				'user_id'          => array(
 					'type' => 'number',

@@ -103,5 +103,6 @@
 	},
 	"editorScript": "file:./block.js",
 	"editorStyle": "file:./block.css",
-	"style": "file:./style.css"
+	"style": "file:./style.css",
+	"render": "file:./render.php"
 }

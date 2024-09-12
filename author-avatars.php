@@ -3,14 +3,14 @@
 Plugin Name: Author Avatars List/Block
 Plugin URI: http://authoravatars.wordpress.com/
 Description: Display lists of user avatars using <a href="widgets.php">widgets</a> ,<a href="https://authoravatars.wordpress.com/documentation/">shortcodes</a> and Gutenberg blocks.
-Version: 2.1.20
+Version: 2.1.21
 Author: Paul Bearne
 Text Domain: author-avatars
 Domain Path: /translations
 */
 
 // The current version of the author avatars plugin. Needs to be updated every time we do a version step.
-define( 'AUTHOR_AVATARS_VERSION', '2.1.20' );
+define( 'AUTHOR_AVATARS_VERSION', '2.1.21' );
 
 // List of all version that need an upgrade, used during update check. (Append new version to the end and write an update__10_11 method on AuthorAvatars class if needed)
 define( 'AUTHOR_AVATARS_VERSION_HISTORY', serialize( array(

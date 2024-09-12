@@ -13,6 +13,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _style_scss__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./style.scss */ "./src/show-avatar/style.scss");
 /* harmony import */ var _editor_scss__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./editor.scss */ "./src/show-avatar/editor.scss");
+/* harmony import */ var _block_json__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./block.json */ "./src/show-avatar/block.json");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _wordpress_blocks__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/blocks */ "@wordpress/blocks");
+/* harmony import */ var _wordpress_blocks__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
+/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var _wordpress_server_side_render__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @wordpress/server-side-render */ "@wordpress/server-side-render");
+/* harmony import */ var _wordpress_server_side_render__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_wordpress_server_side_render__WEBPACK_IMPORTED_MODULE_9__);
 
 /**
  * BLOCK: author-avatars
@@ -24,49 +37,27 @@ __webpack_require__.r(__webpack_exports__);
 //  Import CSS.
 
 
-const {
-  __
-} = wp.i18n; // Import __() from wp.i18n
-const {
-  registerBlockType
-} = wp.blocks; // Import registerBlockType() from wp.blocks
-const {
-  RadioControl,
-  Panel,
-  PanelBody,
-  PanelRow,
-  SelectControl,
-  Spinner,
-  TextControl,
-  RangeControl,
-  ColorPicker,
-  PanelColorSettings,
-  CheckboxControl,
-  TextareaControl
-} = wp.components;
-const {
-  InspectorControls,
-  InspectorAdvancedControls,
-  BlockControls,
-  AlignmentToolbar
-} = wp.blockEditor;
-const {
-  withSelect,
-  setState
-} = wp.data;
-const {
-  serverSideRender: ServerSideRender
-} = wp;
-const {
-  Fragment
-} = wp.element;
+
+// Import metadata from block.json
+
+
+/**
+ * Use imports
+ */
+
+
+
+
+
+
+
 let user_options = [];
 let display_options = [];
 let user_roles = [];
 let user_links = [];
 let sort_list = [];
 let blogs_list = [];
-let DonateButton = '';
+let DonateButton = "";
 
 /**
  * Register: aa Gutenberg Block.
@@ -81,113 +72,8 @@ let DonateButton = '';
  * @return {?WPBlock}          The block, if it has been successfully
  *                             registered; otherwise `undefined`.
  */
-registerBlockType('author-avatars/show-avatar', {
-  // Block name. Block names must be string that contains a namespace prefix. Example: my-plugin/my-custom-block.
-  title: __('Avatar Lists', 'author-avatars'),
-  // Block title.
-  icon: 'businessman',
-  // Block icon from Dashicons → https://developer.wordpress.org/resource/dashicons/.
-  category: 'common',
-  // Block category — Group blocks together based on common traits E.g. common, formatting, layout widgets, embed.
-  keywords: [__('avatar', 'author-avatars'), __('Author Avatars', 'author-avatars'), __('profile pictures', 'author-avatars')],
-  example: {
-    attributes: {
-      'preview': true
-    }
-  },
-  attributes: {
-    size: {
-      type: 'init',
-      default: 50
-    },
-    email: {
-      type: 'string'
-    },
-    alignment: {
-      type: 'string',
-      default: 'left'
-    },
-    Options: {
-      type: 'array'
-    },
-    link: {
-      type: 'string'
-    },
-    display: {
-      type: 'object'
-    },
-    role: {
-      type: 'object'
-    },
-    blogs: {
-      type: 'object'
-    },
-    sort_avatars_by: {
-      type: 'string',
-      default: 'display_name'
-    },
-    sort_order: {
-      type: 'string'
-    },
-    bio_length: {
-      type: 'init',
-      default: 50
-    },
-    user_id: {
-      type: 'init',
-      default: 0
-    },
-    limit: {
-      type: 'number'
-    },
-    page_size: {
-      type: 'number'
-    },
-    min_post_count: {
-      type: 'number'
-    },
-    hidden_users: {
-      type: 'string'
-    },
-    whitelist_users: {
-      type: 'string'
-    },
-    background_color: {
-      type: 'string',
-      default: '#fff' // Default value for newly added block
-    },
 
-    font_color: {
-      type: 'string',
-      default: '#000' // Default value for newly added block
-    },
-
-    border_size: {
-      type: 'number',
-      default: '0' // Default value for newly added block
-    },
-
-    border_color: {
-      type: 'string',
-      default: '#000' // Default value for newly added block
-    },
-
-    border_radius: {
-      type: 'number',
-      default: '0' // Default value for newly added block
-    },
-
-    // To storage the complete style of the div that will be 'merged' with the selected colours
-    block_style: {
-      type: 'string',
-      selector: 'div',
-      // From tag a
-      source: 'attribute',
-      // binds an attribute of the tag
-      attribute: 'style' // binds style of a: the dynamic colours
-    }
-  },
-
+(0,_wordpress_blocks__WEBPACK_IMPORTED_MODULE_5__.registerBlockType)(_block_json__WEBPACK_IMPORTED_MODULE_3__.name, {
   /**
    * The edit function describes the structure of your block in the context of the editor.
    * This represents what the editor will render when the block is used.
@@ -198,10 +84,10 @@ registerBlockType('author-avatars/show-avatar', {
    */
   //   edit: function (props, attributes, className) {
   // Creates a <p class='wp-block-cgb-block-author-avatars'></p>.
-  edit: withSelect(select => {
+  edit: (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_8__.withSelect)(select => {
     return {
       data: wp.apiFetch({
-        path: '/author_avatar/blocks/v1/data'
+        path: "/author_avatar/blocks/v1/data"
       }).then(data => {
         // console.log(data);
         user_options = data.users;
@@ -254,9 +140,9 @@ registerBlockType('author-avatars/show-avatar', {
       backgroundColor: background_color,
       color: font_color,
       borderColor: border_color,
-      borderWidth: border_size + 'px',
-      padding: '14px 25px',
-      fontSize: '16px'
+      borderWidth: border_size + "px",
+      padding: "14px 25px",
+      fontSize: "16px"
     };
 
     // /wp-json/wp/v2/users
@@ -354,7 +240,7 @@ registerBlockType('author-avatars/show-avatar', {
         border_radius: content
       });
     }
-    const display = 'display' in attributes ? attributes.display : new Object();
+    const display = "display" in attributes ? attributes.display : new Object();
     const DisplayCheckBoxes = wp.compose.withState({
       checked_obj: Object.assign(new Object(), display)
     })(_ref => {
@@ -365,7 +251,7 @@ registerBlockType('author-avatars/show-avatar', {
       } = _ref;
       return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, (_display_options = display_options) === null || _display_options === void 0 ? void 0 : _display_options.map(v => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
         key: v.value
-      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(CheckboxControl, {
+      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.CheckboxControl, {
         className: "check_items",
         label: v.label,
         checked: checked_obj[v.value],
@@ -380,7 +266,7 @@ registerBlockType('author-avatars/show-avatar', {
         }
       }))));
     });
-    const role = 'role' in attributes ? attributes.role : new Object();
+    const role = "role" in attributes ? attributes.role : new Object();
     const RolesCheckBoxes = wp.compose.withState({
       checked_obj: Object.assign(new Object(), role)
     })(_ref2 => {
@@ -391,7 +277,7 @@ registerBlockType('author-avatars/show-avatar', {
       } = _ref2;
       return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, (_user_roles = user_roles) === null || _user_roles === void 0 ? void 0 : _user_roles.map(v => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
         key: v.value
-      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(CheckboxControl, {
+      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.CheckboxControl, {
         className: "check_items",
         label: v.label,
         checked: checked_obj[v.value],
@@ -406,7 +292,7 @@ registerBlockType('author-avatars/show-avatar', {
         }
       }))));
     });
-    const blogs = 'blogs' in attributes ? attributes.blogs : new Object();
+    const blogs = "blogs" in attributes ? attributes.blogs : new Object();
     const BlogsCheckBoxes = wp.compose.withState({
       checked_obj: Object.assign(new Object(), role)
     })(_ref3 => {
@@ -417,7 +303,7 @@ registerBlockType('author-avatars/show-avatar', {
       } = _ref3;
       return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, (_blogs_list = blogs_list) === null || _blogs_list === void 0 ? void 0 : _blogs_list.map(v => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
         key: v.value
-      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(CheckboxControl, {
+      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.CheckboxControl, {
         className: "check_items",
         label: v.label,
         checked: checked_obj[v.value],
@@ -442,7 +328,7 @@ registerBlockType('author-avatars/show-avatar', {
     // 	});
     // }
     if (preview) {
-      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
+      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
         className: "author-avatars-preview",
         src: authorAvatars.wppic_preview
       }));
@@ -453,151 +339,151 @@ registerBlockType('author-avatars/show-avatar', {
     // 	return <p>{__('Select the resort in the sidebar, 'mvc' ) }</p>;
     // 	}
     // the server side block with the tax object getting passed
-    return [(0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(InspectorControls, {
-      key: '000'
+    return [(0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_7__.InspectorControls, {
+      key: "000"
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "author-avatar-components-panel"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(SelectControl, {
-      label: __('User or Email addrerss/user_id or Roles', 'author-avatar'),
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.SelectControl, {
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("User or Email addrerss/user_id or Roles", "author-avatar"),
       name: "user_id",
       value: user_id,
       options: user_options,
       onChange: onChangeUser
-    }), -1 == user_id && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(TextControl, {
+    }), -1 == user_id && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.TextControl, {
       label: "Custom email / id",
-      type: 'text',
+      type: "text",
       value: email,
       onChange: onChangeEmail
-    }), 0 == user_id && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
+    }), 0 == user_id && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
       className: "blocks-base-control__label"
-    }, __('Which Roles to display:', 'author-avatar')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(RolesCheckBoxes, null)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Which Roles to display:", "author-avatar")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(RolesCheckBoxes, null)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
       className: "blocks-base-control__label"
-    }, __('Info to show with avatar:', 'author-avatar')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(DisplayCheckBoxes, null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(SelectControl, {
-      label: __('Link avatars to', 'author-avatar'),
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Info to show with avatar:", "author-avatar")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(DisplayCheckBoxes, null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.SelectControl, {
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Link avatars to", "author-avatar"),
       value: link,
       options: user_links,
       onChange: onChangelink
-    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(SelectControl, {
-      label: __('Sort by', 'author-avatar'),
+    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.SelectControl, {
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Sort by", "author-avatar"),
       value: sort_avatars_by,
       options: sort_list,
       onChange: onChangeSortBy
-    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(SelectControl, {
-      label: __('Sort order', 'author-avatar'),
+    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.SelectControl, {
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Sort order", "author-avatar"),
       value: sort_order,
       options: [{
-        label: 'Ascending',
-        value: 'asc'
+        label: "Ascending",
+        value: "asc"
       }, {
-        label: 'Descending',
-        value: 'desc'
+        label: "Descending",
+        value: "desc"
       }],
       onChange: onChangeSortOrder
-    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(RangeControl, {
+    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.RangeControl, {
       label: "Avatar Size",
       value: size,
       onChange: onChangeSize,
       min: 10,
       max: 500,
       initialPosition: 50,
-      beforeIcon: 'businessman'
-    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(RangeControl, {
+      beforeIcon: "businessman"
+    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.RangeControl, {
       label: "Avatar Corner size",
       value: border_radius,
       onChange: onChangeBorderRadius,
       min: 0,
       max: 50,
       initialPosition: 0,
-      beforeIcon: 'buddicons-buddypress-logo'
+      beforeIcon: "buddicons-buddypress-logo"
     }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
       className: "blocks-base-control__label"
-    }, __('Background color', 'author-avatar')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ColorPicker // Element Tag for Gutenberg standard colour selector
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Background color", "author-avatar")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.ColorPicker // Element Tag for Gutenberg standard colour selector
     , {
       color: background_color,
       enableAlpha: true,
-      label: __('Background color', 'author-avatar'),
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Background color", "author-avatar"),
       defaultValue: "#000",
       onChange: onChangeBgColor // onChange event callback
     }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
       className: "blocks-base-control__label"
-    }, __('Font color', 'author-avatar')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ColorPicker // Element Tag for Gutenberg standard colour selector
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Font color", "author-avatar")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.ColorPicker // Element Tag for Gutenberg standard colour selector
     , {
       color: font_color,
-      label: __('Font color', 'author-avatar'),
-      title: __('Font color', 'author-avatar'),
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Font color", "author-avatar"),
+      title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Font color", "author-avatar"),
       defaultValue: "#fff",
       onChange: onChangeFontColor // onChange event callback
-    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(RangeControl, {
+    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.RangeControl, {
       label: "Border size",
       value: border_size,
       onChange: onChangeBorderSize,
       min: 0,
       max: 50,
       initialPosition: 0,
-      beforeIcon: 'buddicons-buddypress-logo'
+      beforeIcon: "buddicons-buddypress-logo"
     }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
       className: "blocks-base-control__label"
-    }, __('Border color', 'author-avatar')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ColorPicker // Element Tag for Gutenberg standard colour selector
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Border color", "author-avatar")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.ColorPicker // Element Tag for Gutenberg standard colour selector
     , {
       color: border_color,
-      label: __('Font color', 'author-avatar'),
-      title: __('Font color', 'author-avatar'),
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Font color", "author-avatar"),
+      title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Font color", "author-avatar"),
       defaultValue: "#fff",
       onChange: onChangeBorderColor // onChange event callback
-    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-      className: 'donate',
-      href: 'https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=MZTZ5S8MGF75C&lc=CA&item_name=Author%20Avatars%20Plugin%20Support&item_number=authoravatars&currency_code=CAD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted',
-      target: '_donante'
+    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+      className: "donate",
+      href: "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=MZTZ5S8MGF75C&lc=CA&item_name=Author%20Avatars%20Plugin%20Support&item_number=authoravatars&currency_code=CAD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted",
+      target: "_donante"
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
-      alt: 'Donate to support Plugin',
+      alt: "Donate to support Plugin",
       src: "https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif"
     }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
       className: "blocks-base-control__label"
-    }, __('More options in Adavanced:', 'author-avatar'))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(InspectorAdvancedControls, {
-      key: '111'
-    }, true === display.show_biography && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(RangeControl, {
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("More options in Adavanced:", "author-avatar"))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_7__.InspectorAdvancedControls, {
+      key: "111"
+    }, true === display.show_biography && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.RangeControl, {
       label: "bio_length",
       value: bio_length,
       onChange: onChangebio_length,
       min: 10,
       max: 200,
       initialPosition: 50
-    }), 0 == user_id && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(TextControl, {
-      label: __('Max. avatars shown:', 'author-avatar'),
-      type: 'number',
+    }), 0 == user_id && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.TextControl, {
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Max. avatars shown:", "author-avatar"),
+      type: "number",
       value: limit,
-      name: 'limit',
+      name: "limit",
       onChange: onChangeLimit
-    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(TextControl, {
-      label: __('Max. avatars per page:', 'author-avatar'),
-      type: 'number',
+    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.TextControl, {
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Max. avatars per page:", "author-avatar"),
+      type: "number",
       value: page_size,
-      name: 'limit',
+      name: "limit",
       onChange: onChangePageSize
-    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(TextControl, {
-      label: __('Required number of posts:', 'author-avatar'),
-      type: 'number',
+    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.TextControl, {
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Required number of posts:", "author-avatar"),
+      type: "number",
       value: min_post_count,
-      name: 'limit',
+      name: "limit",
       onChange: onChangeMinPosts
-    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(TextareaControl, {
-      label: __('Hidden users', 'author-avatar'),
-      help: __('(Comma separate list of user login ids. Hidden user are removed before the white list)', 'author-avatar'),
+    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.TextareaControl, {
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Hidden users", "author-avatar"),
+      help: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("(Comma separate list of user login ids. Hidden user are removed before the white list)", "author-avatar"),
       value: hidden_users,
       onChange: onChangeHiddenUsers
-    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(TextareaControl, {
-      label: __('White List of users:', 'author-avatar'),
-      help: __('(0nly show these users, Comma separate list of user login ids)', 'author-avatar'),
+    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.TextareaControl, {
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("White List of users:", "author-avatar"),
+      help: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("(0nly show these users, Comma separate list of user login ids)", "author-avatar"),
       value: whitelist_users,
       onChange: onChangeWhitelistUsers
     }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(BlogsCheckBoxes, null))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: className,
       style: block_style,
-      key: '222'
-    }, !!focus && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(BlockControls, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(AlignmentToolbar, {
+      key: "222"
+    }, !!focus && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_7__.BlockControls, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_7__.AlignmentToolbar, {
       value: alignment,
       onChange: onChangeAlignment
-    })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ServerSideRender, {
+    })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)((_wordpress_server_side_render__WEBPACK_IMPORTED_MODULE_9___default()), {
       block: "author-avatars/show-avatar",
       attributes: attributes
     }))];
@@ -642,6 +528,46 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "@wordpress/block-editor":
+/*!*************************************!*\
+  !*** external ["wp","blockEditor"] ***!
+  \*************************************/
+/***/ (function(module) {
+
+module.exports = window["wp"]["blockEditor"];
+
+/***/ }),
+
+/***/ "@wordpress/blocks":
+/*!********************************!*\
+  !*** external ["wp","blocks"] ***!
+  \********************************/
+/***/ (function(module) {
+
+module.exports = window["wp"]["blocks"];
+
+/***/ }),
+
+/***/ "@wordpress/components":
+/*!************************************!*\
+  !*** external ["wp","components"] ***!
+  \************************************/
+/***/ (function(module) {
+
+module.exports = window["wp"]["components"];
+
+/***/ }),
+
+/***/ "@wordpress/data":
+/*!******************************!*\
+  !*** external ["wp","data"] ***!
+  \******************************/
+/***/ (function(module) {
+
+module.exports = window["wp"]["data"];
+
+/***/ }),
+
 /***/ "@wordpress/element":
 /*!*********************************!*\
   !*** external ["wp","element"] ***!
@@ -649,6 +575,36 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module) {
 
 module.exports = window["wp"]["element"];
+
+/***/ }),
+
+/***/ "@wordpress/i18n":
+/*!******************************!*\
+  !*** external ["wp","i18n"] ***!
+  \******************************/
+/***/ (function(module) {
+
+module.exports = window["wp"]["i18n"];
+
+/***/ }),
+
+/***/ "@wordpress/server-side-render":
+/*!******************************************!*\
+  !*** external ["wp","serverSideRender"] ***!
+  \******************************************/
+/***/ (function(module) {
+
+module.exports = window["wp"]["serverSideRender"];
+
+/***/ }),
+
+/***/ "./src/show-avatar/block.json":
+/*!************************************!*\
+  !*** ./src/show-avatar/block.json ***!
+  \************************************/
+/***/ (function(module) {
+
+module.exports = JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":2,"name":"author-avatars/show-avatar","version":"0.1.0","title":"Author Avatar List Block","category":"common","icon":"businessman","description":"Author Avatar List Block.","supports":{"html":false},"textdomain":"author-avatars-list-block","keywords":["avatar","Author Avatars","profile pictures"],"example":{"attributes":{"preview":true}},"attributes":{"size":{"type":"number","default":50},"email":{"type":"string"},"alignment":{"type":"string","default":"left"},"Options":{"type":"array"},"link":{"type":"string"},"display":{"type":"object"},"role":{"type":"object"},"blogs":{"type":"object"},"sort_avatars_by":{"type":"string","default":"display_name"},"sort_order":{"type":"string"},"bio_length":{"type":"number","default":50},"user_id":{"type":"number","default":0},"limit":{"type":"number"},"page_size":{"type":"number"},"min_post_count":{"type":"number"},"hidden_users":{"type":"string"},"whitelist_users":{"type":"string"},"background_color":{"type":"string","default":"#fff"},"font_color":{"type":"string","default":"#000"},"border_size":{"type":"number","default":"0"},"border_color":{"type":"string","default":"#000"},"border_radius":{"type":"number","default":"0"},"block_style":{"type":"string","selector":"div","source":"attribute","attribute":"style"}},"editorScript":"file:./block.js","editorStyle":"file:./block.css","style":"file:./style.css","render":"file:./render.php"}');
 
 /***/ })
 

@@ -322,7 +322,7 @@ class ShowAvatarShortcode {
 		}
 
 
-		return '<div class="shortcode-show-avatar ' . $extraClass . '"style="' . $style . '" >' . $hrefStart . $avatar . $name . $last_post . $hrefend . $bio . $email . '</div>' . $content;
+		return '<div class="shortcode-show-avatar ' . $extraClass . '"style="' . $style . '" >' . $hrefStart . $avatar . esc_html( $name ) . esc_html( $last_post ) . $hrefend . $bio . esc_html( $email ) . '</div>' . $content;
 	}
 
 
