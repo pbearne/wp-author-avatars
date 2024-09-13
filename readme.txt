@@ -72,6 +72,10 @@ If you have added CSS to your theme you may have to update it for this upgrade (
 7. Advance Gutenberg blocks options
 
 == Changelog ==
+
+2.1.23
+Addjusted where the late escaping happened for the avatar name
+
 2.1.22
 Added late escaping to avatar name
 

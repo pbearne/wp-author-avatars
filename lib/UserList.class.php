@@ -560,7 +560,7 @@ class UserList {
 			}
 
 			$divcss[] = 'with-biography bio-length-' . $this->bio_length;
-			$name     = '<strong>' . $name . '</strong>';
+			$name     = '<strong>' . esc_html( $name ) . '</strong>';
 			if ( empty( $biography ) ) {
 				$divcss[] = 'biography-missing';
 			}
@@ -871,7 +871,7 @@ class UserList {
 			 * @param string $name The value (users name) passed into the span
 			 * @param object $user The user object
 			 */
-			$html .= sprintf( apply_filters( 'aa_user_name_template', '<span class="name">%s</span>', $name , $user ), esc_html( $name ) );
+			$html .= sprintf( apply_filters( 'aa_user_name_template', '<span class="name">%s</span>', $name , $user ), $name );
 		}
 
 		if ( $link ) {
