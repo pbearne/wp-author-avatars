@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=MZTZ5
 Tags: block, Avatar, Author, Image, Profile
 Requires at least: 3.0
 Tested up to: 6.6.2
-Stable tag: 2.1.22
+Stable tag: 2.1.23
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
