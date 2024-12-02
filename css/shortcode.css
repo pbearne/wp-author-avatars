@@ -1,7 +1,8 @@
 .shortcode-author-avatars .author-list {
-    float: left;
+    /*float: left;*/
     width: 100%;
     padding-bottom: 1.5em;
+    display: inline-block;
 }
 
 .shortcode-author-avatars div.author-list .user {
@@ -9,6 +10,9 @@
     float: left;
     padding: 0.2em;
     text-align: center;
+}
+.shortcode-author-avatars div.author-list .user a {
+    color: inherit;
 }
 
 .shortcode-author-avatars div.author-list .user .avatar img {
@@ -50,6 +54,7 @@
     padding: 2px 4px;
     border: 1px #BFBFBF solid;
     margin: 0 2px;
+    color: inherit;
 }
 
 .shortcode-author-avatars div.aa_pageList a.current, .shortcode-author-avatars div.aa_pageList a:hover {

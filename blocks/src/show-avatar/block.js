@@ -150,6 +150,10 @@ registerBlockType('author-avatars/show-avatar', {
 			type: 'number',
 			default: '0', // Default value for newly added block
 		},
+		avatar_radius: {
+			type: 'number',
+			default: '0', // Default value for newly added block
+		},
 		// To storage the complete style of the div that will be 'merged' with the selected colours
 		block_style: {
 			type: 'string',
@@ -201,6 +205,7 @@ registerBlockType('author-avatars/show-avatar', {
 			var sort_avatars_by = props.attributes.sort_avatars_by;
 			var sort_order = props.attributes.sort_order;
 			var border_radius = props.attributes.border_radius;
+			var avatar_radius = props.attributes.avatar_radius;
 			var size = props.attributes.size;
 			var bio_length = props.attributes.bio_length;
 			var page_size = props.attributes.page_size;
@@ -221,6 +226,7 @@ registerBlockType('author-avatars/show-avatar', {
 				color: font_color,
 				borderColor: border_color,
 				borderWidth: border_size +'px',
+				borderRadius: border_radius +'px',
 				padding: '14px 25px',
 				fontSize: '16px',
 			};
@@ -246,7 +252,6 @@ registerBlockType('author-avatars/show-avatar', {
 			function onChangeBorderSize(content) {
 				props.setAttributes({border_size: content})
 			}
-
 			function onChangelink(content) {
 				props.setAttributes({link: content})
 			}
@@ -303,6 +308,9 @@ registerBlockType('author-avatars/show-avatar', {
 				props.setAttributes({border_radius: content});
 			}
 
+			function onChangeAvatarRadius(content) {
+				props.setAttributes({avatar_radius: content});
+			}
 
 			const display = ('display' in attributes) ? attributes.display : new Object
 			const DisplayCheckBoxes = wp.compose.withState({
@@ -462,8 +470,8 @@ registerBlockType('author-avatars/show-avatar', {
 
 						<RangeControl
 							label="Avatar Corner size"
-							value={border_radius}
-							onChange={onChangeBorderRadius}
+							value={avatar_radius}
+							onChange={onChangeAvatarRadius}
 							min={0}
 							max={50}
 							initialPosition={0}
@@ -492,6 +500,15 @@ registerBlockType('author-avatars/show-avatar', {
 							onChange={onChangeBorderSize}
 							min={0}
 							max={50}
+							initialPosition={0}
+							beforeIcon={'buddicons-buddypress-logo'}
+						/>
+						<RangeControl
+							label="Border Corner size"
+							value={border_radius}
+							onChange={onChangeBorderRadius}
+							min={0}
+							max={100}
 							initialPosition={0}
 							beforeIcon={'buddicons-buddypress-logo'}
 						/>

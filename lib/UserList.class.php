@@ -92,9 +92,13 @@ class UserList {
 	var $display_extra = array();
 
 	/**
-	 * Size of avatar border_radius.
+	 * Size of border_radius.
 	 */
 	var $border_radius = 0;
+	/**
+	 * Size of avatar border_radius.
+	 */
+	var $avatar_radius = 0;
 	/**
 	 * Size of avatar border_radius.
 	 */
@@ -377,14 +381,14 @@ class UserList {
 
 		$name = '';
 		if ( $this->show_name ) {
-			$name = $user->display_name;
+			$name = esc_html( $user->display_name );
 		}
 
 		$alt = $title = $name;
 
 		$divcss = array( 'user' );
 		if ( $this->show_name ) {
-			$name = $user->display_name;
+			$name = esc_html( $user->display_name );
 			$divcss[] = 'with-name';
 			$divcss = apply_filters( 'aa_show_name_css', $divcss, $user->display_name );
 		}
@@ -398,7 +402,7 @@ class UserList {
 				$nickname = sprintf( apply_filters( 'AA_nickname_with_name_wrap', ' (%s)' ),  $nickname );
 			}
 
-			$name .= $nickname;
+			$name .= esc_html( $nickname );
 			$divcss[] = 'with-nickname';
 		}
 
@@ -560,7 +564,7 @@ class UserList {
 			}
 
 			$divcss[] = 'with-biography bio-length-' . $this->bio_length;
-			$name     = '<strong>' . esc_html( $name ) . '</strong>';
+			$name     = '<strong>' . $name . '</strong>';
 			if ( empty( $biography ) ) {
 				$divcss[] = 'biography-missing';
 			}
@@ -821,8 +825,8 @@ class UserList {
 
 			if ( ! stripos( $avatar, 'style=' ) ) {
 				$avatar_style = '';
-				if ( ! empty( $this->border_radius ) ) {
-					$avatar_style .= ' border-radius:' . absint( $this->border_radius ) . '%;';
+				if ( ! empty( $this->avatar_radius ) ) {
+					$avatar_style .= ' border-radius:' . absint( $this->avatar_radius ) . '%;';
 				}
 				/**
 				 * filter the avatar alt

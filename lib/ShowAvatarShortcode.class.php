@@ -311,14 +311,14 @@ class ShowAvatarShortcode {
 			$style .= $style;
 		}
 		if ( ! empty( $atts['background_color'] ) ) {
-			$style .= ' background-color:' . $atts['background_color'] . ';';
+			$style .= ' background-color:' . sanitize_hex_color( $atts['background_color'] ) . ';';
 		}
 
 		if ( ! empty( $atts['font_color'] ) ) {
-			$style .= ' color:' . $atts['font_color'] . ';';
-			$hrefStart =  preg_replace( '@<a @', '<a style="color:' . $atts['font_color']  . ';"', $hrefStart );
-			$last_post =  preg_replace( '@<a @', '<a style="color:' . $atts['font_color']  . ';"', $last_post );
-			$email =  preg_replace( '@<a @', '<a style="color:' . $atts['font_color']  . ';"', $email );
+			$style .= ' color:' . sanitize_hex_color( $atts['font_color'] ) . ';';
+			$hrefStart =  preg_replace( '@<a @', '<a style="color:' . sanitize_hex_color( $atts['font_color'] )  . ';"', $hrefStart );
+			$last_post =  preg_replace( '@<a @', '<a style="color:' . sanitize_hex_color( $atts['font_color'] )  . ';"', $last_post );
+			$email =  preg_replace( '@<a @', '<a style="color:' . sanitize_hex_color( $atts['font_color'] )  . ';"', $email );
 		}
 
 

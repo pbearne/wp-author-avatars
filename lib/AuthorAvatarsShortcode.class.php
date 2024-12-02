@@ -31,7 +31,7 @@ class AuthorAvatarsShortcode {
 	 *
 	 * @return string
 	 */
-	public function shortcode_handler($atts, $content = null ) {
+	public function shortcode_handler( $atts, $content = null ) {
 		require_once( 'UserList.class.php' );
         wp_enqueue_style( 'author-avatars-shortcode' );
 		$this->userlist = new UserList();
@@ -165,7 +165,12 @@ class AuthorAvatarsShortcode {
 				$this->userlist->avatar_size = $size;
 			}
 		}
-
+		if ( ! empty( $atts['avatar_radius'] ) ) {
+			$avatar_radius = (int) $atts['avatar_radius'];
+			if ( $avatar_radius > 0 ) {
+				$this->userlist->avatar_radius = $avatar_radius;
+			}
+		}
 		if ( ! empty( $atts['border_radius'] ) ) {
 			$border_radius = (int) $atts['border_radius'];
 			if ( $border_radius > 0 ) {
@@ -246,8 +251,35 @@ class AuthorAvatarsShortcode {
 				$this->userlist->use_list_template();
 			}
 		}
+		$style = [];
+		if ( ! empty( $atts['border_radius'] ) ) {
+			$style[] = sprintf( "border-radius:%dpx;",  $atts['border_radius'] );
+		}
+		if ( ! empty( $atts['background_color'] ) ) {
+			$style[] = sprintf( "background-color:%s;", sanitize_hex_color( $atts['background_color'] ) );
+		}
+		if ( ! empty( $atts['font_color'] ) ) {
+			$style[] = sprintf( "color:%s;", sanitize_hex_color( $atts['font_color'] ) );
+		}
+		if ( ! empty( $atts['border_size'] ) ) {
+			$style[] = sprintf( "border:solid transparent %dpx;", $atts['border_size'] );
+		}
+		if ( ! empty( $atts['border_color'] ) ) {
+			$style[] = sprintf( "border-color:%s;", sanitize_hex_color( $atts['border_color'] ) );
+		}
+		if ( ! empty( $atts['align'] ) ) {
+			switch ( $atts['align'] ) {
+				case 'right':
+					$style[] = 'padding-right: 0.4em;';
+					break;
+				case 'center':
+					break;
+			}
+		} else {
+			$style[] = 'padding-left: 0.2em;';
+		}
 
-		$return = '<div class="shortcode-author-avatars">' . $this->userlist->get_output() . $content . $this->userlist->pagingHTML . '</div>';
+		$return = '<div class="shortcode-author-avatars" style="'. implode(' ', $style ).'">' . $this->userlist->get_output() . $content . $this->userlist->pagingHTML . '</div>';
 		if ( $switch_back_to_blog_id ) {
 			switch_to_blog($switch_back_to_blog_id);
 		}

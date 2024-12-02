@@ -83,6 +83,9 @@ class Render {
 				'border_radius'    => array(
 					'type' => 'number',
 				),
+				'avatar_radius'    => array(
+					'type' => 'number',
+				),
 				'sort'             => array(
 					'type' => 'string',
 				),
@@ -130,18 +133,22 @@ class Render {
 			}
 		}
 
-
+//var_dump($attributes);
 		$atts = array(
 			'avatar_size'      => ( isset( $attributes['size'] ) ) ? esc_attr( $attributes['size'] ) : false,
 			'max_bio_length'   => (int) ( isset( $attributes['bio_length'] ) ) ? esc_attr( $attributes['bio_length'] ) : - 1,
 			'align'            => ( isset( $attributes['alignment'] ) ) ? esc_attr( $attributes['alignment'] ) : '',
 			'user_link'        => ( isset( $attributes['link'] ) ) ? esc_attr( $attributes['link'] ) : 'none',
-			'border_radius'    => ( isset( $attributes['border_radius'] ) ) ? esc_attr( $attributes['border_radius'] ) : '',
-			'background_color' => ( isset( $attributes['background_color'] ) ) ? esc_attr( $attributes['background_color']) : '',
-			'font_color'       => ( isset( $attributes['font_color'] ) ) ? esc_attr( $attributes['font_color'] ) : '',
-			'border_color'     => ( isset( $attributes['border_color'] ) ) ? esc_attr( $attributes['border_color'] ) : '',
-			'border_size'      => (int) ( isset( $attributes['border_size'] ) ) ? esc_attr( $attributes['border_size'] ) : 0,
+			'avatar_radius'    => ( isset( $attributes['avatar_radius'] ) ) ? esc_attr( $attributes['avatar_radius'] ) : 0,
+
 		);
+		if( !  ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ){
+			$atts['border_radius']    = ( isset( $attributes['border_radius'] ) ) ? esc_attr( $attributes['border_radius'] ) : '';
+			$atts['background_color'] = ( isset( $attributes['background_color'] ) ) ? esc_attr( $attributes['background_color']) : '';
+			$atts['font_color']       = ( isset( $attributes['font_color'] ) ) ? esc_attr( $attributes['font_color'] ) : '';
+			$atts['border_color']     = ( isset( $attributes['border_color'] ) ) ? esc_attr( $attributes['border_color'] ) : '';
+			$atts['border_size']      = (int) ( isset( $attributes['border_size'] ) ) ? esc_attr( $attributes['border_size'] ) : 0;
+		}
 
 		if ( isset( $attributes['display'] ) ) {
 			foreach ( $attributes['display'] as $key => $value ) {

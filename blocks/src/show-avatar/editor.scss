@@ -27,12 +27,9 @@
   .shortcode-author-avatars {
 	a {
 	  font-size: 1rem;
-
+	  color: inherit;
 	}
-
   }
-
-
 }
 
 
@@ -94,6 +91,7 @@
   padding: 2px 4px;
   border: 1px #BFBFBF solid;
   margin: 0 2px;
+  color: inherit;
 }
 
 .shortcode-author-avatars div.aa_pageList a.current, .shortcode-author-avatars div.aa_pageList a:hover {

@@ -72,6 +72,10 @@
       "type": "number",
       "default": "0"
     },
+    "avatar_radius": {
+      "type": "number",
+      "default": "0"
+    },
     "border_color": {
       "type": "string",
       "default": "#000"
