@@ -841,7 +841,10 @@ class UserList {
 
 
 		}
-
+		if ( apply_filters( 'aa_user_avatar_lazy_load', true, $avatar, $user ) ) {
+			// add the lazy loading tag
+			$avatar = preg_replace( '@ ?/>@', ' loading="lazy" />', $avatar );
+		}
 
 		/**
 		 * filter the avatar

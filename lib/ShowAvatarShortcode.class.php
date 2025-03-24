@@ -103,6 +103,10 @@ class ShowAvatarShortcode {
 			$avatar = preg_replace( '@ ?\/>@', ' style="' . $avatar_style . '"  />', $avatar );
 		}
 
+		if ( apply_filters( 'aa_user_avatar_lazy_load', true, $avatar, $id ) ) {
+			// add the lazy loading tag
+			$avatar = preg_replace( '@ ?/>@', ' loading="lazy" />', $avatar );
+		}
 
 		if ( ! empty( $atts['user_link'] )
 		     || ! empty( $atts['show_biography'] )
