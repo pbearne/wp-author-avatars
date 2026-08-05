@@ -7,6 +7,40 @@
 .author-avatar-components-panel {
   padding: 16px;
 
+  .author-avatars-border-control-wrapper {
+	margin-bottom: 24px;
+  }
+
+  .author-avatars-inline-unit-controls {
+	display: flex;
+	gap: 16px;
+	align-items: flex-start;
+
+	&.components-panel__row {
+	  margin-bottom: 8px;
+	  height: auto;
+	  min-height: 0;
+
+	  &:last-of-type {
+		margin-bottom: 0;
+	  }
+	}
+
+	.components-base-control {
+	  flex: 1;
+	  margin-bottom: 0;
+
+	  .components-base-control__field {
+		margin-bottom: 0;
+	  }
+
+	  .components-input-control__container {
+		// Ensure the unit control doesn't overflow
+		width: 100%;
+	  }
+	}
+  }
+
   .donate {
 	display: block;
 	text-align: center;
@@ -23,11 +57,18 @@
 
 .wp-block-author-avatars-show-avatar {
   display: flow-root;
+  background: none !important;
+  border: none !important;
+  color: inherit !important;
 
   .shortcode-author-avatars {
 	a {
 	  font-size: 1rem;
-	  color: inherit;
+	  color: var(--aa-card-link-color, inherit);
+
+	  &:hover {
+		color: var(--aa-card-link-hover-color, var(--aa-card-link-color, inherit));
+	  }
 	}
   }
 }
@@ -41,19 +82,16 @@
 //  max-width: 740px;
 //  padding: 2rem;
 //}
-//.shortcode-author-avatars .author-list {
-//  float: left;
-//  width: 100%;
-//  padding-bottom: 1.5em;
-//}
-//
-//.shortcode-author-avatars div.author-list .user {
-//  display: block;
-//  float: left;
-//  padding: 0.2em;
-//  text-align: center;
-//}
+.shortcode-author-avatars .author-list {
+  display: inline-block;
+  width: 100%;
+  padding-bottom: 1.5em;
+}
+
 .shortcode-author-avatars div.author-list .user {
+  display: block;
+  float: left;
+  padding: 0.2em;
   text-align: center;
 
   .name {

@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=MZTZ5
 Tags: block, Avatar, Author, Image, Profile
 Requires at least: 3.0
 Tested up to: 7.0.0
-Stable tag: 2.1.26
+Stable tag: 2.1.27
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -72,6 +72,13 @@ If you have added CSS to your theme you may have to update it for this upgrade (
 7. Advance Gutenberg blocks options
 
 == Changelog ==
+2.1.27
+Update blocks to use the new block editor controls
+Bumped WP VERSION
+
+2.1.26
+Bumped WP VERSION
+
 2.1.25
 Added lazy loading tag to avatars
 Can be overriden with filter aa_user_avatar_lazy_load set to false

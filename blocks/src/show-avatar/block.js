@@ -8,12 +8,11 @@
 //  Import CSS.
 import './style.scss';
 import './editor.scss';
+import metadata from './block.json';
 
-const {__} = wp.i18n; // Import __() from wp.i18n
-const {
-	registerBlockType
-} = wp.blocks; // Import registerBlockType() from wp.blocks
-const {
+import { __ } from '@wordpress/i18n';
+import { registerBlockType } from '@wordpress/blocks';
+import {
 	RadioControl,
 	Panel,
 	PanelBody,
@@ -23,27 +22,53 @@ const {
 	TextControl,
 	RangeControl,
 	ColorPicker,
-	PanelColorSettings,
 	CheckboxControl,
-	TextareaControl
-} = wp.components;
-const {
+	TextareaControl,
+} from '@wordpress/components';
+import {
 	InspectorControls,
 	InspectorAdvancedControls,
 	BlockControls,
-	AlignmentToolbar
-} = wp.blockEditor;
-const {withSelect, setState} = wp.data;
-const {serverSideRender: ServerSideRender} = wp;
-const {Fragment} = wp.element;
+	AlignmentToolbar,
+	PanelColorSettings,
+	useBlockProps,
+} from '@wordpress/block-editor';
+import { Fragment, useState, useEffect } from '@wordpress/element';
+import apiFetch from '@wordpress/api-fetch';
+import _ServerSideRender from '@wordpress/server-side-render';
 
-let user_options = [];
-let display_options = [];
-let user_roles = [];
-let user_links = [];
-let sort_list = [];
-let blogs_list = [];
-let DonateButton = '';
+const PanelColorSettingsEditor = PanelColorSettings || wp.editor?.PanelColorSettings || (() => null);
+const ServerSideRender = _ServerSideRender || wp.components?.ServerSideRender || (() => null);
+const UnitControl = wp.components?.__experimentalUnitControl || wp.components?.UnitControl || (() => null);
+const BoxControl = wp.components?.__experimentalBoxControl || wp.components?.BoxControl || (() => null);
+const BorderControl = wp.components?.__experimentalBorderControl || wp.components?.BorderControl || (() => null);
+const BorderRadiusControl = wp.components?.__experimentalBorderRadiusControl || wp.components?.BorderRadiusControl || (() => null);
+
+const MultiCheckboxControl = ( { label, options, selected, onChange } ) => (
+	<Fragment>
+		{ label && <label className="blocks-base-control__label">{ label }</label> }
+		<ul>
+			{ options?.map( ( v ) => (
+				<li key={ v.value }>
+					<CheckboxControl
+						className="check_items"
+						label={ v.label }
+						checked={ !! selected[ v.value ] }
+						onChange={ ( check ) => {
+							const newSelected = { ...selected };
+							if ( check ) {
+								newSelected[ v.value ] = true;
+							} else {
+								delete newSelected[ v.value ];
+							}
+							onChange( newSelected );
+						} }
+					/>
+				</li>
+			) ) }
+		</ul>
+	</Fragment>
+);
 
 /**
  * Register: aa Gutenberg Block.
@@ -58,559 +83,304 @@ let DonateButton = '';
  * @return {?WPBlock}          The block, if it has been successfully
  *                             registered; otherwise `undefined`.
  */
-registerBlockType('author-avatars/show-avatar', {
-	// Block name. Block names must be string that contains a namespace prefix. Example: my-plugin/my-custom-block.
-	title: __('Avatar Lists', 'author-avatars'), // Block title.
-	icon: 'businessman', // Block icon from Dashicons → https://developer.wordpress.org/resource/dashicons/.
-	category: 'common', // Block category — Group blocks together based on common traits E.g. common, formatting, layout widgets, embed.
-	keywords: [
-		__('avatar', 'author-avatars'),
-		__('Author Avatars', 'author-avatars'),
-		__('profile pictures', 'author-avatars'),
-	],
-	example: {
-		attributes: {
-			'preview': true,
-		},
-	},
-	attributes: {
-		size: {
-			type: 'init',
-			default: 50,
-		},
-		email: {
-			type: 'string',
-		},
-		alignment: {
-			type: 'string',
-			default: 'left',
-		},
-		Options: {
-			type: 'array',
-		},
-		link: {
-			type: 'string',
-		},
-		display: {
-			type: 'object',
-		},
-		role: {
-			type: 'object',
-		},
-		blogs: {
-			type: 'object',
-		},
-		sort_avatars_by: {
-			type: 'string',
-			default: 'display_name',
-		},
-		sort_order: {
-			type: 'string',
-		},
-		bio_length: {
-			type: 'init',
-			default: 50,
-		},
-		user_id: {
-			type: 'init',
-			default: 0,
-		},
-		limit: {
-			type: 'number',
-		},
-		page_size: {
-			type: 'number',
-		},
-		min_post_count: {
-			type: 'number',
-		},
-		hidden_users: {
-			type: 'string',
-		},
-		whitelist_users: {
-			type: 'string',
-		},
-		background_color: {
-			type: 'string',
-			default: '#fff', // Default value for newly added block
-		},
-		font_color: {
-			type: 'string',
-			default: '#000', // Default value for newly added block
-		},
-		border_size: {
-			type: 'number',
-			default: '0', // Default value for newly added block
-		},
-		border_color: {
-			type: 'string',
-			default: '#000', // Default value for newly added block
-		},
-		border_radius: {
-			type: 'number',
-			default: '0', // Default value for newly added block
-		},
-		avatar_radius: {
-			type: 'number',
-			default: '0', // Default value for newly added block
-		},
-		// To storage the complete style of the div that will be 'merged' with the selected colours
-		block_style: {
-			type: 'string',
-			selector: 'div', // From tag a
-			source: 'attribute', // binds an attribute of the tag
-			attribute: 'style', // binds style of a: the dynamic colours
-		},
+/**
+ * Edit component for the block.
+ */
+const Edit = ( props ) => {
+	const {
+		isSelected, attributes, setAttributes
+	} = props;
 
-	},
-	/**
-	 * The edit function describes the structure of your block in the context of the editor.
-	 * This represents what the editor will render when the block is used.
-	 *
-	 * The "edit" property must be a valid function.
-	 *
-	 * @link https://wordpress.org/gutenberg/handbook/block-api/block-edit-save/
-	 */
-	//   edit: function (props, attributes, className) {
-	// Creates a <p class='wp-block-cgb-block-author-avatars'></p>.
-	edit:
-		withSelect(select => {
-			return {
-				data: wp.apiFetch({path: '/author_avatar/blocks/v1/data'}).then(data => {
-						// console.log(data);
-						user_options = data.users;
-						display_options = data.display_options;
-						user_roles = data.roles;
-						user_links = data.links;
-						sort_list = data.sort_avatars_by;
-						blogs_list = data.blogs;
-						DonateButton = data.donate;
+	const blockProps = useBlockProps();
 
-						// return data;
-					}
-				)
-			};
-		})
-		((props) => {
-			const {
-				className, user, data, isSelected, attributes, setAttributes
-			} = props;
-			var background_color = props.attributes.background_color;
-			var font_color = props.attributes.font_color;
-			var border_size = props.attributes.border_size;
-			var border_color = props.attributes.border_color;
-			var user_id = props.attributes.user_id;
-			var email = props.attributes.email;
-			var link = props.attributes.link;
-			var sort_avatars_by = props.attributes.sort_avatars_by;
-			var sort_order = props.attributes.sort_order;
-			var border_radius = props.attributes.border_radius;
-			var avatar_radius = props.attributes.avatar_radius;
-			var size = props.attributes.size;
-			var bio_length = props.attributes.bio_length;
-			var page_size = props.attributes.page_size;
-			var min_post_count = props.attributes.min_post_count;
-			var whitelist_users = props.attributes.whitelist_users;
-			var hidden_users = props.attributes.hidden_users;
-			var preview = props.attributes.preview;
+	const [ blockData, setBlockData ] = useState( {
+		user_options: [],
+		display_options: [],
+		user_roles: [],
+		user_links: [],
+		sort_list: [],
+		blogs_list: [],
+		DonateButton: '',
+		loading: true
+	} );
 
-			var limit = props.attributes.limit;
-			const {alignment} = attributes;
+	useEffect( () => {
+		apiFetch( { path: '/author_avatar/blocks/v1/data' } ).then( data => {
+			setBlockData( {
+				user_options: data?.users || [],
+				display_options: data?.display_options || [],
+				user_roles: data?.roles || [],
+				user_links: data?.links || [],
+				sort_list: data?.sort_avatars_by || [],
+				blogs_list: data?.blogs || [],
+				DonateButton: data?.donate || '',
+				loading: false
+			} );
+		} ).catch( () => {
+			setBlockData( prev => ( { ...prev, loading: false } ) );
+		} );
+	}, [] );
 
-			// Style object for the button
-			// I created a style in JSX syntax to keep it here for
-			// the dynamic changes
-			var block_style = props.attributes.block_style // To bind the style of the button
-			block_style = {
-				backgroundColor: background_color,
-				color: font_color,
-				borderColor: border_color,
-				borderWidth: border_size +'px',
-				borderRadius: border_radius +'px',
-				padding: '14px 25px',
-				fontSize: '16px',
-			};
+	const {
+		user_options, display_options, user_roles, user_links, sort_list, blogs_list, DonateButton, loading
+	} = blockData;
 
+	const {
+		background_color, font_color, link_color, link_hover_color,
+		user_id, email, link, sort_avatars_by, sort_order,
+		size, bio_length, page_size, min_post_count, whitelist_users,
+		hidden_users, preview, limit, alignment
+	} = attributes;
 
-			// /wp-json/wp/v2/users
+	// Normalize attributes that might be in legacy formats (e.g. from old blocks)
+	const normalizeToMap = ( val ) => {
+		if ( Array.isArray( val ) ) {
+			return val.reduce( ( acc, v ) => ( { ...acc, [ v ]: true } ), {} );
+		}
+		if ( typeof val === 'boolean' || ! val ) {
+			return {};
+		}
+		return val;
+	};
 
-			//
-			// onChange event functions
-			//
-			function onChangeBgColor(content) {
-				props.setAttributes({background_color: content})
-			}
+	const display = normalizeToMap( attributes.display );
+	const role = normalizeToMap( attributes.role );
+	const blogs = normalizeToMap( attributes.blogs );
 
-			function onChangeFontColor(content) {
-				props.setAttributes({font_color: content})
-			}
+	if ( preview ) {
+		return (
+			<div { ...blockProps }>
+				<img className="author-avatars-preview" src={ window.authorAvatars?.wppic_preview } alt="Preview" />
+			</div>
+		);
+	}
 
-			function onChangeBorderColor(content) {
-				props.setAttributes({border_color: content})
-			}
-
-			function onChangeBorderSize(content) {
-				props.setAttributes({border_size: content})
-			}
-			function onChangelink(content) {
-				props.setAttributes({link: content})
-			}
-
-			function onChangeUser(content) {
-				props.setAttributes({user_id: content})
-			}
-
-			function onChangeEmail(content) {
-				props.setAttributes({email: content})
-			}
-
-			function onChangeSize(content) {
-				props.setAttributes({size: content})
-			}
-
-			function onChangeLimit(content) {
-				props.setAttributes({limit: content})
-			}
-
-			function onChangeMinPosts(content) {
-				props.setAttributes({min_post_count: content})
-			}
-
-			function onChangebio_length(content) {
-				props.setAttributes({bio_length: content})
-			}
-
-			function onChangeSortOrder(content) {
-				props.setAttributes({sort_order: content})
-			}
-
-			function onChangeSortBy(content) {
-				props.setAttributes({sort_avatars_by: content})
-			}
-
-			function onChangePageSize(content) {
-				props.setAttributes({page_size: content})
-			}
-
-			function onChangeHiddenUsers(content) {
-				props.setAttributes({hidden_users: content})
-			}
-
-			function onChangeWhitelistUsers(content) {
-				props.setAttributes({whitelist_users: content})
-			}
-
-			function onChangeAlignment(updatedAlignment) {
-				props.setAttributes({alignment: updatedAlignment});
-			}
-
-			function onChangeBorderRadius(content) {
-				props.setAttributes({border_radius: content});
-			}
-
-			function onChangeAvatarRadius(content) {
-				props.setAttributes({avatar_radius: content});
-			}
-
-			const display = ('display' in attributes) ? attributes.display : new Object
-			const DisplayCheckBoxes = wp.compose.withState({
-				checked_obj: Object.assign(new Object, display)
-			})(({checked_obj, setState}) => (
-				<ul>
-					{
-						display_options?.map((v) => (
-							<li key={v.value}><CheckboxControl
-								className="check_items"
-								label={v.label}
-								checked={checked_obj[v.value]}
-								onChange={(check) => {
-									check ? checked_obj[v.value] = true : delete checked_obj[v.value]
-									setAttributes({display: checked_obj})
-									setState({checked_obj})
-								}}
-							/></li>
-						))
-					}
-				</ul>
-			))
-
-			const role = ('role' in attributes) ? attributes.role : new Object
-			const RolesCheckBoxes = wp.compose.withState({
-				checked_obj: Object.assign(new Object, role)
-			})(({checked_obj, setState}) => (
-				<ul>
-					{
-						user_roles?.map((v) => (
-							<li key={v.value}><CheckboxControl
-								className="check_items"
-								label={v.label}
-								checked={checked_obj[v.value]}
-								onChange={(check) => {
-									check ? checked_obj[v.value] = true : delete checked_obj[v.value]
-									setAttributes({role: checked_obj})
-									setState({checked_obj})
-								}}
-							/></li>
-						))
-					}
-				</ul>
-			))
-
-			const blogs = ('blogs' in attributes) ? attributes.blogs : new Object
-			const BlogsCheckBoxes = wp.compose.withState({
-				checked_obj: Object.assign(new Object, role)
-			})(({checked_obj, setState}) => (
-				<ul>
-					{
-						blogs_list?.map((v) => (
-							<li key={v.value}><CheckboxControl
-								className="check_items"
-								label={v.label}
-								checked={checked_obj[v.value]}
-								onChange={(check) => {
-									check ? checked_obj[v.value] = true : delete checked_obj[v.value]
-									setAttributes({blogs: checked_obj})
-									setState({checked_obj})
-								}}
-							/></li>
-						))
-					}
-				</ul>
-			))
-
-			//
-			// let statusXX = users=>status();
-			// console.log( statusXX );
-			// if( statusXX ){
-			// 	users.forEach((user) => {
-			// 		options.push({value:user.value, label:user.label});
-			// 	});
-			// }
-			if (preview) {
-				return (
-					<Fragment>
-						<img className="author-avatars-preview" src={authorAvatars.wppic_preview}/>
-					</Fragment>
-				);
-			}
-
-			// if we have no tax set for the page then just show a messege to save a call to server side
-			// if (0 === users.length) {
-			// 	return <p>{__('Select the resort in the sidebar, 'mvc' ) }</p>;
-			// 	}
-			// the server side block with the tax object getting passed
-			return [
-
-				<InspectorControls key={'000'}>
-					<div className="author-avatar-components-panel">
-
-						<SelectControl
-							label={__('User or Email addrerss/user_id or Roles', 'author-avatar')}
-							name='user_id'
-							value={user_id}
-							options={user_options}
-							onChange={onChangeUser}
+	return (
+		<Fragment>
+			<InspectorControls key="inspector">
+				<div className="author-avatar-components-panel">
+					{ loading && <Spinner /> }
+					<SelectControl
+						label={ __( 'User or Email addrerss/user_id or Roles', 'author-avatar' ) }
+						name="user_id"
+						value={ user_id }
+						options={ user_options }
+						onChange={ ( val ) => setAttributes( { user_id: val } ) }
+					/>
+					{ -1 == user_id && (
+						<TextControl
+							label="Custom email / id"
+							type="text"
+							value={ email }
+							onChange={ ( val ) => setAttributes( { email: val } ) }
 						/>
-						{-1 == user_id && (
+					) }
+					{ 0 == user_id && (
+						<MultiCheckboxControl
+							label={ __( 'Which Roles to display:', 'author-avatar' ) }
+							options={ user_roles }
+							selected={ role }
+							onChange={ ( val ) => setAttributes( { role: val } ) }
+						/>
+					) }
+					<MultiCheckboxControl
+						label={ __( 'Info to show with avatar:', 'author-avatar' ) }
+						options={ display_options }
+						selected={ display }
+						onChange={ ( val ) => setAttributes( { display: val } ) }
+					/>
 
-							<TextControl
-								label='Custom email / id'
-								type={'text'}
-								value={email}
-								onChange={onChangeEmail}
+					<SelectControl
+						label={ __( 'Sort by', 'author-avatar' ) }
+						value={ sort_avatars_by }
+						options={ sort_list }
+						onChange={ ( val ) => setAttributes( { sort_avatars_by: val } ) }
+					/>
+
+					<SelectControl
+						label={ __( 'Sort order', 'author-avatar' ) }
+						value={ sort_order }
+						options={ [
+							{ label: 'Ascending', value: 'asc' },
+							{ label: 'Descending', value: 'desc' },
+						] }
+						onChange={ ( val ) => setAttributes( { sort_order: val } ) }
+					/>
+
+					<PanelBody title={ __( 'Avatar Card Styles', 'author-avatars' ) } initialOpen={ true }>
+						<SelectControl
+							label={ __( 'Link avatars to', 'author-avatar' ) }
+							value={ link }
+							options={ user_links }
+							onChange={ ( val ) => setAttributes( { link: val } ) }
+						/>
+						<PanelColorSettingsEditor
+							title={ __( 'Card Colors', 'author-avatars' ) }
+							initialOpen={ false }
+							colorSettings={ [
+								{
+									value: background_color,
+									onChange: ( val ) => setAttributes( { background_color: val } ),
+									label: __( 'Background Color', 'author-avatars' ),
+								},
+								{
+									value: font_color,
+									onChange: ( val ) => setAttributes( { font_color: val } ),
+									label: __( 'Font Color', 'author-avatars' ),
+								},
+								{
+									value: link_color,
+									onChange: ( val ) => setAttributes( { link_color: val } ),
+									label: __( 'Link Color', 'author-avatars' ),
+								},
+								{
+									value: link_hover_color,
+									onChange: ( val ) => setAttributes( { link_hover_color: val } ),
+									label: __( 'Link Hover Color', 'author-avatars' ),
+								},
+							] }
+						/>
+						<div className="author-avatars-border-control-wrapper">
+							<BorderControl
+								label={ __( 'Border', 'author-avatars' ) }
+								value={ attributes.card_border }
+								onChange={ ( value ) => setAttributes( { card_border: value } ) }
 							/>
-
-						)}
-						{0 == user_id && (
-							<Fragment>
-								<label
-									className="blocks-base-control__label">{__('Which Roles to display:', 'author-avatar')}</label>
-
-								<RolesCheckBoxes/>
-							</Fragment>
-						)}
-						<label
-							className="blocks-base-control__label">{__('Info to show with avatar:', 'author-avatar')}</label>
-						<DisplayCheckBoxes/>
-
-
-						<SelectControl
-							label={__('Link avatars to', 'author-avatar')}
-							value={link}
-							options={user_links}
-							onChange={onChangelink}
-						/>
-
-						<SelectControl
-							label={__('Sort by', 'author-avatar')}
-							value={sort_avatars_by}
-							options={sort_list}
-							onChange={onChangeSortBy}
-						/>
-
-						<SelectControl
-							label={__('Sort order', 'author-avatar')}
-							value={sort_order}
-							options={[
-								{label: 'Ascending', value: 'asc'},
-								{label: 'Descending', value: 'desc'},
-							]}
-							onChange={onChangeSortOrder}
-						/>
-
-						<RangeControl
-							label="Avatar Size"
-							value={size}
-							onChange={onChangeSize}
-							min={10}
-							max={500}
-							initialPosition={50}
-							beforeIcon={'businessman'}
-						/>
-
-						<RangeControl
-							label="Avatar Corner size"
-							value={avatar_radius}
-							onChange={onChangeAvatarRadius}
-							min={0}
-							max={50}
-							initialPosition={0}
-							beforeIcon={'buddicons-buddypress-logo'}
-						/>
-
-						<label className="blocks-base-control__label">{__('Background color', 'author-avatar')}</label>
-						<ColorPicker  // Element Tag for Gutenberg standard colour selector
-							color={background_color}
-							enableAlpha
-							label={__('Background color', 'author-avatar')}
-							defaultValue="#000"
-							onChange={onChangeBgColor} // onChange event callback
-						/>
-						<label className="blocks-base-control__label">{__('Font color', 'author-avatar')}</label>
-						<ColorPicker  // Element Tag for Gutenberg standard colour selector
-							color={font_color}
-							label={__('Font color', 'author-avatar')}
-							title={__('Font color', 'author-avatar')}
-							defaultValue="#fff"
-							onChange={onChangeFontColor} // onChange event callback
-						/>
-						<RangeControl
-							label="Border size"
-							value={border_size}
-							onChange={onChangeBorderSize}
-							min={0}
-							max={50}
-							initialPosition={0}
-							beforeIcon={'buddicons-buddypress-logo'}
-						/>
-						<RangeControl
-							label="Border Corner size"
-							value={border_radius}
-							onChange={onChangeBorderRadius}
-							min={0}
-							max={100}
-							initialPosition={0}
-							beforeIcon={'buddicons-buddypress-logo'}
-						/>
-						<label className="blocks-base-control__label">{__('Border color', 'author-avatar')}</label>
-						<ColorPicker  // Element Tag for Gutenberg standard colour selector
-							color={border_color}
-							label={__('Font color', 'author-avatar')}
-							title={__('Font color', 'author-avatar')}
-							defaultValue="#fff"
-							onChange={onChangeBorderColor} // onChange event callback
-						/>
-
-						<Fragment>
-							<a className={'donate'}
-							   href={'https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=MZTZ5S8MGF75C&lc=CA&item_name=Author%20Avatars%20Plugin%20Support&item_number=authoravatars&currency_code=CAD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted'}
-							   target={'_donante'}>
-								<img alt={'Donate to support Plugin'}
-									 src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif"/>
-							</a>
-						</Fragment>
-						<div>
-							<label
-								className="blocks-base-control__label">{__('More options in Adavanced:', 'author-avatar')}</label>
 						</div>
-					</div>
-				</InspectorControls>,
-
-				<InspectorAdvancedControls key={'111'}>
-					{true === display.show_biography && (
-						<RangeControl
-							label="bio_length"
-							value={bio_length}
-							onChange={onChangebio_length}
-							min={10}
-							max={200}
-							initialPosition={50}
+						<BorderRadiusControl
+							label={ __( 'Border Radius', 'author-avatars' ) }
+							values={ attributes.card_border_radius }
+							onChange={ ( value ) => setAttributes( { card_border_radius: value } ) }
 						/>
-					)}
-					{0 == user_id && (
-						<Fragment>
-							<TextControl
-								label={__('Max. avatars shown:', 'author-avatar')}
-								type={'number'}
-								value={limit}
-								name={'limit'}
-								onChange={onChangeLimit}
+						<BoxControl
+							__next40pxDefaultSize={ true }
+							label={ __( 'Padding', 'author-avatars' ) }
+							values={ attributes.avatar_padding }
+							onChange={ ( value ) => setAttributes( { avatar_padding: value } ) }
+						/>
+						<BoxControl
+							__next40pxDefaultSize={ true }
+							label={ __( 'Margin', 'author-avatars' ) }
+							values={ attributes.avatar_margin }
+							onChange={ ( value ) => setAttributes( { avatar_margin: value } ) }
+						/>
+
+						<PanelRow className="author-avatars-inline-unit-controls">
+							<UnitControl
+								__next40pxDefaultSize={ true }
+								label={ __( 'Min Width', 'author-avatars' ) }
+								value={ attributes.card_min_width }
+								onChange={ ( value ) => setAttributes( { card_min_width: value } ) }
 							/>
-
-							<TextControl
-								label={__('Max. avatars per page:', 'author-avatar')}
-								type={'number'}
-								value={page_size}
-								name={'limit'}
-								onChange={onChangePageSize}
+							<UnitControl
+								__next40pxDefaultSize={ true }
+								label={ __( 'Max Width', 'author-avatars' ) }
+								value={ attributes.card_max_width }
+								onChange={ ( value ) => setAttributes( { card_max_width: value } ) }
 							/>
-
-							<TextControl
-								label={__('Required number of posts:', 'author-avatar')}
-								type={'number'}
-								value={min_post_count}
-								name={'limit'}
-								onChange={onChangeMinPosts}
+						</PanelRow>
+						<PanelRow className="author-avatars-inline-unit-controls">
+							<UnitControl
+								__next40pxDefaultSize={ true }
+								label={ __( 'Min Height', 'author-avatars' ) }
+								value={ attributes.card_min_height }
+								onChange={ ( value ) => setAttributes( { card_min_height: value } ) }
 							/>
-
-							<TextareaControl
-								label={__('Hidden users', 'author-avatar')}
-								help={__('(Comma separate list of user login ids. Hidden user are removed before the white list)', 'author-avatar')}
-								value={hidden_users}
-								onChange={onChangeHiddenUsers}
+							<UnitControl
+								__next40pxDefaultSize={ true }
+								label={ __( 'Max Height', 'author-avatars' ) }
+								value={ attributes.card_max_height }
+								onChange={ ( value ) => setAttributes( { card_max_height: value } ) }
 							/>
+						</PanelRow>
+					</PanelBody>
 
-							<TextareaControl
-								label={__('White List of users:', 'author-avatar')}
-								help={__('(0nly show these users, Comma separate list of user login ids)', 'author-avatar')}
-								value={whitelist_users}
-								onChange={onChangeWhitelistUsers}
-							/>
-
-							<BlogsCheckBoxes/>
-						</Fragment>
-					)}
-
-				</InspectorAdvancedControls>,
-
-
-				<div className={className} style={block_style} key={'222'}>
-					{
-						!!focus && (
-							<BlockControls>
-								<AlignmentToolbar
-									value={alignment}
-									onChange={onChangeAlignment}
-								/>
-							</BlockControls>
-						)
-					}
-
-					<ServerSideRender block="author-avatars/show-avatar" attributes={attributes}/>
+					<Fragment>
+						<div dangerouslySetInnerHTML={ { __html: DonateButton } } />
+					</Fragment>
+					<div>
+						<label className="blocks-base-control__label">
+							{ __( 'More options in Adavanced:', 'author-avatar' ) }
+						</label>
+					</div>
 				</div>
-			];
+			</InspectorControls>
 
-		}),
+			<InspectorAdvancedControls key="advanced">
+				{ true === display?.show_biography && (
+					<RangeControl
+						label="bio_length"
+						value={ bio_length }
+						onChange={ ( val ) => setAttributes( { bio_length: val } ) }
+						min={ 10 }
+						max={ 200 }
+						initialPosition={ 50 }
+					/>
+				) }
+				{ 0 == user_id && (
+					<Fragment>
+						<TextControl
+							label={ __( 'Max. avatars shown:', 'author-avatar' ) }
+							type="number"
+							value={ limit }
+							onChange={ ( val ) => setAttributes( { limit: parseInt( val ) } ) }
+						/>
+
+						<TextControl
+							label={ __( 'Max. avatars per page:', 'author-avatar' ) }
+							type="number"
+							value={ page_size }
+							onChange={ ( val ) => setAttributes( { page_size: parseInt( val ) } ) }
+						/>
+
+						<TextControl
+							label={ __( 'Required number of posts:', 'author-avatar' ) }
+							type="number"
+							value={ min_post_count }
+							onChange={ ( val ) => setAttributes( { min_post_count: parseInt( val ) } ) }
+						/>
+
+						<TextareaControl
+							label={ __( 'Hidden users', 'author-avatar' ) }
+							help={ __( '(Comma separate list of user login ids. Hidden user are removed before the white list)', 'author-avatar' ) }
+							value={ hidden_users }
+							onChange={ ( val ) => setAttributes( { hidden_users: val } ) }
+						/>
+
+						<TextareaControl
+							label={ __( 'White List of users:', 'author-avatar' ) }
+							help={ __( '(0nly show these users, Comma separate list of user login ids)', 'author-avatar' ) }
+							value={ whitelist_users }
+							onChange={ ( val ) => setAttributes( { whitelist_users: val } ) }
+						/>
+
+						<MultiCheckboxControl
+							label={ __( 'Blogs to display from:', 'author-avatar' ) }
+							options={ blogs_list }
+							selected={ blogs }
+							onChange={ ( val ) => setAttributes( { blogs: val } ) }
+						/>
+					</Fragment>
+				) }
+			</InspectorAdvancedControls>
+
+			<div { ...blockProps }>
+				{ !! isSelected && (
+					<BlockControls>
+						<AlignmentToolbar
+							value={ alignment }
+							onChange={ ( val ) => setAttributes( { alignment: val } ) }
+						/>
+					</BlockControls>
+				) }
+				{ loading ? <Spinner /> : <ServerSideRender block="author-avatars/show-avatar" attributes={ attributes } /> }
+			</div>
+		</Fragment>
+	);
+};
+
+registerBlockType( metadata.name, {
+	edit: Edit,
 
 
 	/**

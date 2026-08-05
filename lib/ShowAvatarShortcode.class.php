@@ -260,14 +260,27 @@ class ShowAvatarShortcode {
 							break;
 
 						case 'show_postcount':
-							$name .= ' (' . $postcount = $this->userlist->get_user_postcount( $id ) . ')';
+							$postcount        = $this->userlist->get_user_postcount( $id );
+							$post_count_title = sprintf( _n( '%d post', '%d posts', $postcount, 'author-avatars' ), $postcount );
+							if ( ! empty( $hrefStart ) ) {
+								$name .= ' <span class="aa-post-count" title="' . esc_attr( $post_count_title ) . '">(' . $postcount . ')</span>';
+							} else {
+								$author_posts_url = get_author_posts_url( $id );
+								$name            .= ' <a class="aa-post-count" href="' . esc_url( $author_posts_url ) . '" title="' . esc_attr( $post_count_title ) . '">(' . $postcount . ')</a>';
+							}
 
 							break;
 
 						case 'show_bbpress_post_count':
 							if ( function_exists( 'bbp_get_user_topic_count_raw' ) ) {
-								$BBPRESS_postcount = bbp_get_user_topic_count_raw( $id ) + bbp_get_user_reply_count_raw( $id );
-								$name              .= ' (' . $postcount = $BBPRESS_postcount . ')';
+								$bbp_postcount        = bbp_get_user_topic_count_raw( $id ) + bbp_get_user_reply_count_raw( $id );
+								$bbp_post_count_title = sprintf( _n( '%d BBPress post', '%d BBPress posts', $bbp_postcount, 'author-avatars' ), $bbp_postcount );
+								if ( ! empty( $hrefStart ) ) {
+									$name .= ' <span class="aa-bbpress-post-count" title="' . esc_attr( $bbp_post_count_title ) . '">(' . $bbp_postcount . ')</span>';
+								} else {
+									$author_posts_url = get_author_posts_url( $id );
+									$name            .= ' <a class="aa-bbpress-post-count" href="' . esc_url( $author_posts_url ) . '" title="' . esc_attr( $bbp_post_count_title ) . '">(' . $bbp_postcount . ')</a>';
+								}
 							}
 							break;
 
