@@ -199,7 +199,7 @@ class Render {
 		if ( ! empty( $attributes['card_border_radius'] ) ) {
 			$card_border_data['radius'] = $attributes['card_border_radius'];
 		}
-		if ( ! empty( $card_border_data ) ) {
+		if ( ! empty( $card_border_data ) && function_exists( 'wp_style_engine_get_styles' ) ) {
 			// Ensure units for numeric values to prevent wp_style_engine from emitting unitless lengths.
 			if ( isset( $card_border_data['radius'] ) ) {
 				if ( is_numeric( $card_border_data['radius'] ) ) {
@@ -236,12 +236,12 @@ class Render {
 			$card_style[] = sprintf( 'max-height:%s;', $this->add_px_if_numeric( $attributes['card_max_height'] ) );
 		}
 
-		$avatar_styles = wp_style_engine_get_styles( array(
+		$avatar_styles = function_exists( 'wp_style_engine_get_styles' ) ? wp_style_engine_get_styles( array(
 			'spacing' => array(
 				'padding' => $this->add_missing_px_units( $attributes['avatar_padding'] ?? array() ),
 				'margin'  => $this->add_missing_px_units( $attributes['avatar_margin'] ?? array() ),
 			),
-		) );
+		) ) : array();
 		if ( ! empty( $avatar_styles['css'] ) ) {
 			$card_style[] = rtrim( $avatar_styles['css'], ';' ) . ';';
 		}
@@ -252,7 +252,7 @@ class Render {
 		if ( ! empty( $attributes['avatar_border_radius'] ) ) {
 			$avatar_border_data['radius'] = $attributes['avatar_border_radius'];
 		}
-		if ( ! empty( $avatar_border_data ) ) {
+		if ( ! empty( $avatar_border_data ) && function_exists( 'wp_style_engine_get_styles' ) ) {
 			// Ensure units for numeric values.
 			if ( isset( $avatar_border_data['radius'] ) ) {
 				if ( is_numeric( $avatar_border_data['radius'] ) ) {
@@ -333,11 +333,18 @@ class Render {
 
 		// Add the card style to each user's card div.
 		$html = preg_replace_callback(
-			'/(<div class="[^"]*\buser\b[^"]*" style=")([^"]*)(")/',
+			'/(<div[^>]+class=["\']([^"\']*\buser\b[^"\']*)["\']([^>]*>))/i',
 			function ( $m ) use ( $card_style_string ) {
-				$existing = trim( $m[2] );
-				$style    = $existing ? rtrim( $existing, ';' ) . '; ' . $card_style_string : $card_style_string;
-				return $m[1] . $style . $m[3];
+				$tag = $m[1];
+				// Match style attribute with either single or double quotes
+				if ( preg_match( '/style=(["\'])(.*?)\1/i', $tag, $s_match ) ) {
+					$quote    = $s_match[1];
+					$existing = rtrim( trim( $s_match[2] ), ';' ) . '; ';
+					$new_tag  = str_replace( $s_match[0], 'style=' . $quote . $existing . $card_style_string . $quote, $tag );
+				} else {
+					$new_tag = preg_replace( '/<div/i', '<div style="' . $card_style_string . '"', $tag, 1 );
+				}
+				return $new_tag;
 			},
 			$html
 		);
@@ -346,14 +353,16 @@ class Render {
 		if ( ! empty( $avatar_image_style ) ) {
 			$avatar_image_style_string = implode( ' ', $avatar_image_style );
 			$html                      = preg_replace_callback(
-				'/(<img[^>]+class="[^"]*\bavatar\b[^"]*"[^>]*>)/i',
+				'/(<img[^>]+class=["\']([^"\']*\b(?:avatar|photo|gravatar|bp-user-avatar|bp-avatar)\b[^"\']*)["\']([^>]*>))/i',
 				function ( $m ) use ( $avatar_image_style_string ) {
 					$tag = $m[1];
-					if ( preg_match( '/style="([^"]*)"/i', $tag, $s_match ) ) {
-						$existing = rtrim( trim( $s_match[1] ), ';' ) . '; ';
-						$new_tag  = str_replace( $s_match[0], 'style="' . $existing . $avatar_image_style_string . '"', $tag );
+					// Match style attribute with either single or double quotes
+					if ( preg_match( '/style=(["\'])(.*?)\1/i', $tag, $s_match ) ) {
+						$quote    = $s_match[1];
+						$existing = rtrim( trim( $s_match[2] ), ';' ) . '; ';
+						$new_tag  = str_replace( $s_match[0], 'style=' . $quote . $existing . $avatar_image_style_string . $quote, $tag );
 					} else {
-						$new_tag = str_replace( '<img', '<img style="' . $avatar_image_style_string . '"', $tag );
+						$new_tag = preg_replace( '/<img/i', '<img style="' . $avatar_image_style_string . '"', $tag, 1 );
 					}
 					return $new_tag;
 				},
