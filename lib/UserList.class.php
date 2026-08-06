@@ -374,7 +374,8 @@ class UserList {
 	function format_user( $user ) {
 		$tpl_vars = array( '{class}' => '', '{user}' => '', '{style}' => '' );
 
-		$avatar_size = (int) $this->avatar_size;
+		$avatar_size_orig = $this->avatar_size;
+		$avatar_size = (int) $avatar_size_orig;
 		if ( ! $avatar_size ) {
 			$avatar_size = false;
 		}
@@ -840,24 +841,29 @@ class UserList {
 			}
 
 
-			if ( ! stripos( $avatar, 'style=' ) ) {
-				$avatar_style = '';
-				if ( ! empty( $this->avatar_radius ) ) {
-					$avatar_style .= ' border-radius:' . absint( $this->avatar_radius ) . '%;';
-				}
-				/**
-				 * filter the avatar alt
-				 *
-				 * @param string $alt users nicename.
-				 * @param object $user The user object
-				 */
-				$avatar_style = esc_attr( apply_filters( 'aa_user_avatar_style', $avatar_style, $user ) );
+		}
 
-				$avatar = preg_replace( '@ ?/>@', ' style="' . $avatar_style . '"  />', $avatar );
+		if ( ! stripos( $avatar, 'style=' ) ) {
+			$avatar_style = '';
+			if ( ! empty( $this->avatar_radius ) ) {
+				$avatar_style .= ' border-radius:' . absint( $this->avatar_radius ) . '%;';
 			}
 
+			if ( ! empty( $avatar_size_orig ) && ! is_numeric( $avatar_size_orig ) ) {
+				$avatar_style .= ' width:' . esc_attr( $avatar_size_orig ) . '; height:' . esc_attr( $avatar_size_orig ) . ';';
+			}
 
+			/**
+			 * filter the avatar style
+			 *
+			 * @param string $avatar_style The style string.
+			 * @param object $user The user object
+			 */
+			$avatar_style = esc_attr( apply_filters( 'aa_user_avatar_style', $avatar_style, $user ) );
+
+			$avatar = preg_replace( '@ ?/>@', ' style="' . $avatar_style . '"  />', $avatar );
 		}
+
 		if ( apply_filters( 'aa_user_avatar_lazy_load', true, $avatar, $user ) ) {
 			// add the lazy loading tag
 			$avatar = preg_replace( '@ ?/>@', ' loading="lazy" />', $avatar );

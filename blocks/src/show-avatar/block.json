@@ -27,8 +27,8 @@
 			"default": 0
 		},
 		"size": {
-			"type": "number",
-			"default": 50
+			"type": "string",
+			"default": "50px"
 		},
 		"email": {
 			"type": "string"

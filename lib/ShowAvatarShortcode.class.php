@@ -55,9 +55,11 @@ class ShowAvatarShortcode {
 
 
 		// get avatar size
+		$avatar_size_orig = false;
 		$avatar_size = false;
 		if ( ! empty( $atts['avatar_size'] ) ) {
-			$avatar_size = (int) esc_attr( $atts['avatar_size'] );
+			$avatar_size_orig = $atts['avatar_size'];
+			$avatar_size = (int) esc_attr( $avatar_size_orig );
 		}
 
 		// get alignment
@@ -92,6 +94,11 @@ class ShowAvatarShortcode {
 			if ( ! empty( $atts['border_radius'] ) ) {
 				$avatar_style .= ' border-radius:' . absint( $atts['border_radius'] ) . '%;';
 			}
+
+			if ( ! empty( $avatar_size_orig ) && ! is_numeric( $avatar_size_orig ) ) {
+				$avatar_style .= ' width:' . esc_attr( $avatar_size_orig ) . '; height:' . esc_attr( $avatar_size_orig ) . ';';
+			}
+
 			/**
 			 * filter the avatar alt
 			 *
