@@ -207,13 +207,20 @@ const Edit = ( props ) => {
 						onChange={ ( val ) => setAttributes( { sort_order: val } ) }
 					/>
 
+					<SelectControl
+						label={ __( 'Link avatars to', 'author-avatar' ) }
+						value={ link }
+						options={ user_links }
+						onChange={ ( val ) => setAttributes( { link: val } ) }
+					/>
+					<RangeControl
+						label={ __( 'Avatar size', 'author-avatar' ) }
+						value={ size }
+						onChange={ ( val ) => setAttributes( { size: val } ) }
+						min={ 10 }
+						max={ 500 }
+					/>
 					<PanelBody title={ __( 'Avatar Card Styles', 'author-avatars' ) } initialOpen={ true }>
-						<SelectControl
-							label={ __( 'Link avatars to', 'author-avatar' ) }
-							value={ link }
-							options={ user_links }
-							onChange={ ( val ) => setAttributes( { link: val } ) }
-						/>
 						<PanelColorSettingsEditor
 							title={ __( 'Card Colors', 'author-avatars' ) }
 							initialOpen={ false }

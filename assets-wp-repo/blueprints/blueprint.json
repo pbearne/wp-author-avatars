@@ -10,34 +10,48 @@
     "php": "8.3",
     "wp": "latest"
   },
-  "plugins": ["sqlite-database-integration","author-avatars"],
-  "extraLibraries": ["wp-cli"],
-  "landingPage": "/wp-admin/post.php?post=4&action=edit",
   "steps": [
+    {
+      "step": "installPlugin",
+      "pluginData": "sqlite-database-integration"
+    },
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "dir",
+        "path": "../../",
+        "slug": "author-avatars",
+        "name": "Author Avatars List"
+      },
+      "options": {
+        "activate": true
+      }
+    },
     {
       "step": "login",
       "username": "admin",
       "password": "password"
     },
     {
-      "step": "wp-cli",
-      "command": "wp user create testeditor editor@example.com --role=editor --user_pass=SecurePass123!"
+      "step": "runWordPressCLI",
+      "command": "user create testeditor editor@example.com --role=editor --user_pass=SecurePass123!"
     },
     {
-      "step": "wp-cli",
-      "command": "wp user create user1 user1@example.com --role=author --display_name='John Doe'"
+      "step": "runWordPressCLI",
+      "command": "user create user1 user1@example.com --role=author --display_name='John Doe'"
     },
     {
-      "step": "wp-cli",
-      "command": "wp user create user2 user2@example.com --role=editor --display_name='Jane Smith'"
+      "step": "runWordPressCLI",
+      "command": "user create user2 user2@example.com --role=editor --display_name='Jane Smith'"
     },
     {
-      "step": "wp-cli",
-      "command": "wp user create user3 user3@example.com --role=contributor --display_name='Bob Johnson'"
+      "step": "runWordPressCLI",
+      "command": "user create user3 user3@example.com --role=contributor --display_name='Bob Johnson'"
     },
     {
       "step": "runPHP",
-      "code": "<?php \nif ( file_exists( '/wordpress/wp-load.php' ) ) {\n\trequire_once '/wordpress/wp-load.php';\n} else {\n\trequire_once '/var/www/html/wp-load.php';\n}\n\n$content = <<<'EOT'\n<!-- wp:shortcode -->\n[authoravatars roles=administrator,editor background_color='test\" onfocus=alert(1) tabindex=\"0\" ']\n<!-- /wp:shortcode -->\n\n<!-- wp:author-avatars/show-avatar {\"size\":140,\"email\":\"1\",\"link\":\"none\",\"display\":{\"show_name\":true,\"show_email\":true,\"show_nickname\":true,\"show_biography\":true,\"show_postcount\":true,\"show_last_post\":true},\"sort_avatars_by\":\"nickname\",\"background_color\":\"#a24949\",\"font_color\":\"#f7f4f4\",\"border_radius\":24,\"avatar_radius\":9,\"role\":{\"administrator\":true,\"editor\":true,\"subscriber\":true},\"border_size\":11,\"border_color\":\"#4c4040\",\"avatar_padding\":{\"top\":\"0\",\"right\":\"0\",\"bottom\":\"0\",\"left\":\"0\"},\"avatar_margin\":{\"top\":\"0\",\"right\":\"0\",\"bottom\":\"0\",\"left\":\"23\"},\"card_border\":{\"color\":\"#f20d0d\",\"style\":\"dashed\",\"width\":\"5px\"},\"card_min_width\":\"23\",\"card_max_width\":\"\",\"card_min_height\":\"220\"} /-->\n\n<!-- wp:author-avatars/show-avatar {\"display\":{\"show_email\":true},\"background_color\":\"#d8613c\",\"role\":{\"subscriber\":true,\"contributor\":true,\"author\":true,\"editor\":true,\"administrator\":true}} /-->\nEOT;\n\n// Insert the post exactly as it is\nremove_all_filters('content_save_pre');\nremove_all_filters('content_filtered_save_pre');\nremove_all_filters('excerpt_save_pre');\nremove_all_filters('pre_comment_content');\nremove_all_filters('pre_user_description');\n\nwp_insert_post([\n\t'post_title' => 'Author Avatars Preview',\n\t'post_content' => $content,\n\t'post_status' => 'publish',\n\t'post_type' => 'page',\n\t'post_name' => 'author-avatars-preview',\n]);\n"
+      "code": "<?php \nif ( file_exists( '/wordpress/wp-load.php' ) ) {\n\trequire_once '/wordpress/wp-load.php';\n} else {\n\trequire_once '/var/www/html/wp-load.php';\n}\n\n$content = <<<'EOT'\n<!-- wp:paragraph -->\n<p>Use the shortcode [authoravatars] there is wizard in the tinyMCE<br><em>Note: Not all the branding is supported via the short code</em></p>\n<!-- /wp:paragraph -->\n\n<!-- wp:shortcode -->\n[authoravatars roles=administrator,editor background_color='test\" onfocus=alert(1) tabindex=\"0\" ']\n<!-- /wp:shortcode -->\n\n<!-- wp:paragraph -->\n<p>Or use blocks and style them</p>\n<!-- /wp:paragraph -->\n\n<!-- wp:author-avatars/show-avatar {\"size\":140,\"email\":\"1\",\"link\":\"none\",\"display\":{\"show_name\":true,\"show_email\":true,\"show_nickname\":true,\"show_biography\":true,\"show_postcount\":true,\"show_last_post\":true},\"sort_avatars_by\":\"nickname\",\"background_color\":\"#a24949\",\"font_color\":\"#f7f4f4\",\"border_radius\":24,\"avatar_radius\":9,\"role\":{\"administrator\":true,\"subscriber\":true,\"editor\":true},\"border_size\":11,\"border_color\":\"#4c4040\",\"avatar_padding\":{\"top\":\"0\",\"right\":\"0\",\"bottom\":\"0\",\"left\":\"0\"},\"avatar_margin\":{\"top\":\"0\",\"right\":\"0\",\"bottom\":\"31\",\"left\":\"7px\"},\"card_border\":{\"color\":\"#f20d0d\",\"style\":\"dashed\",\"width\":\"5px\"},\"card_min_width\":\"184px\",\"card_max_width\":\"\",\"card_min_height\":\"236px\"} /-->\n\n<!-- wp:author-avatars/show-avatar {\"link\":\"authorpage\",\"display\":{\"show_name\":true},\"background_color\":\"#d8613c\",\"style\":{\"border\":{\"width\":\"20px\"},\"spacing\":{\"padding\":{\"top\":\"var:preset|spacing|20\",\"bottom\":\"var:preset|spacing|20\",\"left\":\"var:preset|spacing|20\",\"right\":\"var:preset|spacing|20\"}}},\"role\":{\"subscriber\":true,\"contributor\":true,\"author\":true,\"editor\":true,\"administrator\":true},\"card_min_width\":\"\",\"backgroundColor\":\"accent-2\",\"borderColor\":\"accent-1\"} /-->\nEOT;\n\n// Insert the post exactly as it is\nremove_all_filters('content_save_pre');\nremove_all_filters('content_filtered_save_pre');\nremove_all_filters('excerpt_save_pre');\nremove_all_filters('pre_comment_content');\nremove_all_filters('pre_user_description');\n\nwp_insert_post([\n\t'post_title' => 'Author Avatars Preview',\n\t'post_content' => $content,\n\t'post_status' => 'publish',\n\t'post_type' => 'page',\n\t'post_name' => 'author-avatars-preview',\n]);\n"
     }
-  ]
+  ],
+  "landingPage": "/author-avatars-preview"
 }
