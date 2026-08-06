@@ -127,6 +127,12 @@
     "avatar_margin": {
       "type": "object"
     },
+    "avatar_border": {
+      "type": "object"
+    },
+    "avatar_border_radius": {
+      "type": "object"
+    },
     "card_border": {
       "type": "object"
     },

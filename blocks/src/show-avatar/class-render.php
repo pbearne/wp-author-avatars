@@ -46,11 +46,10 @@ class Render {
 
 		$html = '';
 //		$html .= '<pre>';
-//
 //		$html .= print_r( $attributes, true );
 //		$html .= print_r( $content, true );
 //		$html .= '</pre>';
-//
+
 		if ( ! isset( $attributes['user_id'] ) ) {
 			if ( isset( $attributes['role'] ) ) {
 
@@ -64,7 +63,7 @@ class Render {
 			}
 		}
 
-//var_dump($attributes);
+
 		$atts = array(
 			'avatar_size'      => ( isset( $attributes['size'] ) ) ? esc_attr( $attributes['size'] ) : false,
 			'max_bio_length'   => (int) ( isset( $attributes['bio_length'] ) ) ? esc_attr( $attributes['bio_length'] ) : - 1,
@@ -173,6 +172,7 @@ class Render {
 	 * @return string
 	 */
 	private function apply_card_and_wrapper_styles( $html, $attributes ) {
+
 		$card_style = array();
 		if ( ! empty( $attributes['background_color'] ) ) {
 			$card_style[] = sprintf( 'background-color:%s;', sanitize_hex_color( $attributes['background_color'] ) );
@@ -246,61 +246,120 @@ class Render {
 			$card_style[] = rtrim( $avatar_styles['css'], ';' ) . ';';
 		}
 
-		// Native "Dimensions"/"Border" Style tab values apply to the OUTER
-		// block wrapper only. Skip this during the editor's ServerSideRender
-		// REST preview: Gutenberg's own block-list wrapper already shows the
-		// native border/spacing there via its built-in support HOCs, so
-		// applying it again here would double it up. On the real front end
-		// there is no such wrapper, so this is the only place it can render.
-		$is_editor_preview    = defined( 'REST_REQUEST' ) && REST_REQUEST;
-		$wrapper_styles       = $is_editor_preview ? array() : wp_style_engine_get_styles( array(
-			'spacing'    => $attributes['style']['spacing'] ?? array(),
-			'border'     => $attributes['style']['border'] ?? array(),
-			'color'      => $attributes['style']['color'] ?? array(),
-			'background' => $attributes['style']['background'] ?? array(),
-		) );
-		$wrapper_extra_style  = ! empty( $wrapper_styles['css'] ) ? rtrim( $wrapper_styles['css'], ';' ) . ';' : '';
+		// Avatar Image Border and Radius
+		$avatar_image_style = array();
+		$avatar_border_data = $attributes['avatar_border'] ?? array();
+		if ( ! empty( $attributes['avatar_border_radius'] ) ) {
+			$avatar_border_data['radius'] = $attributes['avatar_border_radius'];
+		}
+		if ( ! empty( $avatar_border_data ) ) {
+			// Ensure units for numeric values.
+			if ( isset( $avatar_border_data['radius'] ) ) {
+				if ( is_numeric( $avatar_border_data['radius'] ) ) {
+					$avatar_border_data['radius'] .= 'px';
+				} elseif ( is_array( $avatar_border_data['radius'] ) ) {
+					$avatar_border_data['radius'] = $this->add_missing_px_units( $avatar_border_data['radius'] );
+				}
+			}
+			foreach ( array( 'top', 'right', 'bottom', 'left' ) as $side ) {
+				if ( isset( $avatar_border_data[ $side ]['width'] ) && is_numeric( $avatar_border_data[ $side ]['width'] ) ) {
+					$avatar_border_data[ $side ]['width'] .= 'px';
+				}
+			}
+			if ( isset( $avatar_border_data['width'] ) && is_numeric( $avatar_border_data['width'] ) ) {
+				$avatar_border_data['width'] .= 'px';
+			}
 
-		if ( empty( $card_style ) && '' === $wrapper_extra_style ) {
-			return $html;
+			$avatar_border_styles = wp_style_engine_get_styles( array( 'border' => $avatar_border_data ) );
+			if ( ! empty( $avatar_border_styles['css'] ) ) {
+				$avatar_image_style[] = rtrim( $avatar_border_styles['css'], ';' ) . ';';
+			}
 		}
 
-		// Strip the plugin's own background/border/radius from the outer
-		// wrapper (moved to the card below), keeping layout declarations
-		// (e.g. padding-left / align), then add the native wrapper-level style.
+		$is_editor_preview = defined( 'REST_REQUEST' ) && REST_REQUEST;
+
+		// Process the outer wrapper div
 		$html = preg_replace_callback(
-			'/(<div class="shortcode-author-avatars" style=")([^"]*)(")/',
-			function ( $m ) use ( $wrapper_extra_style ) {
-				$kept = array();
-				foreach ( array_filter( array_map( 'trim', explode( ';', $m[2] ) ) ) as $decl ) {
+			'/(<div\s+class="shortcode-author-avatars"([^>]*)>)/i',
+			function ( $m ) use ( $attributes, $is_editor_preview ) {
+				$attrs_string = $m[2];
+
+				// Extract style and class from the legacy tag
+				$legacy_style = '';
+				if ( preg_match( '/style="([^"]*)"/i', $attrs_string, $s_match ) ) {
+					$legacy_style = $s_match[1];
+				}
+				$legacy_class = 'shortcode-author-avatars';
+				if ( preg_match( '/class="([^"]*)"/i', $attrs_string, $c_match ) ) {
+					$legacy_class = $c_match[1];
+				}
+
+				// Strip legacy card styles from legacy_style (they are moved to .user cards below)
+				$kept_styles = array();
+				foreach ( array_filter( array_map( 'trim', explode( ';', $legacy_style ) ) ) as $decl ) {
 					if ( ! preg_match( '/^(background-color|border-color|border-radius|border|color)\s*:/i', $decl ) ) {
-						$kept[] = $decl;
+						$kept_styles[] = $decl;
 					}
 				}
-				$style = $kept ? implode( '; ', $kept ) . ';' : '';
-				if ( $wrapper_extra_style ) {
-					$style .= ( $style ? ' ' : '' ) . $wrapper_extra_style;
+				$kept_style_string = implode( '; ', $kept_styles ) . ( $kept_styles ? ';' : '' );
+
+				// Remove existing class and style from attrs_string so we can replace them
+				$other_attrs = preg_replace( '/\b(class|style)\s*=\s*"[^"]*"\s*/i', '', $attrs_string );
+
+				// Get native wrapper attributes (classes and styles) for the front end.
+				// In the editor preview, ServerSideRender's own wrapper already handles these.
+				if ( ! $is_editor_preview && function_exists( 'get_block_wrapper_attributes' ) ) {
+					$wrapper_attributes = get_block_wrapper_attributes( array(
+						'class' => $legacy_class,
+						'style' => $kept_style_string,
+					) );
+					return '<div ' . $wrapper_attributes . ' ' . trim( $other_attrs ) . '>';
 				}
-				return $m[1] . $style . $m[3];
+
+				// Fallback or editor preview: reconstruct the tag manually
+				$new_attrs = ' class="' . esc_attr( $legacy_class ) . '"';
+				if ( $kept_style_string ) {
+					$new_attrs .= ' style="' . esc_attr( $kept_style_string ) . '"';
+				}
+				return '<div' . $new_attrs . ' ' . trim( $other_attrs ) . '>';
 			},
 			$html
 		);
 
-		if ( empty( $card_style ) ) {
+		if ( empty( $card_style ) && empty( $avatar_image_style ) ) {
 			return $html;
 		}
-		$card_style = implode( ' ', $card_style );
+		$card_style_string = implode( ' ', $card_style );
 
 		// Add the card style to each user's card div.
 		$html = preg_replace_callback(
 			'/(<div class="[^"]*\buser\b[^"]*" style=")([^"]*)(")/',
-			function ( $m ) use ( $card_style ) {
+			function ( $m ) use ( $card_style_string ) {
 				$existing = trim( $m[2] );
-				$style    = $existing ? rtrim( $existing, ';' ) . '; ' . $card_style : $card_style;
+				$style    = $existing ? rtrim( $existing, ';' ) . '; ' . $card_style_string : $card_style_string;
 				return $m[1] . $style . $m[3];
 			},
 			$html
 		);
+
+		// Add the avatar image style to each img tag inside the user div.
+		if ( ! empty( $avatar_image_style ) ) {
+			$avatar_image_style_string = implode( ' ', $avatar_image_style );
+			$html                      = preg_replace_callback(
+				'/(<img[^>]+class="[^"]*\bavatar\b[^"]*"[^>]*>)/i',
+				function ( $m ) use ( $avatar_image_style_string ) {
+					$tag = $m[1];
+					if ( preg_match( '/style="([^"]*)"/i', $tag, $s_match ) ) {
+						$existing = rtrim( trim( $s_match[1] ), ';' ) . '; ';
+						$new_tag  = str_replace( $s_match[0], 'style="' . $existing . $avatar_image_style_string . '"', $tag );
+					} else {
+						$new_tag = str_replace( '<img', '<img style="' . $avatar_image_style_string . '"', $tag );
+					}
+					return $new_tag;
+				},
+				$html
+			);
+		}
 
 		return $html;
 	}

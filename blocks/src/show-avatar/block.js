@@ -24,6 +24,16 @@ import {
 	ColorPicker,
 	CheckboxControl,
 	TextareaControl,
+	__experimentalUnitControl,
+	__experimentalBoxControl,
+	__experimentalBorderControl,
+	__experimentalBorderRadiusControl,
+	__experimentalBorderBoxControl,
+	UnitControl as _UnitControl,
+	BoxControl as _BoxControl,
+	BorderControl as _BorderControl,
+	BorderRadiusControl as _BorderRadiusControl,
+	BorderBoxControl as _BorderBoxControl,
 } from '@wordpress/components';
 import {
 	InspectorControls,
@@ -39,10 +49,11 @@ import _ServerSideRender from '@wordpress/server-side-render';
 
 const PanelColorSettingsEditor = PanelColorSettings || wp.editor?.PanelColorSettings || (() => null);
 const ServerSideRender = _ServerSideRender || wp.components?.ServerSideRender || (() => null);
-const UnitControl = wp.components?.__experimentalUnitControl || wp.components?.UnitControl || (() => null);
-const BoxControl = wp.components?.__experimentalBoxControl || wp.components?.BoxControl || (() => null);
-const BorderControl = wp.components?.__experimentalBorderControl || wp.components?.BorderControl || (() => null);
-const BorderRadiusControl = wp.components?.__experimentalBorderRadiusControl || wp.components?.BorderRadiusControl || (() => null);
+const UnitControl = _UnitControl || __experimentalUnitControl || wp.components?.__experimentalUnitControl || wp.components?.UnitControl || (() => null);
+const BoxControl = _BoxControl || __experimentalBoxControl || wp.components?.__experimentalBoxControl || wp.components?.BoxControl || (() => null);
+const BorderControl = _BorderControl || __experimentalBorderControl || wp.components?.__experimentalBorderControl || wp.components?.BorderControl || (() => null);
+const BorderBoxControl = _BorderBoxControl || __experimentalBorderBoxControl || wp.components?.__experimentalBorderBoxControl || wp.components?.BorderBoxControl || (() => null);
+const BorderRadiusControl = _BorderRadiusControl || __experimentalBorderRadiusControl || wp.components?.__experimentalBorderRadiusControl || wp.components?.BorderRadiusControl || wp.blockEditor?.__experimentalBorderRadiusControl || wp.blockEditor?.BorderRadiusControl || (() => null);
 
 const MultiCheckboxControl = ( { label, options, selected, onChange } ) => (
 	<Fragment>
@@ -254,31 +265,46 @@ const Edit = ( props ) => {
 					/>
 
 					<PanelBody title={ __( 'Avatar Card Styles', 'author-avatars' ) } initialOpen={ true }>
+							<div className="author-avatars-border-control-wrapper">
+								<BorderBoxControl
+								__next40pxDefaultSize={ true }
+								label={ __( 'Avatar Border', 'author-avatars' ) }
+								value={ attributes.avatar_border }
+								onChange={ ( value ) => setAttributes( { avatar_border: value } ) }
+							/>
+							<BorderRadiusControl
+								__next40pxDefaultSize={ true }
+								label={ __( 'Avatar Border Radius', 'author-avatars' ) }
+								values={ attributes.avatar_border_radius }
+								onChange={ ( value ) => setAttributes( { avatar_border_radius: value } ) }
+							/>
+						</div>
 						<div className="author-avatars-border-control-wrapper">
-							<BorderControl
-								label={ __( 'Border', 'author-avatars' ) }
+							<BorderBoxControl
+								__next40pxDefaultSize={ true }
+								label={ __( 'Card Border', 'author-avatars' ) }
 								value={ attributes.card_border }
 								onChange={ ( value ) => setAttributes( { card_border: value } ) }
 							/>
+							<BorderRadiusControl
+								__next40pxDefaultSize={ true }
+								label={ __( 'Card Border Radius', 'author-avatars' ) }
+								values={ attributes.card_border_radius }
+								onChange={ ( value ) => setAttributes( { card_border_radius: value } ) }
+							/>
 						</div>
-						<BorderRadiusControl
-							label={ __( 'Border Radius', 'author-avatars' ) }
-							values={ attributes.card_border_radius }
-							onChange={ ( value ) => setAttributes( { card_border_radius: value } ) }
-						/>
 						<BoxControl
 							__next40pxDefaultSize={ true }
-							label={ __( 'Padding', 'author-avatars' ) }
+							label={ __( 'Card Padding', 'author-avatars' ) }
 							values={ attributes.avatar_padding }
 							onChange={ ( value ) => setAttributes( { avatar_padding: value } ) }
 						/>
 						<BoxControl
 							__next40pxDefaultSize={ true }
-							label={ __( 'Margin', 'author-avatars' ) }
+							label={ __( 'Card Margin', 'author-avatars' ) }
 							values={ attributes.avatar_margin }
 							onChange={ ( value ) => setAttributes( { avatar_margin: value } ) }
 						/>
-
 						<PanelRow className="author-avatars-inline-unit-controls">
 							<UnitControl
 								__next40pxDefaultSize={ true }
