@@ -53,11 +53,11 @@ class AuthorAvatars {
 	function init() {
 
 		if ( ! $this->system_check() ) {
-			_e( 'Author avatars: system check failed.', 'author-avatars' );
+			esc_html_e( 'Author avatars: system check failed.', 'author-avatars' );
 		} elseif ( ! $this->install_check() ) {
-			_e( 'Author avatars: install check failed.', 'author-avatars' );
+			esc_html_e( 'Author avatars: install check failed.', 'author-avatars' );
 		} elseif ( ! $this->update_check() ) {
-			_e( 'Author avatars: update check failed.', 'author-avatars' );
+			esc_html_e( 'Author avatars: update check failed.', 'author-avatars' );
 		} else {
 
 			$this->init_settings();
@@ -125,7 +125,7 @@ class AuthorAvatars {
 		// styles
 		wp_register_style( 'author-avatars-widget', plugins_url( 'css/widget.css', __DIR__ ), array(), $aa_ver );
 		wp_register_style( 'author-avatars-shortcode', plugins_url( 'css/shortcode.css', __DIR__ ), array(), $aa_ver );
-		wp_register_style( 'admin-form', plugins_url( 'css/admin-form.css', __DIR__ ), array(), $aa_ver );
+		wp_register_style( 'admin-form', plugins_url( 'css/admin-form.css', __DIR__ ), array( 'dashicons' ), $aa_ver );
 
 		// scripts
 		wp_register_script( 'jquery-ui-resizable', plugins_url( 'js/jquery-ui.resizable.js', __DIR__ ), array( 'jquery-ui-core' ), '1.5.3' );
@@ -327,7 +327,8 @@ class AuthorAvatars {
 				$fn = 'update__' . preg_replace( "[^0-9]", "", $version ) . '_' . preg_replace( "[^0-9]", "", $new_version );
 
 				if ( method_exists( $this, $fn ) && ! $this->{$fn}() ) {
-					die( 'Author Avatars: error trying to update version ' . $version . ' to ' . $new_version . '. ' ); // FIXME: change error handling!?
+					/* translators: %1$s: old version  %2$s: new version*/
+					die( esc_html( sprintf( __( 'Author Avatars: error trying to update version %1$s to %2$s.', 'author-avatars' ), $version, $new_version ) ) );
 				}
 
 				$this->set_installed_version( $new_version );

@@ -178,14 +178,14 @@ class AuthorAvatarsWidget extends WP_Widget {
 		// add the standard title filter
 		$title = empty( $instance['title'] ) ? '' : apply_filters( 'widget_title', $instance['title'] );
 		// build the widget html
-		echo $before_widget;
+		echo $before_widget; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		if ( ! empty( trim( $title ) ) ) {
-			echo $before_title . $title . $after_title;
+			echo $before_title . $title . $after_title; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
 		$userlist->output();
 
-		echo $after_widget;
+		echo $after_widget; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	/**
@@ -279,7 +279,7 @@ class AuthorAvatarsWidget extends WP_Widget {
 		} else {
 			$adv_left .= $form->renderFieldOrder( array(), 'display][order' );
 		}
-		echo($adv_left);
+		// echo($adv_left);
 		if ( array_key_exists( 'sort_direction', $instance['display'] ) ) {
 			$adv_left .= $form->renderFieldSortDirection( $instance['display']['sort_direction'], 'display][sort_direction' );
 		}else {
@@ -319,10 +319,10 @@ class AuthorAvatarsWidget extends WP_Widget {
 		$advanced = '<h5>' . __( 'Advanced', 'author-avatars' ) . '</h5>';
 		$advanced .= $form->renderColumns( $adv_left, $adv_right );
 
-		echo '<div class="aa-widget-control-panel">' . $basic . $advanced . '</div>';
+		echo '<div class="aa-widget-control-panel">' . $basic . $advanced . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 		// hidden "submit=1" field (do we still need this?, FIXME)
-		echo AAFormHelper::input( 'hidden', $this->get_field_name( 'submit' ), '1', array( 'id' => $this->get_field_id( 'submit' ) ) );
+		echo AAFormHelper::input( 'hidden', $this->get_field_name( 'submit' ), '1', array( 'id' => $this->get_field_id( 'submit' ) ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	function get_field_name( $varname ) {

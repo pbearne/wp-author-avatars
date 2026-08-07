@@ -231,7 +231,7 @@ class UserList {
 	 * @return void
 	 */
 	function output() {
-		echo $this->get_output();
+		echo $this->get_output(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	/**
@@ -241,7 +241,7 @@ class UserList {
 	 */
 	public function ajax_output() {
 		// pass all the value into class
-		echo $this->get_output();
+		echo $this->get_output(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	/**
@@ -354,7 +354,7 @@ class UserList {
 	function setup_page_users_ajax() {
 
 		// create axjax calls
-		wp_register_script( 'author-avatars-shortcode-paging', plugins_url( '../js/AuthorAvatarsShortcode.paging.ajax.js', __FILE__ ), array( 'jquery-ui-core' ), '', true );
+		wp_register_script( 'author-avatars-shortcode-paging', plugins_url( '../js/AuthorAvatarsShortcode.paging.ajax.js', __FILE__ ), array( 'jquery-ui-core' ), AUTHOR_AVATARS_VERSION, true );
 
 		// pass values to JS
 		$params = array(
@@ -448,8 +448,8 @@ class UserList {
 		}
 
 		$title = $name;
-		// Translators: %s is for the name of the user
-		$alt = sprintf( __( 'avatar for %s', 'author-avatars'), $name );
+		/* translators: %s: user name */
+		$alt = sprintf( __( 'avatar for %1$s', 'author-avatars' ), $name );
 
 
 		$link       = false;
@@ -1158,8 +1158,9 @@ class UserList {
 					if ( null !== $coauthors_plus ) {
 
 						$args = array(
-							'orderby' => 'term_order',
-							'order'   => 'ASC',
+							'taxonomy' => $coauthors_plus->coauthor_taxonomy,
+							'orderby'  => 'term_order',
+							'order'    => 'ASC',
 						);
 						//	$args = array(
 						// 		'optioncount'      => false,
@@ -1176,7 +1177,7 @@ class UserList {
 
 						//	$coauthor_terms = coauthors_wp_list_authors( $args );
 
-						$coauthor_terms = get_terms( $coauthors_plus->coauthor_taxonomy, $args );
+						$coauthor_terms = get_terms( $args );
 
 						if ( is_array( $coauthor_terms ) && ! empty( $coauthor_terms ) ) {
 
@@ -1341,8 +1342,9 @@ class UserList {
 			if ( $roleQuery ) {
 				$or = ' or ';
 			}
-			$roleQuery .= $wpdb->prepare( $or . 'meta_value like %s', $role );
+			$roleQuery .= $or . $wpdb->prepare( 'meta_value like %s', $role );
 		}
+
 		if ( $roleQuery ) {
 			$roleQuery = ' AND(' . $roleQuery . ')';
 		}
@@ -2232,8 +2234,8 @@ class UserList {
 		}
 		if (empty( $b) ) {
             $b = '';
-        }   
-		
+        }
+
 		return strcasecmp( $a, $b );
 	}
 }

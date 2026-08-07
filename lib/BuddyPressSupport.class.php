@@ -45,7 +45,8 @@ class BuddyPressSupport {
 					foreach ( $profile_group->fields as $field ) {
 						//  echo $field->id . ' - ' . $field->name . '<br/>';
 						$id             = 'bp_' . str_replace( ' ', '_', $field->name );
-						$fields2[ $id ] = sprintf( __( 'BP %s profile: %s', 'author-avatars' ), $group_name, $field->name );
+						/* translators: 1: profile group name, 2: field name */
+						$fields2[ $id ] = sprintf( __( 'BP %1$s profile: %2$s', 'author-avatars' ), $group_name, $field->name );
 					}
 				}
 			}
