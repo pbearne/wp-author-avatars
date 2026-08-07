@@ -3,8 +3,8 @@ Contributors: pbearne, bforchhammer
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=MZTZ5S8MGF75C&lc=CA&item_name=Wordpress%20Development%20%2f%20Paul%20Bearne&item_number=AuthorAvatarsList%20Plugin&currency_code=CAD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted
 Tags: block, Avatar, Author, Image, Profile
 Requires at least: 3.0
-Tested up to: 7.0.0
-Stable tag: 2.1.26
+Tested up to: 7.1.0
+Stable tag: 2.1.29
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -72,6 +72,22 @@ If you have added CSS to your theme you may have to update it for this upgrade (
 7. Advance Gutenberg blocks options
 
 == Changelog ==
+
+2.1.29
+re-added missing avatar size setting removed by mistake in the control updates
+
+2.1.28
+Bumped block version
+added playground file
+
+2.1.27
+Update blocks to use the new block editor controls
+Bumped WP VERSION
+Added Playground file
+
+2.1.26
+Bumped WP VERSION
+
 2.1.25
 Added lazy loading tag to avatars
 Can be overriden with filter aa_user_avatar_lazy_load set to false

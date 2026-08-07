@@ -374,7 +374,8 @@ class UserList {
 	function format_user( $user ) {
 		$tpl_vars = array( '{class}' => '', '{user}' => '', '{style}' => '' );
 
-		$avatar_size = (int) $this->avatar_size;
+		$avatar_size_orig = $this->avatar_size;
+		$avatar_size = (int) $avatar_size_orig;
 		if ( ! $avatar_size ) {
 			$avatar_size = false;
 		}
@@ -516,13 +517,11 @@ class UserList {
 		}
 
 		if ( $this->show_postcount ) {
-
 			if ( - 1 == $user->user_id && 'guest-author' !== $type ) {
-				$postcount = $this->get_comment_count( $user->user_email );
-				$title .= ' (' . sprintf( _n( '%d comment', '%d comments', $postcount, 'author-avatars' ), $postcount ) . ')';
+				$postcount        = $this->get_comment_count( $user->user_email );
+				$post_count_title = sprintf( _n( '%d comment', '%d comments', $postcount, 'author-avatars' ), $postcount );
 			} else {
 				// this is passing 1 for coauthors
-
 				if ( 'guest-author' === $type && $user->linked_account ) {
 					$linked_user = get_user_by( 'login', $user->linked_account );
 					// fetch the linked account and show thats count
@@ -530,19 +529,38 @@ class UserList {
 				} else {
 					$postcount = $this->get_user_postcount( $user->user_id );
 				}
-
-				$title .= ' (' . sprintf( _n( '%d post', '%d posts', $postcount, 'author-avatars' ), $postcount ) . ')';
+				$post_count_title = sprintf( _n( '%d post', '%d posts', $postcount, 'author-avatars' ), $postcount );
 			}
-			$name .= sprintf( apply_filters( 'aa_post_count', ' <span class="aa-post-count-wrap-start">(</span>%d<span class="aa-post-count-wrap-end">)</span>', $postcount, $user ), $postcount );
+			$title .= ' (' . $post_count_title . ')';
+
+			$post_count_html = ' <span class="aa-post-count-wrap-start">(</span><span class="aa-post-count" title="' . esc_attr( $post_count_title ) . '">%d</span><span class="aa-post-count-wrap-end">)</span>';
+			// If we don't already have an overall link, add a link to the author's profile on the count.
+			if ( ! $link && $user->user_id > 0 ) {
+				if ( 'guest-author' === $type ) {
+					$author_posts_url = get_author_posts_url( $user->user_id, $user->user_nicename );
+				} else {
+					$author_posts_url = get_author_posts_url( $user->user_id );
+				}
+				$post_count_html = ' <span class="aa-post-count-wrap-start">(</span><a class="aa-post-count" href="' . esc_url( $author_posts_url ) . '" title="' . esc_attr( $post_count_title ) . '">%d</a><span class="aa-post-count-wrap-end">)</span>';
+			}
+			$name .= sprintf( apply_filters( 'aa_post_count', $post_count_html, $postcount, $user ), $postcount );
 		}
 
 		if ( $this->show_bbpress_post_count && AA_is_bbpress() ) {
 			$bb_press_postcount = 0;
 			if ( function_exists( 'bbp_get_user_topic_count_raw' ) ) {
-				$bb_press_postcount = bbp_get_user_topic_count_raw( $user->user_id ) + bbp_get_user_reply_count_raw( $user->user_id );
-				$title .= ' (' . sprintf( _n( '%d BBPress post', '%d BBPress posts', $bb_press_postcount, 'author-avatars' ), $bb_press_postcount ) . ')';
+				$bb_press_postcount  = bbp_get_user_topic_count_raw( $user->user_id ) + bbp_get_user_reply_count_raw( $user->user_id );
+				$bb_post_count_title = sprintf( _n( '%d BBPress post', '%d BBPress posts', $bb_press_postcount, 'author-avatars' ), $bb_press_postcount );
+				$title              .= ' (' . $bb_post_count_title . ')';
+
+				$bb_post_count_html = ' <span class="aa-bbpress-post-count" title="' . esc_attr( $bb_post_count_title ) . '">(%d)</span>';
+				// Link to profile if no overall link and it's a real user.
+				if ( ! $link && $user->user_id > 0 ) {
+					$author_posts_url   = get_author_posts_url( $user->user_id );
+					$bb_post_count_html = ' <a class="aa-bbpress-post-count" href="' . esc_url( $author_posts_url ) . '" title="' . esc_attr( $bb_post_count_title ) . '">(%d)</a>';
+				}
+				$name .= sprintf( apply_filters( 'aa_BBPress_post_count', $bb_post_count_html, $bb_press_postcount, $user ), $bb_press_postcount );
 			}
-			$name .= sprintf( apply_filters( 'aa_BBPress_post_count', ' (%d)', $postcount, $user ), $bb_press_postcount );
 		}
 
 		$biography = false;
@@ -823,24 +841,29 @@ class UserList {
 			}
 
 
-			if ( ! stripos( $avatar, 'style=' ) ) {
-				$avatar_style = '';
-				if ( ! empty( $this->avatar_radius ) ) {
-					$avatar_style .= ' border-radius:' . absint( $this->avatar_radius ) . '%;';
-				}
-				/**
-				 * filter the avatar alt
-				 *
-				 * @param string $alt users nicename.
-				 * @param object $user The user object
-				 */
-				$avatar_style = esc_attr( apply_filters( 'aa_user_avatar_style', $avatar_style, $user ) );
+		}
 
-				$avatar = preg_replace( '@ ?/>@', ' style="' . $avatar_style . '"  />', $avatar );
+		if ( ! stripos( $avatar, 'style=' ) ) {
+			$avatar_style = '';
+			if ( ! empty( $this->avatar_radius ) ) {
+				$avatar_style .= ' border-radius:' . absint( $this->avatar_radius ) . '%;';
 			}
 
+			if ( ! empty( $avatar_size_orig ) && ! is_numeric( $avatar_size_orig ) ) {
+				$avatar_style .= ' width:' . esc_attr( $avatar_size_orig ) . '; height:' . esc_attr( $avatar_size_orig ) . ';';
+			}
 
+			/**
+			 * filter the avatar style
+			 *
+			 * @param string $avatar_style The style string.
+			 * @param object $user The user object
+			 */
+			$avatar_style = esc_attr( apply_filters( 'aa_user_avatar_style', $avatar_style, $user ) );
+
+			$avatar = preg_replace( '@ ?/>@', ' style="' . $avatar_style . '"  />', $avatar );
 		}
+
 		if ( apply_filters( 'aa_user_avatar_lazy_load', true, $avatar, $user ) ) {
 			// add the lazy loading tag
 			$avatar = preg_replace( '@ ?/>@', ' loading="lazy" />', $avatar );

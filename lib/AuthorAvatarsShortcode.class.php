@@ -160,10 +160,7 @@ class AuthorAvatarsShortcode {
 
 		// avatar size
 		if ( ! empty( $atts['avatar_size'] ) ) {
-			$size = (int) $atts['avatar_size'];
-			if ( $size > 0 ) {
-				$this->userlist->avatar_size = $size;
-			}
+			$this->userlist->avatar_size = $atts['avatar_size'];
 		}
 		if ( ! empty( $atts['avatar_radius'] ) ) {
 			$avatar_radius = (int) $atts['avatar_radius'];

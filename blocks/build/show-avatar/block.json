@@ -1,17 +1,191 @@
 {
   "$schema": "https://schemas.wp.org/trunk/block.json",
-  "apiVersion": 2,
+  "apiVersion": 3,
   "name": "author-avatars/show-avatar",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "title": "Author Avatar List Block",
   "category": "widgets",
+  "keywords": [
+    "avatar",
+    "Author Avatars",
+    "profile pictures"
+  ],
   "icon": "businessman",
   "description": "Author Avatar List Block.",
-  "supports": {
-    "html": false
-  },
   "textdomain": "author-avatars-list-block",
   "editorScript": "file:./block.js",
   "editorStyle": "file:./block.css",
-  "style": "file:./style.css"
+  "style": "file:./style.css",
+  "example": {
+    "attributes": {
+      "preview": true
+    }
+  },
+  "attributes": {
+    "user_id": {
+      "type": "number",
+      "default": 0
+    },
+    "size": {
+      "type": "string",
+      "default": "50px"
+    },
+    "email": {
+      "type": "string"
+    },
+    "alignment": {
+      "type": "string",
+      "default": "left"
+    },
+    "link": {
+      "type": "string"
+    },
+    "display": {
+      "type": "object"
+    },
+    "sort_avatars_by": {
+      "type": "string"
+    },
+    "sort_order": {
+      "type": "string"
+    },
+    "limit": {
+      "type": "number"
+    },
+    "bio_length": {
+      "type": "number",
+      "default": 50
+    },
+    "page_size": {
+      "type": "number"
+    },
+    "min_post_count": {
+      "type": "number"
+    },
+    "hidden_users": {
+      "type": "string"
+    },
+    "whitelist_users": {
+      "type": "string"
+    },
+    "background_color": {
+      "type": "string",
+      "default": "#fff"
+    },
+    "font_color": {
+      "type": "string",
+      "default": "#000"
+    },
+    "style": {
+      "type": "object"
+    },
+    "block_style": {
+      "type": "string"
+    },
+    "className": {
+      "type": "string"
+    },
+    "border_radius": {
+      "type": "number",
+      "default": 0
+    },
+    "avatar_radius": {
+      "type": "number",
+      "default": 0
+    },
+    "sort": {
+      "type": "string"
+    },
+    "sort_by": {
+      "type": "string"
+    },
+    "role": {
+      "type": "object"
+    },
+    "blogs": {
+      "type": "object"
+    },
+    "border_size": {
+      "type": "number",
+      "default": 0
+    },
+    "border_color": {
+      "type": "string",
+      "default": "#000"
+    },
+    "link_color": {
+      "type": "string",
+      "default": "#0073aa"
+    },
+    "link_hover_color": {
+      "type": "string",
+      "default": "#005177"
+    },
+    "avatar_padding": {
+      "type": "object"
+    },
+    "avatar_margin": {
+      "type": "object"
+    },
+    "avatar_border": {
+      "type": "object"
+    },
+    "avatar_border_radius": {
+      "type": "object"
+    },
+    "card_border": {
+      "type": "object"
+    },
+    "card_border_radius": {
+      "type": "object"
+    },
+    "card_min_width": {
+      "type": "string"
+    },
+    "card_max_width": {
+      "type": "string"
+    },
+    "card_min_height": {
+      "type": "string"
+    },
+    "card_max_height": {
+      "type": "string"
+    }
+  },
+  "supports": {
+    "html": false,
+    "spacing": {
+      "margin": true,
+      "padding": true,
+      "__experimentalDefaultControls": {
+        "margin": false,
+        "padding": false
+      }
+    },
+    "__experimentalBorder": {
+      "color": true,
+      "radius": true,
+      "style": true,
+      "width": true,
+      "__experimentalDefaultControls": {
+        "color": false,
+        "radius": false,
+        "style": false,
+        "width": false
+      }
+    },
+    "color": {
+      "background": true,
+      "__experimentalDefaultControls": {
+        "background": true
+      }
+    },
+    "background": {
+      "backgroundImage": true,
+      "backgroundSize": true,
+      "__experimentalDefaultControls": {
+        "backgroundImage": true
+      }
+    }
+  }
 }

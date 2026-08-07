@@ -100,6 +100,30 @@ function register_author_avatars_block() {
 				'border_color'            => array(
 					'type' => 'string',
 				),
+				'link_color'            => array(
+					'type' => 'string',
+				),
+				'link_hover_color'      => array(
+					'type' => 'string',
+				),
+				'card_border'            => array(
+					'type' => 'object',
+				),
+				'card_border_radius'     => array(
+					'type' => 'object',
+				),
+				'card_min_width'            => array(
+					'type' => 'string',
+				),
+				'card_max_width'            => array(
+					'type' => 'string',
+				),
+				'card_min_height'            => array(
+					'type' => 'string',
+				),
+				'card_max_height'            => array(
+					'type' => 'string',
+				),
 			)
 		)
 	);

@@ -11,7 +11,10 @@
     text-align: center;
 }
 .shortcode-author-avatars div.author-list .user a {
-    color: inherit;
+    color: var(--aa-card-link-color, inherit);
+}
+.shortcode-author-avatars div.author-list .user a:hover {
+    color: var(--aa-card-link-hover-color, var(--aa-card-link-color, inherit));
 }
 
 .shortcode-author-avatars div.author-list .user .avatar img {
