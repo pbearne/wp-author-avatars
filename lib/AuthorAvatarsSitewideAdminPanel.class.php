@@ -76,7 +76,7 @@ class AuthorAvatarsSitewideAdminPanel {
 
 	function save_settings() {
 		check_admin_referer( 'wpmu_author_avatars');
-		$settings = $_POST['settings_sitewide'];
+		$settings = ( isset( $_POST['settings_sitewide'] ) ? wp_unslash( $_POST['settings_sitewide'] ) : array() );
 
 		return $this->settings->save_sitewide( $settings );
 	}

@@ -41,7 +41,7 @@ class Render {
 
 
 	public function callback( $attributes, $content ) {
-		wp_register_style( 'author-avatars-shortcode', plugins_url( 'css/shortcode.css',dirname(__DIR__) ) );
+		wp_register_style( 'author-avatars-shortcode', plugins_url( 'css/shortcode.css',dirname(__DIR__) ), '', AUTHOR_AVATARS_VERSION );
 
 
 		$html = '';

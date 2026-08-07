@@ -113,7 +113,6 @@ class AuthorAvatars {
 	function load_translation_domain() {
 		// load translation file
 		$plugin_dir = basename( dirname( __FILE__, 2 ) );
-		load_plugin_textdomain( 'author-avatars', false, $plugin_dir . '/translations' );
 	}
 
 	/**
@@ -128,14 +127,14 @@ class AuthorAvatars {
 		wp_register_style( 'admin-form', plugins_url( 'css/admin-form.css', __DIR__ ), array( 'dashicons' ), $aa_ver );
 
 		// scripts
-		wp_register_script( 'jquery-ui-resizable', plugins_url( 'js/jquery-ui.resizable.js', __DIR__ ), array( 'jquery-ui-core' ), '1.5.3' );
-		wp_register_script( 'author-avatars-form', plugins_url( 'js/form.js', __DIR__ ), array( 'jquery-ui-resizable' ), $aa_ver );
-		wp_register_script( 'author-avatars-widget-admin', plugins_url( 'js/widget.admin.js', __DIR__ ), array( 'author-avatars-form' ), $aa_ver );
-		wp_register_script( 'tinymce-popup', '/wp-includes/js/tinymce/tiny_mce_popup.js', array(), function_exists( 'mce_version' ) ? mce_version() : false );
+		wp_register_script( 'jquery-ui-resizable', plugins_url( 'js/jquery-ui.resizable.js', __DIR__ ), array( 'jquery-ui-core' ), $aa_ver, true );
+		wp_register_script( 'author-avatars-form', plugins_url( 'js/form.js', __DIR__ ), array( 'jquery-ui-resizable' ), $aa_ver, true );
+		wp_register_script( 'author-avatars-widget-admin', plugins_url( 'js/widget.admin.js', __DIR__ ), array( 'author-avatars-form' ), $aa_ver, true );
+		wp_register_script( 'tinymce-popup', '/wp-includes/js/tinymce/tiny_mce_popup.js', array(), function_exists( 'mce_version' ) ? mce_version() : false, true );
 		wp_register_script( 'author-avatars-tinymce-popup', plugins_url( 'js/tinymce.popup.js', __DIR__ ), array(
 				'author-avatars-form',
 				'jquery-ui-tabs'
-			), $aa_ver );
+			), $aa_ver, true );
 	}
 
 	// /**
@@ -165,7 +164,7 @@ class AuthorAvatars {
 	 */
 
 	function admin_enqueue_resources() {
-		if ( is_admin() && basename( $_SERVER['PHP_SELF'] ) === 'widgets.php' ) {
+		if ( is_admin() && isset( $_SERVER['PHP_SELF'] ) && basename( wp_unslash( $_SERVER['PHP_SELF'] ) ) === 'widgets.php' ) {
 			wp_enqueue_script( 'author-avatars-widget-admin' );
 			wp_enqueue_style( 'admin-form' );
 		}

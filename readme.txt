@@ -75,6 +75,8 @@ If you have added CSS to your theme you may have to update it for this upgrade (
 
 2.2.0
 fixed an issue the paging AAjax not checking the values passed were allowed
+Tidy up the code
+
 
 2.1.29
 re-added missing avatar size setting removed by mistake in the control updates
