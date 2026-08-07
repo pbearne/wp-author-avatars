@@ -1,4 +1,8 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ! function_exists( 'AA_is_wpmu' ) ) :
 	/**
 	 * Helper function which checks whether we are running wpmu

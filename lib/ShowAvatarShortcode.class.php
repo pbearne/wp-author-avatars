@@ -1,5 +1,9 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Show Avatar Shortcode: provides a shortcode for displaying avatars for any email address/userid
  */

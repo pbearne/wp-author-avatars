@@ -1,5 +1,9 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Author Avatars Shortcode: provides a shortcode for displaying avatars of blog users
  *

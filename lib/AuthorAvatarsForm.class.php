@@ -1,5 +1,9 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Collection of functions for form fields used in author avatars widget and shortcode wizard
  */

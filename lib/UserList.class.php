@@ -1,5 +1,9 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * User list class: provides a filtered and ordered list of users and different ways of outputting them.
  *

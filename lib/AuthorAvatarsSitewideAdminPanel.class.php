@@ -1,5 +1,9 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Class providing a sitewide settings page on WPMU systems.
  * Sitewide settings pages can only be seen by

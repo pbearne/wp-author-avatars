@@ -1,4 +1,10 @@
-<?php  if ( ! class_exists( 'AAFormHelper' ) ):
+<?php
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+if ( ! class_exists( 'AAFormHelper' ) ):
 
 	/*
 	Copyright (c) 2009 Benedikt Forchhammer

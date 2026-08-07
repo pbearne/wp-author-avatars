@@ -1,4 +1,10 @@
-<?php  if(!class_exists('MultiWidget')):
+<?php
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+if(!class_exists('MultiWidget')):
 
 /*
 Copyright (c) 2008 Alex Tingle.

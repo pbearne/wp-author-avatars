@@ -5,6 +5,10 @@
  * Performs updates and initialises widgets, shortcodes, admin areas.
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 // include global helper functions file.
 require_once( __DIR__ . '/helper.functions.php' );
 // include settings file
