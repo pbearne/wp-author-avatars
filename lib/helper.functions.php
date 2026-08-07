@@ -241,13 +241,83 @@ if ( ! function_exists( 'aa_clean_commas' ) ) :
 	 */
 
 	function aa_clean_commas( $string ) {
+		if ( is_string( $string ) ) {
 
-	 if( is_string($string) ) {
-
-		 return trim( $string, ',:;`.' );
-     }
+			return trim( $string, ',:;`.' );
+		}
 
 		return $string;
+	}
+endif;
+
+if ( ! function_exists( 'AA_get_shortcode_hash' ) ) :
+	/**
+	 * Get a hash for shortcode attributes to secure AJAX paging.
+	 *
+	 * @param array $params
+	 *
+	 * @return string
+	 */
+	function AA_get_shortcode_hash( $params ) {
+		$hash_data = array();
+		$keys      = array(
+			'hiddenusers',
+			'whitelistusers',
+			'onlyusers',
+			'blogs',
+			'roles',
+			'group_by',
+			'user_link',
+			'contact_links',
+			'show_name',
+			'show_nickname',
+			'show_postcount',
+			'show_bbpress_post_count',
+			'show_biography',
+			'bio_length',
+			'max_bio_length',
+			'show_last_post',
+			'show_email',
+			'avatar_size',
+			'avatar_radius',
+			'border_radius',
+			'align',
+			'limit',
+			'min_post_count',
+			'page_size',
+			'order',
+			'sort_direction',
+			'render_as_list',
+			'background_color',
+			'font_color',
+			'border_size',
+			'border_color',
+			'link_color',
+			'link_hover_color',
+			'card_border',
+			'card_border_radius',
+			'card_min_width',
+			'card_max_width',
+			'card_min_height',
+			'card_max_height',
+			'avatar_padding',
+			'avatar_margin',
+			'avatar_border',
+			'avatar_border_radius',
+		);
+		foreach ( $keys as $key ) {
+			if ( isset( $params[ $key ] ) ) {
+				$val = $params[ $key ];
+				if ( is_array( $val ) ) {
+					sort( $val );
+					$val = implode( ',', $val );
+				}
+				$hash_data[ $key ] = (string) $val;
+			}
+		}
+		ksort( $hash_data );
+
+		return md5( serialize( $hash_data ) );
 	}
 endif;
 

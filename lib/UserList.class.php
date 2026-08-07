@@ -109,6 +109,31 @@ class UserList {
 	var $avatar_size = 0;
 
 	/**
+	 * Flag whether to render as a list.
+	 */
+	var $render_as_list = false;
+
+	/**
+	 * Styling properties for avatar cards.
+	 */
+	var $background_color;
+	var $font_color;
+	var $border_size;
+	var $border_color;
+	var $link_color;
+	var $link_hover_color;
+	var $card_border;
+	var $card_border_radius;
+	var $card_min_width;
+	var $card_max_width;
+	var $card_min_height;
+	var $card_max_height;
+	var $avatar_padding;
+	var $avatar_margin;
+	var $avatar_border;
+	var $avatar_border_radius;
+
+	/**
 	 * Maximum number of users.
 	 */
 	var $limit = 0;
@@ -187,6 +212,7 @@ class UserList {
 	 * @return void
 	 */
 	function use_list_template( $ordered = false ) {
+		$this->render_as_list = true;
 		if ( (bool) $ordered ) {
 			$this->userlist_template = '<ol class="author-list">{users}</ol>';
 		} else {
@@ -328,9 +354,9 @@ class UserList {
 
 		// pass values to JS
 		$params = array(
-
 			'hiddenusers'             => $this->hiddenusers,
 			'whitelistusers'          => $this->whitelistusers,
+			'onlyusers'               => $this->onlyusers,
 			'blogs'                   => $this->blogs,
 			'roles'                   => $this->roles,
 			'group_by'                => $this->group_by,
@@ -340,21 +366,31 @@ class UserList {
 			'show_postcount'          => $this->show_postcount,
 			'show_bbpress_post_count' => $this->show_bbpress_post_count,
 			'show_biography'          => $this->show_biography,
-			'bio_length'              => $this->bio_length,
+			'max_bio_length'          => $this->bio_length,
 			'show_last_post'          => $this->show_last_post,
 			'show_email'              => $this->show_email,
 			'contact_links'           => $this->contact_links,
 			'avatar_size'             => $this->avatar_size,
+			'avatar_radius'           => $this->avatar_radius,
+			'border_radius'           => $this->border_radius,
+			'align'                   => $this->align,
 			'limit'                   => $this->limit,
 			'min_post_count'          => $this->min_post_count,
 			'page_size'               => $this->page_size,
 			'order'                   => $this->order,
 			'sort_direction'          => $this->sort_direction,
-			'postCommentNonce'        => wp_create_nonce( 'author-avatars-shortcode-paging-nonce' ),
-			'action'                  => 'AA_shortcode_paging',
-			'aa_page'                 => 0,
-			'ajax_url'                => admin_url( 'admin-ajax.php' ),
+			'render_as_list'          => $this->render_as_list ? 'true' : 'false',
 		);
+		foreach ( array( 'background_color', 'font_color', 'border_size', 'border_color', 'link_color', 'link_hover_color', 'card_border', 'card_border_radius', 'card_min_width', 'card_max_width', 'card_min_height', 'card_max_height', 'avatar_padding', 'avatar_margin', 'avatar_border', 'avatar_border_radius' ) as $key ) {
+			if ( isset( $this->$key ) ) {
+				$params[ $key ] = $this->$key;
+			}
+		}
+		$nonce_hash              = AA_get_shortcode_hash( $params );
+		$params['postCommentNonce'] = wp_create_nonce( 'author-avatars-shortcode-paging-nonce-' . $nonce_hash );
+		$params['action']           = 'AA_shortcode_paging';
+		$params['aa_page']          = 0;
+		$params['ajax_url']         = admin_url( 'admin-ajax.php' );
 
 		wp_enqueue_script( 'author-avatars-shortcode-paging' );
 		wp_localize_script( 'author-avatars-shortcode-paging', 'shortCodeValues', $params );

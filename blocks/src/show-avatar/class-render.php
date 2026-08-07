@@ -86,10 +86,10 @@ class Render {
 			}
 		}
 		if ( 0 === (int) $attributes['user_id'] ) {
-			require_once( dirname( dirname( dirname(__DIR__ ) ) ) . '/lib/AuthorAvatarsShortcode.class.php' );
+			require_once( dirname( dirname( dirname( __DIR__ ) ) ) . '/lib/AuthorAvatarsShortcode.class.php' );
 			$render = new \AuthorAvatarsShortcode();
 
-			$atts['roles'] = ( isset( $attributes['role'] ) )? array_keys( $attributes['role'] ) : array();
+			$atts['roles'] = ( isset( $attributes['role'] ) ) ? array_keys( $attributes['role'] ) : array();
 
 			if ( isset( $attributes['blogs'] ) ) {
 
@@ -132,10 +132,12 @@ class Render {
 				$atts['sort_direction'] = $attributes['sort_order'];
 			}
 
+			// Add all other attributes for styling post-processing
+			$atts = array_merge( $attributes, $atts );
 
 			$html .= $render->shortcode_handler( $atts );
 		} else {
-			require_once( dirname( dirname( dirname(__DIR__ ) ) ) . '/lib/ShowAvatarShortcode.class.php' );
+			require_once( dirname( dirname( dirname( __DIR__ ) ) ) . '/lib/ShowAvatarShortcode.class.php' );
 			$render = new \ShowAvatarShortcode();
 
 
@@ -145,10 +147,13 @@ class Render {
 				$atts['id'] = $attributes['user_id'];
 			}
 
+			// Add all other attributes for styling post-processing
+			$atts = array_merge( $attributes, $atts );
+
 			$html .= $render->shortcode_handler( $atts );
 		}
 
-		return $this->apply_card_and_wrapper_styles( $html, $attributes );
+		return $html;
 	}
 
 	/**

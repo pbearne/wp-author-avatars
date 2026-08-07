@@ -3,14 +3,14 @@
 Plugin Name: Author Avatars List/Block
 Plugin URI: http://authoravatars.wordpress.com/
 Description: Display lists of user avatars using <a href="widgets.php">widgets</a> ,<a href="https://authoravatars.wordpress.com/documentation/">shortcodes</a> and Gutenberg blocks.
-Version: 2.1.29
+Version: 2.2.0
 Author: Paul Bearne
 Text Domain: author-avatars
 Domain Path: /translations
 */
 
 // The current version of the author avatars plugin. Needs to be updated every time we do a version step.
-define( 'AUTHOR_AVATARS_VERSION', '2.1.29' );
+define( 'AUTHOR_AVATARS_VERSION', '2.2.0' );
 
 // List of all version that need an upgrade, used during update check. (Append new version to the end and write an update__10_11 method on AuthorAvatars class if needed)
 define( 'AUTHOR_AVATARS_VERSION_HISTORY', serialize( array(
@@ -30,14 +30,14 @@ add_action( 'wp_ajax_nopriv_AA_shortcode_paging', 'AA_shortcode_paging' );
 function AA_shortcode_paging() {
 	// check to see if the submitted nonce matches with the
 	// generated nonce we created earlier
-	if ( ! wp_verify_nonce( $_POST['postCommentNonce'], 'author-avatars-shortcode-paging-nonce' ) ) {
+	$nonce_hash = AA_get_shortcode_hash( $_POST );
+	if ( ! wp_verify_nonce( $_POST['postCommentNonce'], 'author-avatars-shortcode-paging-nonce-' . $nonce_hash ) ) {
 		die( 'Busted!' );
 	}
 	// need to create class in the function scope
 	$aaa = new AuthorAvatars();
 	$aaa->init_shortcodes();
-	echo substr( str_replace( '<div class="shortcode-author-avatars">', '', $aaa->author_avatars_shortcode->shortcode_handler( $_POST ) ), 0, - 6 );
-	// echo	$aaa->author_avatars_shortcode->userlist->ajax_output();//. $aa->userlist->content .$aa->userlist->pagingHTML ;
+	echo $aaa->author_avatars_shortcode->shortcode_handler( $_POST, null, true );
 	die();
 }
 

@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=MZTZ5
 Tags: block, Avatar, Author, Image, Profile
 Requires at least: 3.0
 Tested up to: 7.1.0
-Stable tag: 2.1.29
+Stable tag: 2.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -72,6 +72,9 @@ If you have added CSS to your theme you may have to update it for this upgrade (
 7. Advance Gutenberg blocks options
 
 == Changelog ==
+
+2.2.0
+fixed an issue the paging AAjax not checking the values passed were allowed
 
 2.1.29
 re-added missing avatar size setting removed by mistake in the control updates
