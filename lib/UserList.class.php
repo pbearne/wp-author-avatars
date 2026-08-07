@@ -555,6 +555,7 @@ class UserList {
 		if ( $this->show_postcount ) {
 			if ( - 1 == $user->user_id && 'guest-author' !== $type ) {
 				$postcount        = $this->get_comment_count( $user->user_email );
+				/* translators: %d: comment count */
 				$post_count_title = sprintf( _n( '%d comment', '%d comments', $postcount, 'author-avatars' ), $postcount );
 			} else {
 				// this is passing 1 for coauthors
@@ -565,6 +566,7 @@ class UserList {
 				} else {
 					$postcount = $this->get_user_postcount( $user->user_id );
 				}
+				/* translators: %d: post count */
 				$post_count_title = sprintf( _n( '%d post', '%d posts', $postcount, 'author-avatars' ), $postcount );
 			}
 			$title .= ' (' . $post_count_title . ')';
@@ -586,6 +588,7 @@ class UserList {
 			$bb_press_postcount = 0;
 			if ( function_exists( 'bbp_get_user_topic_count_raw' ) ) {
 				$bb_press_postcount  = bbp_get_user_topic_count_raw( $user->user_id ) + bbp_get_user_reply_count_raw( $user->user_id );
+				/* translators: %d: post count */
 				$bb_post_count_title = sprintf( _n( '%d BBPress post', '%d BBPress posts', $bb_press_postcount, 'author-avatars' ), $bb_press_postcount );
 				$title              .= ' (' . $bb_post_count_title . ')';
 

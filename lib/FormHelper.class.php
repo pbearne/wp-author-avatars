@@ -55,7 +55,7 @@
 		static function choice( $name, $choices, $values, $attributes = array() ) {
 			// make sure we have an array of choices
 			if ( ! is_array( $choices ) || empty( $choices ) ) {
-				return __( "Sorry, no choices available." );
+				return __( "Sorry, no choices available.", 'author-avatars' );
 			}
 
 			// make sure we have all values in an array.

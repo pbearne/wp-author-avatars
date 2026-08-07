@@ -6,8 +6,13 @@ Description: Display lists of user avatars using <a href="widgets.php">widgets</
 Version: 2.2.0
 Author: Paul Bearne
 Text Domain: author-avatars
+License: GPLv2 or later
 Domain Path: /translations
 */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 // The current version of the author avatars plugin. Needs to be updated every time we do a version step.
 define( 'AUTHOR_AVATARS_VERSION', '2.2.0' );

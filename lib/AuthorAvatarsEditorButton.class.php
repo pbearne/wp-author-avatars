@@ -162,10 +162,10 @@ class AuthorAvatarsEditorButton {
 		$html = '<div class="aa-tabs">' . $form->renderTabList() . $tabs . '</div>';
 		$html .= "\n\t" . '<div class="mceActionPanel"> ' . AA_donateButton();
 		$html .= "\n\t" . '<div style="float: left; margin-left: 20px;">';
-		$html .= "\n\t" . '<input class="button button-secondary" type="button" id="cancel" name="cancel" value="' . __( "Cancel" ) . '" onclick="tinyMCEPopup.close();" />';
+		$html .= "\n\t" . '<input class="button button-secondary" type="button" id="cancel" name="cancel" value="' . __( 'Cancel', 'author-avatars' ) . '" onclick="tinyMCEPopup.close();" />';
 		$html .= "\n\t" . '</div>';
 		$html .= "\n\t" . '<div style="float: right; margin-right: 20px;">';
-		$html .= "\n\t" . '<input class="button button-primary"  type="submit" id="insert" name="insert" value="' . __( "Insert" ) . '" />';
+		$html .= "\n\t" . '<input class="button button-primary"  type="submit" id="insert" name="insert" value="' . __( 'Insert', 'author-avatars' ) . '" />';
 		$html .= "\n\t" . '</div>';
 		$html .= "\n\t" . '</div>';
 

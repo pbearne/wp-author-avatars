@@ -81,7 +81,7 @@ re-added missing avatar size setting removed by mistake in the control updates
 
 2.1.28
 Bumped block version
-added playground file
+added a playground file
 
 2.1.27
 Update blocks to use the new block editor controls
