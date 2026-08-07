@@ -312,14 +312,20 @@ if ( ! function_exists( 'AA_get_shortcode_hash' ) ) :
 			'avatar_border_radius',
 		);
 		foreach ( $keys as $key ) {
-			if ( isset( $params[ $key ] ) ) {
-				$val = $params[ $key ];
-				if ( is_array( $val ) ) {
-					sort( $val );
-					$val = implode( ',', $val );
-				}
-				$hash_data[ $key ] = (string) $val;
+			$val = isset( $params[ $key ] ) ? $params[ $key ] : '';
+			if ( is_array( $val ) ) {
+				sort( $val );
+				$val = implode( ',', $val );
 			}
+
+			// Normalize values
+			if ( $val === true || $val === 'true' || $val === '1' ) {
+				$val = '1';
+			} elseif ( $val === false || $val === 'false' || $val === '' ) {
+				$val = '';
+			}
+
+			$hash_data[ $key ] = (string) $val;
 		}
 		ksort( $hash_data );
 

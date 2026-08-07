@@ -33,9 +33,12 @@ add_action( 'wp_ajax_AA_shortcode_paging', 'AA_shortcode_paging' );
 add_action( 'wp_ajax_nopriv_AA_shortcode_paging', 'AA_shortcode_paging' );
 
 function AA_shortcode_paging() {
+	$params = wp_unslash( $_POST );
+	$nonce  = isset( $params['postCommentNonce'] ) ? $params['postCommentNonce'] : '';
+
 	// check to see if the submitted nonce matches with the
 	// generated nonce we created earlier
-	if ( ! array_key_exists( 'postCommentNonce', $_POST ) || ! wp_verify_nonce( wp_unslash( $_POST['postCommentNonce'] ), 'author-avatars-shortcode-paging-nonce-' . AA_get_shortcode_hash( wp_unslash( $_POST ) ) ) ) {
+	if ( ! wp_verify_nonce( $nonce, 'author-avatars-shortcode-paging-nonce-' . AA_get_shortcode_hash( $params ) ) ) {
 		die( 'Busted!' );
 	}
 	// need to create class in the function scope

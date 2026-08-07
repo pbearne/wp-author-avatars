@@ -390,6 +390,7 @@ class UserList {
 				$params[ $key ] = $this->$key;
 			}
 		}
+
 		$nonce_hash              = AA_get_shortcode_hash( $params );
 		$params['postCommentNonce'] = wp_create_nonce( 'author-avatars-shortcode-paging-nonce-' . $nonce_hash );
 		$params['action']           = 'AA_shortcode_paging';
