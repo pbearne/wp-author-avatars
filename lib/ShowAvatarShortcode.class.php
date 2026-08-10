@@ -1,5 +1,9 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Show Avatar Shortcode: provides a shortcode for displaying avatars for any email address/userid
  */
@@ -85,7 +89,7 @@ class ShowAvatarShortcode {
 		if ( ! empty( $id ) ) {
 			$avatar = get_avatar( $id, $avatar_size );
 		} else {
-			$avatar = __( "[show_author shortcode: please set id/email attribute]" );
+			$avatar = __( '[show_author shortcode: please set id/email attribute]', 'author-avatars' );
 		}
 		// is there an user link request
 
@@ -268,6 +272,7 @@ class ShowAvatarShortcode {
 
 						case 'show_postcount':
 							$postcount        = $this->userlist->get_user_postcount( $id );
+							/* translators: %d: post count */
 							$post_count_title = sprintf( _n( '%d post', '%d posts', $postcount, 'author-avatars' ), $postcount );
 							if ( ! empty( $hrefStart ) ) {
 								$name .= ' <span class="aa-post-count" title="' . esc_attr( $post_count_title ) . '">(' . $postcount . ')</span>';
@@ -281,6 +286,7 @@ class ShowAvatarShortcode {
 						case 'show_bbpress_post_count':
 							if ( function_exists( 'bbp_get_user_topic_count_raw' ) ) {
 								$bbp_postcount        = bbp_get_user_topic_count_raw( $id ) + bbp_get_user_reply_count_raw( $id );
+								/* translators: %d: post count */
 								$bbp_post_count_title = sprintf( _n( '%d BBPress post', '%d BBPress posts', $bbp_postcount, 'author-avatars' ), $bbp_postcount );
 								if ( ! empty( $hrefStart ) ) {
 									$name .= ' <span class="aa-bbpress-post-count" title="' . esc_attr( $bbp_post_count_title ) . '">(' . $bbp_postcount . ')</span>';

@@ -1,4 +1,10 @@
-<?php  if(!class_exists('MultiWidget')):
+<?php
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+if(!class_exists('MultiWidget')):
 
 /*
 Copyright (c) 2008 Alex Tingle.
@@ -311,10 +317,10 @@ class ExampleMultiWidget extends MultiWidget
   function widget($args,$instance)
   {
     extract($args,EXTR_SKIP);
-    echo $before_widget;
-    echo   $before_title . $instance['title'] . $after_title;
-    echo   $instance['content'];
-    echo $after_widget;
+    echo $before_widget; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+    echo   $before_title . $instance['title'] . $after_title; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+    echo   $instance['content']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+    echo $after_widget; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
   }
 
 
@@ -341,22 +347,22 @@ class ExampleMultiWidget extends MultiWidget
 ?>
     <p>
 
-     <label for="<?php echo $this->get_field_id('title') ?>">
-      <?php _e('Title:'); ?>
-      <input class="widefat" id="<?php echo $this->get_field_id('title') ?>"
-       name="<?php echo $this->get_field_name('title') ?>" type="text"
-       value="<?php echo htmlspecialchars($instance['title'],ENT_QUOTES) ?>" />
+     <label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>">
+      <?php esc_html_e( 'Title:' ); ?>
+      <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"
+       name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text"
+       value="<?php echo esc_attr( $instance['title'] ); ?>" />
      </label>
 
-     <label for="<?php echo $this->get_field_id('content') ?>">
-      <?php _e('Content:'); ?>
-      <input class="widefat" id="<?php echo $this->get_field_id('content') ?>"
-       name="<?php echo $this->get_field_name('content') ?>" type="text"
-       value="<?php echo htmlspecialchars($instance['content'],ENT_QUOTES) ?>" />
+     <label for="<?php echo esc_attr( $this->get_field_id( 'content' ) ); ?>">
+      <?php esc_html_e( 'Content:' ); ?>
+      <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'content' ) ); ?>"
+       name="<?php echo esc_attr( $this->get_field_name( 'content' ) ); ?>" type="text"
+       value="<?php echo esc_attr( $instance['content'] ); ?>" />
      </label>
 
-     <input type="hidden" id="<?php echo $this->get_field_id('submit') ?>"
-      name="<?php echo $this->get_field_name('submit') ?>" value="1" />
+     <input type="hidden" id="<?php echo esc_attr( $this->get_field_id( 'submit' ) ); ?>"
+      name="<?php echo esc_attr( $this->get_field_name( 'submit' ) ); ?>" value="1" />
 
     </p>
 <?php

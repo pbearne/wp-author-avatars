@@ -1,5 +1,9 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Class providing a sitewide settings page on WPMU systems.
  * Sitewide settings pages can only be seen by
@@ -72,7 +76,7 @@ class AuthorAvatarsSitewideAdminPanel {
 
 	function save_settings() {
 		check_admin_referer( 'wpmu_author_avatars');
-		$settings = $_POST['settings_sitewide'];
+		$settings = ( isset( $_POST['settings_sitewide'] ) ? wp_unslash( $_POST['settings_sitewide'] ) : array() );
 
 		return $this->settings->save_sitewide( $settings );
 	}
@@ -80,39 +84,38 @@ class AuthorAvatarsSitewideAdminPanel {
 	function render_config_page( $updated ) {
 		require_once( 'AAFormHelper.class.php' );
 
-		echo '<div class="wrap">';
+		echo '<div class="wrap">'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 		if ( $updated === true ) {
-			echo '<div id="message" class="updated fade"><p>' . __( 'Options saved.', 'author-avatars' ) . '</p></div>';
+			echo '<div id="message" class="updated fade"><p>' . esc_html__( 'Options saved.', 'author-avatars' ) . '</p></div>';
 		} elseif ( is_array( $updated ) ) {
-			echo '<div class="error"><p>' . implode( '<br />', $updated ) . '</p></div>';
+			echo '<div class="error"><p>' . wp_kses_post( implode( '<br />', $updated ) ) . '</p></div>';
 		}
 
-		echo '<h2>' . __( 'Sitewide Author Avatars Options', 'author-avatars' ) . '</h2>';
+		echo '<h2>' . esc_html__( 'Sitewide Author Avatars Options', 'author-avatars' ) . '</h2>';
 
-		echo '<form method="post" id="wpmu_author_avatars_settings" action="">';
-		echo '<h3>' . __( 'Avatar list settings', 'author-avatars' ) . '</h3>';
-		echo '<table class="form-table">';
+		echo '<form method="post" id="wpmu_author_avatars_settings" action="">'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo '<h3>' . esc_html__( 'Avatar list settings', 'author-avatars' ) . '</h3>';
+		echo '<table class="form-table">'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		$this->_render_blogfilter_active_setting();
 
-		echo '</table>';
-		echo AAFormHelper::input( 'hidden', 'action', 'update' );
-		echo AAFormHelper::input( 'hidden', '_wpnonce', wp_create_nonce( 'wpmu_author_avatars' ) );
-		echo '<p class="submit">';
-		echo AAFormHelper::input( 'submit', 'wpmu_author_avatars_settings_save', __( 'Save Changes', 'author-avatars' ) );
-		echo '</p>';
-		echo '</form>';
-		echo '</div>';
+		echo '</table>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo AAFormHelper::input( 'hidden', 'action', 'update' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo AAFormHelper::input( 'hidden', '_wpnonce', wp_create_nonce( 'wpmu_author_avatars' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo '<p class="submit">'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo AAFormHelper::input( 'submit', 'wpmu_author_avatars_settings_save', __( 'Save Changes', 'author-avatars' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo '</p>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo '</form>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	function _render_blogfilter_active_setting() {
 		require_once( 'AuthorAvatarsForm.class.php' );
 
-		echo '<tr>';
-		echo '<th scope="row">' . __( 'Enable blog filter', 'author-avatars' ) . '</th><td>';
+		echo '<tr><th scope="row">' . esc_html__( 'Enable blog filter', 'author-avatars' ) . '</th><td>';
 		$form = new AuthorAvatarsForm();
 
-		echo AAFormHelper::choice(
+		echo wp_kses( AAFormHelper::choice(
 			'settings_sitewide[blog_filters_enabled]',
 			$form->_getAllBlogs(),
 			$this->settings->get_sitewide( 'blog_filters_enabled' ),
@@ -120,8 +123,6 @@ class AuthorAvatarsSitewideAdminPanel {
 				'multiple' => true,
 				'label'    => esc_html__( 'Set the blogs which you would like the blog filter to be enabled. Only blogs selected here can display users from other blogs.', 'author-avatars' ),
 			)
-		);
-		echo '</td>';
-		echo '</tr>';
+		) . '</td></tr>', AAFormHelper::getAllowedHTML() );
 	}
 }

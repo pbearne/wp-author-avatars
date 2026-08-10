@@ -8,10 +8,18 @@
 	"keywords": [
 		"avatar",
 		"Author Avatars",
-		"profile pictures"
+		"profile pictures",
+		"user image",
+		"image",
+		"user photo",
+		"user picture",
+		"Profile",
+		"Thumbnail",
+		"picture",
+		"photo"
 	],
 	"icon": "businessman",
-	"description": "Author Avatar List Block.",
+	"description": "This plugin makes it easy to *display lists of user avatars*, grouped by user roles, on your (multiuser) site. It also allows you to *insert single avatars* for blog users or any email address into a post or page - great for displaying an image of someone you're talking about.",
 	"textdomain": "author-avatars-list-block",
 	"editorScript": "file:./block.js",
 	"editorStyle": "file:./block.css",

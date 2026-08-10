@@ -1,4 +1,10 @@
-<?php  if ( ! class_exists( 'AAFormHelper' ) ):
+<?php
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+if ( ! class_exists( 'AAFormHelper' ) ):
 
 	/*
 	Copyright (c) 2009 Benedikt Forchhammer
@@ -55,7 +61,7 @@
 		static function choice( $name, $choices, $values, $attributes = array() ) {
 			// make sure we have an array of choices
 			if ( ! is_array( $choices ) || empty( $choices ) ) {
-				return __( "Sorry, no choices available." );
+				return __( "Sorry, no choices available.", 'author-avatars' );
 			}
 
 			// make sure we have all values in an array.
@@ -311,6 +317,74 @@
 			$display = apply_filters( 'aa_shortcode_display_list', $display );
 
 			return $display;
+		}
+
+		/**
+		 * Returns the list of allowed html tags for the author avatars editor popup.
+		 *
+		 * @static
+		 * @access public
+		 * @return array
+		 */
+		public static function getAllowedHTML() {
+			$allowed_html = wp_kses_allowed_html( 'post' );
+			$allowed_html['form']     = array(
+				'action' => true,
+				'method' => true,
+				'target' => true,
+			);
+			$allowed_html['input']    = array(
+				'type'    => true,
+				'name'    => true,
+				'value'   => true,
+				'checked' => true,
+				'class'   => true,
+				'id'      => true,
+				'style'   => true,
+				'size'    => true,
+				'src'     => true,
+				'border'  => true,
+				'alt'     => true,
+				'onclick' => true,
+				'title'   => true,
+			);
+			$allowed_html['select']   = array(
+				'id'    => true,
+				'name'  => true,
+				'style' => true,
+				'class' => true,
+			);
+			$allowed_html['option']   = array(
+				'value'    => true,
+				'selected' => true,
+				'class'    => true,
+			);
+			$allowed_html['textarea'] = array(
+				'id'    => true,
+				'name'  => true,
+				'rows'  => true,
+				'cols'  => true,
+				'style' => true,
+				'class' => true,
+			);
+			if ( isset( $allowed_html['a'] ) ) {
+				$allowed_html['a']['onclick'] = true;
+				$allowed_html['a']['target']  = true;
+			}
+			$allowed_html['span'] = array(
+				'class' => true,
+			);
+			if ( isset( $allowed_html['div'] ) ) {
+				$allowed_html['div']['style'] = true;
+			}
+			if ( isset( $allowed_html['img'] ) ) {
+				$allowed_html['img']['srcset']   = true;
+				$allowed_html['img']['loading']  = true;
+				$allowed_html['img']['decoding'] = true;
+				$allowed_html['img']['border']   = true;
+			}
+
+			return $allowed_html;
 		}
 	}
 endif;

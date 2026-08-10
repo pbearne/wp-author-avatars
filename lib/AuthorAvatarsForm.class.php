@@ -1,5 +1,9 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Collection of functions for form fields used in author avatars widget and shortcode wizard
  */
@@ -164,7 +168,7 @@ class AuthorAvatarsForm {
 			$bool         = ( 1 == $where ) ? 1 : 0;
 			$where_string .= " AND $key = '$bool'";
 		}
-		$blogs = $wpdb->get_results( $wpdb->prepare( "SELECT blog_id, path FROM $wpdb->blogs WHERE 1 = 1 AND site_id = %d  $where_string", $wpdb->siteid ), ARRAY_A );
+		$blogs = $wpdb->get_results( $wpdb->prepare( "SELECT blog_id, path FROM $wpdb->blogs WHERE 1 = 1 AND site_id = %d ", $wpdb->siteid ) . $where_string, ARRAY_A );
 
 		$blog_list = array();
 		foreach ( (array) $blogs as $details ) {
@@ -656,7 +660,8 @@ class AuthorAvatarsForm {
 		}
 		$id = AAFormHelper::cleanHtmlId( $id );
 		if ( isset( $this->tabs[ $id ] ) ) {
-			trigger_error( 'Warning: id "' . $id . '" has already been used as tab identifier.', E_USER_WARNING );
+			/* translators: %d: tab id */
+			trigger_error( esc_html( sprintf( __( 'Warning: id "%d" has already been used as tab identifier.', 'author-avatars' ), $id ) ), E_USER_WARNING );
 		} else {
 			$this->tabs[ $id ] = $title;
 		}

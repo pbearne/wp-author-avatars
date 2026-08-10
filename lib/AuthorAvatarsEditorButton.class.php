@@ -1,5 +1,9 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * This class adds a button to the post editor for inserting author avatars
  * shortcodes
@@ -102,8 +106,8 @@ class AuthorAvatarsEditorButton {
 
 	function render_tinymce_popup_head() {
 		echo '<head>';
-		echo "\n\t" . '<title>' . __( 'Author avatars shortcodes', 'author-avatars' ) . '</title>';
-		echo "\n\t" . '<meta http-equiv="Content-Type" content="' . get_bloginfo( 'html_type' ) . '; charset=' . get_option( 'blog_charset' ) . '" />';
+		echo "\n\t" . '<title>' . esc_html__( 'Author avatars shortcodes', 'author-avatars' ) . '</title>';
+		echo "\n\t" . '<meta http-equiv="Content-Type" content="' . esc_attr( get_bloginfo( 'html_type' ) ) . '; charset=' . esc_attr( get_option( 'blog_charset' ) ) . '" />';
 		wp_print_scripts( array( 'jquery', 'jquery-ui-resizable', 'tinymce-popup', 'author-avatars-tinymce-popup' ) );
 		wp_print_styles( array( 'admin-form' ) );
 		echo "\n" . '</head>';
@@ -162,14 +166,14 @@ class AuthorAvatarsEditorButton {
 		$html = '<div class="aa-tabs">' . $form->renderTabList() . $tabs . '</div>';
 		$html .= "\n\t" . '<div class="mceActionPanel"> ' . AA_donateButton();
 		$html .= "\n\t" . '<div style="float: left; margin-left: 20px;">';
-		$html .= "\n\t" . '<input class="button button-secondary" type="button" id="cancel" name="cancel" value="' . __( "Cancel" ) . '" onclick="tinyMCEPopup.close();" />';
+		$html .= "\n\t" . '<input class="button button-secondary" type="button" id="cancel" name="cancel" value="' . esc_attr__( 'Cancel', 'author-avatars' ) . '" onclick="tinyMCEPopup.close();" />';
 		$html .= "\n\t" . '</div>';
 		$html .= "\n\t" . '<div style="float: right; margin-right: 20px;">';
-		$html .= "\n\t" . '<input class="button button-primary"  type="submit" id="insert" name="insert" value="' . __( "Insert" ) . '" />';
+		$html .= "\n\t" . '<input class="button button-primary"  type="submit" id="insert" name="insert" value="' . esc_attr__( 'Insert', 'author-avatars' ) . '" />';
 		$html .= "\n\t" . '</div>';
 		$html .= "\n\t" . '</div>';
 
-		echo '<body class="tinymce_popup">' . $html . "\n" . '</body>';
+		echo '<body class="tinymce_popup">' . wp_kses( $html, AAFormHelper::getAllowedHTML() ) . "\n" . '</body>';
 
 	}
 }

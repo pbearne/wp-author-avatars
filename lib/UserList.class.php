@@ -1,5 +1,9 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * User list class: provides a filtered and ordered list of users and different ways of outputting them.
  *
@@ -109,6 +113,31 @@ class UserList {
 	var $avatar_size = 0;
 
 	/**
+	 * Flag whether to render as a list.
+	 */
+	var $render_as_list = false;
+
+	/**
+	 * Styling properties for avatar cards.
+	 */
+	var $background_color;
+	var $font_color;
+	var $border_size;
+	var $border_color;
+	var $link_color;
+	var $link_hover_color;
+	var $card_border;
+	var $card_border_radius;
+	var $card_min_width;
+	var $card_max_width;
+	var $card_min_height;
+	var $card_max_height;
+	var $avatar_padding;
+	var $avatar_margin;
+	var $avatar_border;
+	var $avatar_border_radius;
+
+	/**
 	 * Maximum number of users.
 	 */
 	var $limit = 0;
@@ -187,6 +216,7 @@ class UserList {
 	 * @return void
 	 */
 	function use_list_template( $ordered = false ) {
+		$this->render_as_list = true;
 		if ( (bool) $ordered ) {
 			$this->userlist_template = '<ol class="author-list">{users}</ol>';
 		} else {
@@ -201,7 +231,7 @@ class UserList {
 	 * @return void
 	 */
 	function output() {
-		echo $this->get_output();
+		echo $this->get_output(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	/**
@@ -211,7 +241,7 @@ class UserList {
 	 */
 	public function ajax_output() {
 		// pass all the value into class
-		echo $this->get_output();
+		echo $this->get_output(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	/**
@@ -324,13 +354,13 @@ class UserList {
 	function setup_page_users_ajax() {
 
 		// create axjax calls
-		wp_register_script( 'author-avatars-shortcode-paging', plugins_url( '../js/AuthorAvatarsShortcode.paging.ajax.js', __FILE__ ), array( 'jquery-ui-core' ), '', true );
+		wp_register_script( 'author-avatars-shortcode-paging', plugins_url( '../js/AuthorAvatarsShortcode.paging.ajax.js', __FILE__ ), array( 'jquery-ui-core' ), AUTHOR_AVATARS_VERSION, true );
 
 		// pass values to JS
 		$params = array(
-
 			'hiddenusers'             => $this->hiddenusers,
 			'whitelistusers'          => $this->whitelistusers,
+			'onlyusers'               => $this->onlyusers,
 			'blogs'                   => $this->blogs,
 			'roles'                   => $this->roles,
 			'group_by'                => $this->group_by,
@@ -340,21 +370,32 @@ class UserList {
 			'show_postcount'          => $this->show_postcount,
 			'show_bbpress_post_count' => $this->show_bbpress_post_count,
 			'show_biography'          => $this->show_biography,
-			'bio_length'              => $this->bio_length,
+			'max_bio_length'          => $this->bio_length,
 			'show_last_post'          => $this->show_last_post,
 			'show_email'              => $this->show_email,
 			'contact_links'           => $this->contact_links,
 			'avatar_size'             => $this->avatar_size,
+			'avatar_radius'           => $this->avatar_radius,
+			'border_radius'           => $this->border_radius,
+			'align'                   => $this->align,
 			'limit'                   => $this->limit,
 			'min_post_count'          => $this->min_post_count,
 			'page_size'               => $this->page_size,
 			'order'                   => $this->order,
 			'sort_direction'          => $this->sort_direction,
-			'postCommentNonce'        => wp_create_nonce( 'author-avatars-shortcode-paging-nonce' ),
-			'action'                  => 'AA_shortcode_paging',
-			'aa_page'                 => 0,
-			'ajax_url'                => admin_url( 'admin-ajax.php' ),
+			'render_as_list'          => $this->render_as_list ? 'true' : 'false',
 		);
+		foreach ( array( 'background_color', 'font_color', 'border_size', 'border_color', 'link_color', 'link_hover_color', 'card_border', 'card_border_radius', 'card_min_width', 'card_max_width', 'card_min_height', 'card_max_height', 'avatar_padding', 'avatar_margin', 'avatar_border', 'avatar_border_radius' ) as $key ) {
+			if ( isset( $this->$key ) ) {
+				$params[ $key ] = $this->$key;
+			}
+		}
+
+		$nonce_hash              = AA_get_shortcode_hash( $params );
+		$params['postCommentNonce'] = wp_create_nonce( 'author-avatars-shortcode-paging-nonce-' . $nonce_hash );
+		$params['action']           = 'AA_shortcode_paging';
+		$params['aa_page']          = 0;
+		$params['ajax_url']         = admin_url( 'admin-ajax.php' );
 
 		wp_enqueue_script( 'author-avatars-shortcode-paging' );
 		wp_localize_script( 'author-avatars-shortcode-paging', 'shortCodeValues', $params );
@@ -408,8 +449,8 @@ class UserList {
 		}
 
 		$title = $name;
-		// Translators: %s is for the name of the user
-		$alt = sprintf( __( 'avatar for %s', 'author-avatars'), $name );
+		/* translators: %s: user name */
+		$alt = sprintf( __( 'avatar for %1$s', 'author-avatars' ), $name );
 
 
 		$link       = false;
@@ -519,6 +560,7 @@ class UserList {
 		if ( $this->show_postcount ) {
 			if ( - 1 == $user->user_id && 'guest-author' !== $type ) {
 				$postcount        = $this->get_comment_count( $user->user_email );
+				/* translators: %d: comment count */
 				$post_count_title = sprintf( _n( '%d comment', '%d comments', $postcount, 'author-avatars' ), $postcount );
 			} else {
 				// this is passing 1 for coauthors
@@ -529,6 +571,7 @@ class UserList {
 				} else {
 					$postcount = $this->get_user_postcount( $user->user_id );
 				}
+				/* translators: %d: post count */
 				$post_count_title = sprintf( _n( '%d post', '%d posts', $postcount, 'author-avatars' ), $postcount );
 			}
 			$title .= ' (' . $post_count_title . ')';
@@ -550,6 +593,7 @@ class UserList {
 			$bb_press_postcount = 0;
 			if ( function_exists( 'bbp_get_user_topic_count_raw' ) ) {
 				$bb_press_postcount  = bbp_get_user_topic_count_raw( $user->user_id ) + bbp_get_user_reply_count_raw( $user->user_id );
+				/* translators: %d: post count */
 				$bb_post_count_title = sprintf( _n( '%d BBPress post', '%d BBPress posts', $bb_press_postcount, 'author-avatars' ), $bb_press_postcount );
 				$title              .= ' (' . $bb_post_count_title . ')';
 
@@ -1115,8 +1159,9 @@ class UserList {
 					if ( null !== $coauthors_plus ) {
 
 						$args = array(
-							'orderby' => 'term_order',
-							'order'   => 'ASC',
+							'taxonomy' => $coauthors_plus->coauthor_taxonomy,
+							'orderby'  => 'term_order',
+							'order'    => 'ASC',
 						);
 						//	$args = array(
 						// 		'optioncount'      => false,
@@ -1133,7 +1178,7 @@ class UserList {
 
 						//	$coauthor_terms = coauthors_wp_list_authors( $args );
 
-						$coauthor_terms = get_terms( $coauthors_plus->coauthor_taxonomy, $args );
+						$coauthor_terms = get_terms( $args );
 
 						if ( is_array( $coauthor_terms ) && ! empty( $coauthor_terms ) ) {
 
@@ -1298,8 +1343,9 @@ class UserList {
 			if ( $roleQuery ) {
 				$or = ' or ';
 			}
-			$roleQuery .= $wpdb->prepare( $or . 'meta_value like %s', $role );
+			$roleQuery .= $or . $wpdb->prepare( 'meta_value like %s', $role );
 		}
+
 		if ( $roleQuery ) {
 			$roleQuery = ' AND(' . $roleQuery . ')';
 		}
@@ -2189,8 +2235,8 @@ class UserList {
 		}
 		if (empty( $b) ) {
             $b = '';
-        }   
-		
+        }
+
 		return strcasecmp( $a, $b );
 	}
 }
