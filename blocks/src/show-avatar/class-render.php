@@ -229,16 +229,28 @@ class Render {
 		}
 
 		if ( ! empty( $attributes['card_min_width'] ) ) {
-			$card_style[] = sprintf( 'min-width:%s;', $this->add_px_if_numeric( $attributes['card_min_width'] ) );
+			$card_min_width = $this->add_px_if_numeric( $attributes['card_min_width'] );
+			if ( ! empty( $card_min_width ) ) {
+				$card_style[] = sprintf( 'min-width:%s;', $card_min_width );
+			}
 		}
 		if ( ! empty( $attributes['card_max_width'] ) ) {
-			$card_style[] = sprintf( 'max-width:%s;', $this->add_px_if_numeric( $attributes['card_max_width'] ) );
+			$card_max_width = $this->add_px_if_numeric( $attributes['card_max_width'] );
+			if ( ! empty( $card_max_width ) ) {
+				$card_style[] = sprintf( 'max-width:%s;', $card_max_width );
+			}
 		}
 		if ( ! empty( $attributes['card_min_height'] ) ) {
-			$card_style[] = sprintf( 'min-height:%s;', $this->add_px_if_numeric( $attributes['card_min_height'] ) );
+			$card_min_height = $this->add_px_if_numeric( $attributes['card_min_height'] );
+			if ( ! empty( $card_min_height ) ) {
+				$card_style[] = sprintf( 'min-height:%s;', $card_min_height );
+			}
 		}
 		if ( ! empty( $attributes['card_max_height'] ) ) {
-			$card_style[] = sprintf( 'max-height:%s;', $this->add_px_if_numeric( $attributes['card_max_height'] ) );
+			$card_max_height = $this->add_px_if_numeric( $attributes['card_max_height'] );
+			if ( ! empty( $card_max_height ) ) {
+				$card_style[] = sprintf( 'max-height:%s;', $card_max_height );
+			}
 		}
 
 		$avatar_styles = function_exists( 'wp_style_engine_get_styles' ) ? wp_style_engine_get_styles( array(
@@ -335,57 +347,88 @@ class Render {
 			return $html;
 		}
 		$card_style_string = implode( ' ', $card_style );
+		if ( function_exists( 'safecss_filter_attr' ) ) {
+			$card_style_string = safecss_filter_attr( $card_style_string );
+		}
 
 		// Add the card style to each user's card div.
-		$html = preg_replace_callback(
-			'/(<div[^>]+class=["\']([^"\']*\buser\b[^"\']*)["\']([^>]*>))/i',
-			function ( $m ) use ( $card_style_string ) {
-				$tag = $m[1];
-				// Match style attribute with either single or double quotes
-				if ( preg_match( '/style=(["\'])(.*?)\1/i', $tag, $s_match ) ) {
-					$quote    = $s_match[1];
-					$existing = rtrim( trim( $s_match[2] ), ';' ) . '; ';
-					$new_tag  = str_replace( $s_match[0], 'style=' . $quote . $existing . $card_style_string . $quote, $tag );
-				} else {
-					$new_tag = preg_replace( '/<div/i', '<div style="' . $card_style_string . '"', $tag, 1 );
-				}
-				return $new_tag;
-			},
-			$html
-		);
-
-		// Add the avatar image style to each img tag inside the user div.
-		if ( ! empty( $avatar_image_style ) ) {
-			$avatar_image_style_string = implode( ' ', $avatar_image_style );
-			$html                      = preg_replace_callback(
-				'/(<img[^>]+class=["\']([^"\']*\b(?:avatar|photo|gravatar|bp-user-avatar|bp-avatar)\b[^"\']*)["\']([^>]*>))/i',
-				function ( $m ) use ( $avatar_image_style_string ) {
+		if ( ! empty( $card_style_string ) ) {
+			$html = preg_replace_callback(
+				'/(<div[^>]+class=["\']([^"\']*\buser\b[^"\']*)["\']([^>]*>))/i',
+				function ( $m ) use ( $card_style_string ) {
 					$tag = $m[1];
 					// Match style attribute with either single or double quotes
 					if ( preg_match( '/style=(["\'])(.*?)\1/i', $tag, $s_match ) ) {
 						$quote    = $s_match[1];
-						$existing = rtrim( trim( $s_match[2] ), ';' ) . '; ';
-						$new_tag  = str_replace( $s_match[0], 'style=' . $quote . $existing . $avatar_image_style_string . $quote, $tag );
+						$existing = rtrim( trim( $s_match[2] ), ';' );
+						$combined = $existing ? $existing . '; ' . $card_style_string : $card_style_string;
+						$new_tag  = str_replace( $s_match[0], 'style=' . $quote . esc_attr( $combined ) . $quote, $tag );
 					} else {
-						$new_tag = preg_replace( '/<img/i', '<img style="' . $avatar_image_style_string . '"', $tag, 1 );
+						$new_tag = preg_replace( '/<div/i', '<div style="' . esc_attr( $card_style_string ) . '"', $tag, 1 );
 					}
+
 					return $new_tag;
 				},
 				$html
 			);
 		}
 
+		// Add the avatar image style to each img tag inside the user div.
+		if ( ! empty( $avatar_image_style ) ) {
+			$avatar_image_style_string = implode( ' ', $avatar_image_style );
+			if ( function_exists( 'safecss_filter_attr' ) ) {
+				$avatar_image_style_string = safecss_filter_attr( $avatar_image_style_string );
+			}
+			if ( ! empty( $avatar_image_style_string ) ) {
+				$html = preg_replace_callback(
+					'/(<img[^>]+class=["\']([^"\']*\b(?:avatar|photo|gravatar|bp-user-avatar|bp-avatar)\b[^"\']*)["\']([^>]*>))/i',
+					function ( $m ) use ( $avatar_image_style_string ) {
+						$tag = $m[1];
+						// Match style attribute with either single or double quotes
+						if ( preg_match( '/style=(["\'])(.*?)\1/i', $tag, $s_match ) ) {
+							$quote    = $s_match[1];
+							$existing = rtrim( trim( $s_match[2] ), ';' );
+							$combined = $existing ? $existing . '; ' . $avatar_image_style_string : $avatar_image_style_string;
+							$new_tag  = str_replace( $s_match[0], 'style=' . $quote . esc_attr( $combined ) . $quote, $tag );
+						} else {
+							$new_tag = preg_replace( '/<img/i', '<img style="' . esc_attr( $avatar_image_style_string ) . '"', $tag, 1 );
+						}
+
+						return $new_tag;
+					},
+					$html
+				);
+			}
+		}
+
 		return $html;
 	}
 
 	/**
-	 * Default any purely-numeric value to px.
+	 * Default any purely-numeric value to px and validate CSS lengths.
 	 *
 	 * @param string $value CSS value.
 	 * @return string
 	 */
 	private function add_px_if_numeric( $value ) {
-		return is_numeric( $value ) ? $value . 'px' : $value;
+		if ( ! is_scalar( $value ) ) {
+			return '';
+		}
+		$trimmed = trim( (string) $value );
+		if ( '' === $trimmed ) {
+			return '';
+		}
+		if ( is_numeric( $trimmed ) ) {
+			return $trimmed . 'px';
+		}
+		if ( preg_match( '/^-?[\d.]+(px|em|rem|%|vh|vw|vmin|vmax|ch|ex|pt|cm|mm|in|pc)$/i', $trimmed ) ) {
+			return $trimmed;
+		}
+		if ( in_array( strtolower( $trimmed ), array( 'auto', 'inherit', 'initial', 'unset', 'min-content', 'max-content', 'fit-content' ), true ) ) {
+			return strtolower( $trimmed );
+		}
+
+		return '';
 	}
 
 	/**
@@ -407,8 +450,16 @@ class Render {
 		foreach ( $sides as $side => $value ) {
 			if ( is_numeric( $value ) ) {
 				$sides[ $side ] = $value . 'px';
+			} elseif ( is_string( $value ) ) {
+				$validated = $this->add_px_if_numeric( $value );
+				if ( ! empty( $validated ) ) {
+					$sides[ $side ] = $validated;
+				} else {
+					unset( $sides[ $side ] );
+				}
 			}
 		}
+
 		return $sides;
 	}
 }
