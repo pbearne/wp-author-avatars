@@ -111,7 +111,7 @@ class ShowAvatarShortcode {
 			 */
 			$avatar_style = apply_filters( 'aa_user_avatar_style', $avatar_style, $atts );
 
-			$avatar = preg_replace( '@ ?\/>@', ' style="' . $avatar_style . '"  />', $avatar );
+			$avatar = preg_replace( '@ ?\/>@', ' style="' . esc_attr( $avatar_style ) . '"  />', $avatar );
 		}
 
 		if ( apply_filters( 'aa_user_avatar_lazy_load', true, $avatar, $id ) ) {

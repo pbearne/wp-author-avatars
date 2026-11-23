@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=MZTZ5
 Tags: block, Avatar, Author, Image, Profile
 Requires at least: 6.1
 Tested up to: 7.1.0
-Stable tag: 2.2.0
+Stable tag: 2.2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -73,8 +73,11 @@ If you have added CSS to your theme you may have to update it for this upgrade (
 
 == Changelog ==
 
+2.2.1
+Fixed card style attributes escaping and validation in shortcode and block to prevent stored XSS
+
 2.2.0
-fixed an issue the paging AAjax not checking the values passed were allowed
+fixed an issue the paging Ajax not checking the values passed were allowed
 Tidy up the code
 
 
@@ -95,16 +98,16 @@ Bumped WP VERSION
 
 2.1.25
 Added lazy loading tag to avatars
-Can be overriden with filter aa_user_avatar_lazy_load set to false
+Can be overridden with filter aa_user_avatar_lazy_load set to false
 Bumped WP VERSION
 
 2.1.24
-Addjusted where the late escaping happened for the background-color
+Adjusted where the late escaping happened for the background-color
 Fix issue with the border in the block
 Added radius control for avatar in the block
 
 2.1.23
-Addjusted where the late escaping happened for the avatar name
+Adjusted where the late escaping happened for the avatar name
 
 2.1.22
 Added late escaping to avatar name
@@ -125,29 +128,29 @@ Fixed lack of escaping on the shortcode
 reported by Ngô Thiên An (ancorn_)
 
 2.1.16
-Fixed duplicate query when sorting by posts
+Fixed a duplicate query when sorting by posts
 
 2.1.15
 "wp-editor" script should not be enqueued notice fixed
 
 2.1.14
-php 8.1 fix
+PHP 8.1 fix
 
 2.1.13
-wp version bump
+WP version bump
 
 2.1.11
 added missing files
 
 2.1.10
-Fixed color picker cashing in editor
+Fixed color picker cashing in the editor
 Added border options
 
 2.1.8
 Fix for PHP 8 thanks to @editpostok for reporting
 
 2.1.5
-Stopped not needed css from loading
+Stopped unnecessary CSS from loading
 
 2.1.4
 Removed .live in js
@@ -197,11 +200,11 @@ https://wordpress.org/support/topic/php-7-3-17/
 bumped WP version
 
 = 1.16 =
-fixed name not loading in ajax paging calls
+Fixed name not loading in AJAX paging calls
 
 = 1.15 =
 Added filter aa_user_final_css to filter the classes on the user div
-added name-{first_letter} class
+Added name-{first_letter} class
 Added span wrape around post count brackets
 
 = 1.14 =
@@ -210,7 +213,7 @@ refactored [show_avatar] to use display
 
 
 = 1.13 =
-added implode to xprofile content if array
+Added imploding to xprofile content if array
 
 = 1.12 =
 Fixed the JS in the TinyMCE popup
@@ -225,7 +228,7 @@ Added does class exists for BP xprofile code
 = 1.9.9 =
 fixed typo
 fixed filter name
-fixed advance option not showing in widget form
+fixed advance option not showing in the widget form
 
 = 1.9.8 =
 Added Filter aa_user_raw_list
@@ -241,30 +244,30 @@ readme update
 removed php 4 constructors
 
 = 1.9.5 =
-Added sorting by white list values
+Added sorting by whitelist values
 
 = 1.9.4 =
-Added white list for users
+Added whitelist for users
 
 = 1.9.3 =
 renamed function causing redeclare error
 
 = 1.9.2 =
-Added aa_user_show_last_post_type filter to allow setting of post type for last post link
-added defaulted to author page if no last post is returned
+Added aa_user_show_last_post_type filter to allow setting of a post type for the last post link
+added defaulted to the author page if no last post is returned
 
 = 1.9 =
-fixed problem with WP 4.4 and widgets not saving
-Add help translate link
+Fixed a problem with WP 4.4 and widgets not saving
+Add a help translate link
 
 = 1.8.8 =
-set the page count to start at 1 not 0
+Set the page count to start at 1 not 0
 Added support for UM profiles links
 
 
 = 1.8.7 =
-replaced parent::WP_Widget()  with parent::__construct to remove php 4 constructors
-remove extract( $args, EXTR_SKIP and replaced with direct extracts
+Replaced parent::WP_Widget()  with parent::__construct to remove php 4 constructors
+Remove extract( $args, EXTR_SKIP and replaced with direct extracts
 Added user id to CSS
 Fixed Co_Author Plus listings
 
@@ -287,7 +290,7 @@ Set the bios to maintain line breaks
 Fixed the random order if not logged in
 
 = 1.8.6.1 =
-deploy script failed to add new file
+Deploy script failed to add a new file
 
 = 1.8.6.0 =
 * added the ability to truncate bio
@@ -311,57 +314,57 @@ deploy script failed to add new file
 * fix static call when starting class
 
 = 1.8.3 =
-* added a tile to the span arond the image.
-* disabled / delete the transit cache for logged in users to help clear them.
+* added a tile to the span around the image.
+* disabled / delete the transit cache for logged-in users to help clear them.
 = 1.8.2 =
-* change the caching to use transits for SQL calls with a 1 hour refesh
+* change the caching to use transits for SQL calls with a 1-hour refresh
 = 1.8.1 =
 * Added support for tinyMCE version 4 ready for WordPress 3.9
 = 1.8.0 =
 * Replaced the pre 2.6 wordpres widget code with the current widget API calls to enable visablity setting
 * CSS changed .multiwidget_author_avatars changed to .widget_author_avatars. This was caused by the widget API update
-* Added expemently support for Co-Author Pluss Plugin - the post count does not work for linked account - will take a patch that fixs it :-)
+* Added expediently support for Co-Author Pluss Plugin - the post-count does not work for a linked account - will take a patch that fixs it :-)
 * Moved the display option to the right column to make more room for roles
 * Split 'Recent Activity' and 'BudyPress last activity' (only shows when buddypress running) to septerate options in the advance ordering option
 * Split / removed 'Recent Activity' into sitewide (pages / custom page types / posts) and just posts (any old shortcode will call just posts)
 
 = 1.7.1 =
-* bubfix removed an extra ' in a SQL select in get_user_last_activity() function. Thanks to "basaja" for the bug report.
+* Bubfix removed an extra ' in a SQL select in get_user_last_activity() function. Thanks to "basaja" for the bug report.
 
 = 1.7.0 =
 * Added Local User select to Single Avatar Shortcode creator
 * Replaced wp_specialchars() with esc_html()
 * Added BBPRESS_post_count as shortcode dispaly and sort options
-* Added show_email to shortcode display option
+* Added show_email to the shortcode display option
 * Added some translation updates
-* Fixed issue with TniyMCE breaking when using HTTPS
-* And a few other tidy ups
+* Fixed an issue with TniyMCE breaking when using HTTPS
+* And a few other tidy-ups
 * Added SQL fliter to only fetch the users for the rolls being requested rather than all users
 * Added caching to the main get_users function which will use an object cache if turned on
 
 = 1.6.3 =
-* Wraped ordering code in "remove_accents" functions to to replace Uni-code accents with non unicode versions so sort works as expected.
-* Increased height of TinyMCE popup so content shows with scroll bars.
-* Replaced text donate links with image link.
+* Wraped ordering code in "remove_accents" functions to replace Unicode accents with non-Unicode versions so sort works as expected.
+* Increased height of the TinyMCE popup so content shows with scroll bars.
+* Replaced text donate links with an image link.
 
 = 1.6.2 =
 * Added display options for single Avatar options
 * Added donation link
 
 = 1.6.1 =
-* Fixed a bug that stoped the loading of default CSS sheet for the plugin that I added a bug in in 1.6
+* Fixed a bug that stoped the loading of the default CSS sheet for the plugin that I added a bug in in 1.6
 
 = 1.6.0 =
 * Added the option to link to BBpress profile in the link to the shortcode and generator  user_link=bbpress_memberpage
-* Fixed bug - the the shortcode generator was shown up in the tinyMCE edit if it was loaded on a page (BBpress forum posts) the popup was 404'ing so add a $pagenow != 'index.php' to make sure we are in the addmin section
-* Fixed bug causing the RTL layout to break
+* Fixed bug - the shortcode generator was shown up in the tinyMCE edit if it was loaded on a page (BBpress forum posts) the popup was 404'ing so add a $pagenow != 'index.php' to make sure we are in the addmin section
+* Fixed bug - causing the RTL layout to break
 
 = 1.5.1 =
 *  Added  Hindi language (by Love Chandel:  Outshine Solutions - http://outshinesolutions.com)
 
 = 1.5 =
 *  Added Paging to the short code
-*  Added  Romanian language (by Alexander Ovsov:  Web Hosting Geeks - http://webhostinggeeks.com)
+*  Added Romanian language (by Alexander Ovsov:  Web Hosting Geeks - http://webhostinggeeks.com)
 
 = 1.4 =
 *   Fix a bug in the js code for the short-code generator in the tinyMCE editor.
@@ -372,13 +375,13 @@ deploy script failed to add new file
 
 = 1.1 =
 *   Added fix for buddypress which was using thumb instead of full versions of images.
-*   Added support for network admin area (new in WP 3.1)
-*   Added dutch translation by René (wpwebshop)
-*   Fixed bug with min_post_count in shortcode
+*   Added support for the network admin area (new in WP 3.1)
+*   Added Dutch translation by René (wpwebshop)
+*   Fixed bug - with min_post_count in shortcode
 
 = 1.0 =
 *   Fixed a number of styling issues
-*   Fixed bug with capabilities (Wordpress 3 multisite)
+*   Fixed bug with capabilities (WordPress 3 multisite)
 *   Removed deprecated functions
 
 = 0.9 =
@@ -491,13 +494,13 @@ The plugin comes with two shortcodes: <code>[authoravatars]</code> for lists of 
 
 Make sure you have enabled the "blog filter" in Site Admin / Author Avatars for the blog on which you are trying to use this feature on. By default this is only enabled for the root blog (blog id = 1).
 
-And you are running [Wordpress MU](http://mu.wordpress.org/) (or respectively WordPress 3 in multi-site mode), right?
+And you are running [WordPress MU](http://mu.wordpress.org/) (or respectively WordPress 3 in multi-site mode), right?
 
 = Can I upload custom pictures for users? =
 
 No, the Author Avatars List plugin only provides ways of <strong>displaying</strong> user avatars.
 
-The plugin uses the Wordpress Core Template function <code>get_avatar()</code> to retrieve the actual avatar images. In order to display custom images you need to look for plugins which use/override WordPress' avatar features and provide respective upload features...
+The plugin uses the WordPress Core Template function <code>get_avatar()</code> to retrieve the actual avatar images. In order to display custom images you need to look for plugins which use/override WordPress' avatar features and provide respective upload features...
 
 Have a look at the [User Photo](http://wordpress.org/extend/plugins/user-photo/) Plugin (turn on option "Override Avatar with User Photo") or the [Add Local Avatar](http://wordpress.org/extend/plugins/add-local-avatar/) Plugin.
 
@@ -512,7 +515,7 @@ You can find a [tutorial](http://codex.wordpress.org/Author_Templates) on Author
 
 = Can I use html in user biographies? =
 
-Wordpress Core unfortunately strips all html from the user biography field when entered. Install the plugin [Weasel's HTML Bios](http://wordpress.org/extend/plugins/weasels-html-bios/) if you want to use html...
+WordPress Core unfortunately strips all html from the user biography field when entered. Install the plugin [Weasel's HTML Bios](http://wordpress.org/extend/plugins/weasels-html-bios/) if you want to use html...
 
 = How can I change the styling of the avatar lists? =
 
